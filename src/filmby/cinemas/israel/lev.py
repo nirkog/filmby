@@ -17,8 +17,8 @@ class LevCinema(Cinema):
     BASE_URL = "https://www.lev.co.il/"
     FILMS_URL = "wp-content/themes/lev/ajax_data.php?clang=he&action=movie_on_location_new&loc={0}&date={1}-{2}-{3}"
 
-    def __init__(self, town):
-        super().__init__(town)
+    def __init__(self):
+        super().__init__()
         self.image_urls = self.get_image_urls()
 
     def get_image_urls(self):
@@ -34,8 +34,8 @@ class LevCinema(Cinema):
 
         return urls
 
-    def get_films_by_date(self, date):
-        encoded_theater_name = urllib.parse.quote(self.THEATER_NAMES[self.town])
+    def get_films_by_date(self, date, town):
+        encoded_theater_name = urllib.parse.quote(self.THEATER_NAMES[town])
         response = requests.get(self.BASE_URL + self.FILMS_URL.format(encoded_theater_name, date.year, date.month, date.day))
         html = BeautifulSoup(response.text, "html.parser")
         movies = html.find_all("li")
@@ -43,6 +43,9 @@ class LevCinema(Cinema):
         films = []
 
         for i, movie in enumerate(movies):
+            if i + 1 > len(movie_links):
+                break
+
             name = urllib.parse.unquote(movie_links[i]["href"][29:-1])
             films.append(Film(name))
 
@@ -50,8 +53,8 @@ class LevCinema(Cinema):
 
             film_date = datetime.datetime.strptime(movie.a.span.text, "%H:%M")
             film_date = datetime.datetime(date.year, date.month, date.day, film_date.hour, film_date.minute)
-            films[-1].add_dates(self.NAME, [film_date])
+            films[-1].add_dates(self.NAME, town, [film_date])
 
-            films[-1].add_link(self.NAME, movie_links[i])
+            films[-1].add_link(self.NAME, movie_links[i]["href"])
 
         return films

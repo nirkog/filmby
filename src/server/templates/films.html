@@ -1,0 +1,10 @@
+<h1>סרטים</h1>
+{% for film in films %}
+	<div class="film">
+		<img src="{{ film.image_url }}"/>
+		<div class="film-text">
+			<h2 class="film-header">{{ film.name }}</h2>
+			<p class="film-description">{{ film.description }}</p>
+		</div>
+	</div>
+{% endfor %}

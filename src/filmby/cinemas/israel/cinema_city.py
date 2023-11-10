@@ -38,11 +38,9 @@ class CinemaCityCinema(Cinema):
     DATE_FORMAT = "%d/%m/%Y"
     FILM_DATE_FORMAT = "%d/%m/%Y %H:%M"
 
-    def __init__(self, town):
-        super().__init__(town)
-        self.theater_id = self.THEATER_IDS[self.town]
-        self.tix_theater_id = self.TIX_THEATER_IDS[self.town]
-        self.film_ids = self.get_movie_ids()
+    def __init__(self):
+        super().__init__()
+        self.film_ids = self.get_movie_ids() # TODO: Move this to get_films_by_date
 
     def get_movie_ids(self):
         response = requests.get(self.MOVIES_URL)
@@ -59,8 +57,10 @@ class CinemaCityCinema(Cinema):
 
         return ids
 
-    def get_films_by_date(self, date):
-        request = requests.get(self.BASE_URL + self.DATES_URL.format(self.theater_id))
+    def get_films_by_date(self, date, town):
+        theater_id = self.THEATER_IDS[town]
+        tix_theater_id = self.TIX_THEATER_IDS[town]
+        request = requests.get(self.BASE_URL + self.DATES_URL.format(theater_id))
         dates = eval(request.text)
         original_dates = eval(request.text)
         dates = ["".join([c for c in date if c in "0123456789/"]) for date in dates]
@@ -73,7 +73,7 @@ class CinemaCityCinema(Cinema):
         date_index = dates[0]
         encoded_date = urllib.parse.quote(original_dates[date_index], safe="")
 
-        request = requests.get(self.BASE_URL + self.FILMS_URL.format(self.tix_theater_id, encoded_date))
+        request = requests.get(self.BASE_URL + self.FILMS_URL.format(tix_theater_id, encoded_date))
         json_films = json.loads(request.text)
         films = []
 
@@ -85,7 +85,7 @@ class CinemaCityCinema(Cinema):
             films[-1].set_image_url(self.IMAGE_URL.format(encoded_pic_name, 300, 300))
 
             date = datetime.datetime.strptime(film["Dates"]["Date"], self.FILM_DATE_FORMAT)
-            films[-1].add_dates(self.NAME, [date])
+            films[-1].add_dates(self.NAME, town, [date])
 
             films[-1].add_link(self.NAME, self.BASE_URL + f"movie/{self.film_ids[film['Name']]}")
 

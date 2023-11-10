@@ -1,0 +1,34 @@
+<!DOCTYPE html>
+<html lang="he">
+	<head>
+		<meta charset="utf-8" />
+		<title>קולנועית</title>
+
+		<link rel="preconnect" href="https://fonts.googleapis.com">
+		<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+		<link href="https://fonts.googleapis.com/css2?family=Heebo:wght@100;200;300;400;500;600;700;800;900&display=swap" rel="stylesheet">
+
+		<link rel="stylesheet" href="{{ url_for("static", filename="css/common.css") }}">
+		<link rel="stylesheet" href="{{ url_for("static", filename="css/index.css") }}">
+
+		<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@tarekraafat/autocomplete.js@10.2.7/dist/css/autoComplete.min.css">
+	</head>
+
+	<body dir="rtl">
+		<div id="content">
+			<h1 id="main-header">קולנועית</h1>
+			<div id="search_form">
+				<!--<input type="text" id="town_input" placeholder="עיר" /> <br>-->
+				<input type="text" id="town_input" placeholder="עיר" value="Tel Aviv" /> <br>
+				<!--<input type="date" id="date_input" min="{{ min_date }}" max="{{ max_date }}" value="{{ min_date }}"/> <br>-->
+				<input type="date" id="date_input" min="{{ min_date }}" max="{{ max_date }}" value="2023-11-06"/> <br>
+				<button id="search_button">מצא סרטים</button>
+			</div>
+
+			<div id="films"></div>
+		</div>
+
+		<script src="https://cdn.jsdelivr.net/npm/@tarekraafat/autocomplete.js@10.2.7/dist/autoComplete.min.js"></script>
+		<script src="{{ url_for("static", filename="javascript/index.js") }}"></script>
+	</body>
+</html>

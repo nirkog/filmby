@@ -2,8 +2,8 @@ class Cinema:
     NAME = None
     TOWNS = None # TODO: Make this dynamic???
 
-    def __init__(self, town):
-        self.town = town
+    def __init__(self):
+        pass
 
     def get_films_by_date(self, date):
         pass
