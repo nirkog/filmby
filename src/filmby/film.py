@@ -5,7 +5,7 @@ CONTENT_TYPES_TO_FILE_ENGINGS = {
     "image/jpeg": ".jpg"
 }
 
-# TODO: Add cachable and non-cachable properties
+# TODO: Add cachable and non-cachable properties (should receive cache in get_films and only update non-cachable properties)
 # TODO: Add description
 # TODO: Add extra details (length, director, etc.)
 # TODO: Support dubbed films

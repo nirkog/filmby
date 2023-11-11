@@ -11,4 +11,4 @@ async function get_films(e) {
 const search_button = document.querySelector("#search_button");
 search_button.addEventListener("click", get_films);
 
-get_films(0);
+//get_films(null);

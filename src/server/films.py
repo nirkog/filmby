@@ -6,6 +6,8 @@ from datetime import date, timedelta
 
 import filmby
 
+MAX_THREAD_COUNT = 100
+
 films = []
 
 class IntervalThread(threading.Thread):
@@ -23,23 +25,32 @@ class IntervalThread(threading.Thread):
             self.func(*self.args, **self.kwargs)
             time.sleep(self.interval)
 
+def same_film_heuristic(first, second):
+    if first.have_same_name(second):
+        return True
+    
+    return False
+
 def merge_films(films):
     i = 0
     found_names = dict()
+    print("AS")
     while i < len(films):
         film = films[i]
 
-        found_film = None
-        for name in found_names:
-            if film.have_same_name(films[found_names[name]]):
-                found_film = films[found_names[name]]
+        found = False
+        for j in range(0, i):
+            other = films[j]
+            if same_film_heuristic(film, other):
+                found = True
+                other.merge(film)
+                films.remove(film)
+                break
 
-        if found_film != None:
-            found_film.merge(film)
-            films.remove(film)
-        else:
-            found_names[film.name] = i
-            i += 1
+        if found:
+            continue
+
+        i += 1
 
 def start_film_updating_thread(interval):
     global films
@@ -59,8 +70,17 @@ TMP_DESC = """
 נורה והא-סונג, שני חברי ילדות בעלי קשר ייחודי כפי שיש רק לילדים, נאלצים להיפרד כשמשפחתה של נורה עוזבת את סיאול ומהגרת לקנדה. שני עשורים לאחר מכן, הם נפגשים שוב בניו יורק. הפגישה המחודשת מעלה שאלות על גורל, אהבה, והבחירות שמעצבות את החיים שלנו.
 """
 
+def get_films_by_date(cinema, date, town, arr, condition):
+    result = cinema.get_films_by_date(date, town)
+    if result != None:
+        arr.extend(result)
+    with condition:
+        condition.notify_all()
+
 def update_films(interval=None):
     global films
+
+    start = time.time()
 
     print("Updating films")
 
@@ -72,12 +92,19 @@ def update_films(interval=None):
         if town in cinema.TOWNS:
             cinemas.append(cinema())
 
+    threads = []
     new_films = []
+    condition = threading.Condition()
     for cinema in cinemas:
         for i in range(0, 7):
-            cinema_films = cinema.get_films_by_date(date.today() + timedelta(i), town)
-            if cinema_films != None:
-                new_films.extend(cinema_films)
+            if threading.active_count() > MAX_THREAD_COUNT:
+                with condition:
+                    condition.wait()
+            threads.append(threading.Thread(target=get_films_by_date, args=(cinema, date.today() + timedelta(i), town, new_films, condition,)))
+            threads[-1].start()
+
+    for thread in threads:
+        thread.join()
 
     merge_films(new_films)
 
@@ -92,11 +119,4 @@ def update_films(interval=None):
     with open("cache/films.bin", "wb") as f:
         pickle.dump(films, f)
 
-    print(f"Finished updating with {len(films)} films")
-
-    # for film in films:
-    #     if len(film.links) > 2:
-    #         print(film.name)
-    #         print(film.links)
-    #         print(film.image_url)
-    #         print(film.dates)
+    print(f"Finished updating with {len(films)} films, took {time.time() - start}s")
