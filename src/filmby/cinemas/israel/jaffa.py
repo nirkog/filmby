@@ -64,6 +64,6 @@ class JaffaCinema(Cinema):
 
             films[-1].add_link(self.NAME, link)
 
-        self._merege_films(films)
+        self._merge_films(films)
 
         return films

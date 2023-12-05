@@ -7,8 +7,11 @@ class Cinema:
 
     def get_films_by_date(self, date):
         pass
+    
+    def get_film_details(self, film):
+        pass
 
-    def _merege_films(self, films):
+    def _merge_films(self, films):
         i = 0
         found_names = dict()
         while i < len(films):

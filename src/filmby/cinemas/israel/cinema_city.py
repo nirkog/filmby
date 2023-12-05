@@ -79,7 +79,9 @@ class CinemaCityCinema(Cinema):
 
         # TODO: Merge duplicates
         for film in json_films:
-            films.append(Film(film["Name"]))
+            name = film["Name"]
+            clean_name = name.replace("-מדובב", "") # ???
+            films.append(Film(clean_name))
              
             encoded_pic_name = urllib.parse.quote(film["Pic"])
             films[-1].set_image_url(self.IMAGE_URL.format(encoded_pic_name, 300, 300))
@@ -89,6 +91,6 @@ class CinemaCityCinema(Cinema):
 
             films[-1].add_link(self.NAME, self.BASE_URL + f"movie/{self.film_ids[film['Name']]}")
 
-        self._merege_films(films)
+        self._merge_films(films)
 
         return films

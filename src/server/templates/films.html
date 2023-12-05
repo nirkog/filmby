@@ -1,10 +1,27 @@
 <h1>סרטים</h1>
 {% for film in films %}
 	<div class="film">
-		<img src="{{ film.image_url }}"/>
+		<img src="{{ film.image_url }}" referrerpolicy="no-referrer"/>
 		<div class="film-text">
 			<h2 class="film-header">{{ film.name }}</h2>
-			<p class="film-description">{{ film.description }}</p>
+			{% if film.description != None %}
+				<p class="film-description">{{ film.description }}</p>
+			{% endif %}
+			{% if film.director != None %}
+				<p class="film-director">{{ film.director }}</p>
+			{% endif %}
+			{% if film.cast != None %}
+				<p class="film-cast">{{ film.cast }}</p>
+			{% endif %}
+			{% if film.length != None %}
+				<p class="film-length">{{ film.length }}</p>
+			{% endif %}
+			{% if film.countries != None %}
+				<p class="film-countries">{{ film.countries }}</p>
+			{% endif %}
+			{% if film.language != None %}
+				<p class="film-language">{{ film.language }}</p>
+			{% endif %}
 		</div>
 	</div>
 {% endfor %}

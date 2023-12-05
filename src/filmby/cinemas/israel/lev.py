@@ -2,6 +2,7 @@ import requests
 import datetime
 import urllib.parse
 import json
+import parse
 from bs4 import BeautifulSoup
 
 from ...cinema import Cinema
@@ -16,6 +17,7 @@ class LevCinema(Cinema):
     }
     BASE_URL = "https://www.lev.co.il/"
     FILMS_URL = "wp-content/themes/lev/ajax_data.php?clang=he&action=movie_on_location_new&loc={0}&date={1}-{2}-{3}"
+    INFO_FORMAT = "{0},{1}|{2}|{3}" # TODO: Add other formats
 
     def __init__(self):
         super().__init__()
@@ -47,7 +49,9 @@ class LevCinema(Cinema):
                 break
 
             name = urllib.parse.unquote(movie_links[i]["href"][29:-1])
-            films.append(Film(name))
+            clean_name = name.replace("-", " ")
+            # clean_name = clean_name.replace("-מדובב", "") # ???
+            films.append(Film(clean_name))
 
             films[-1].set_image_url(self.image_urls[name])
 
@@ -57,4 +61,59 @@ class LevCinema(Cinema):
 
             films[-1].add_link(self.NAME, movie_links[i]["href"])
 
+        self._merge_films(films)
+
         return films
+
+    def get_film_details(self, film):
+        if not self.NAME in film.links:
+            return None
+        
+        link = film.links[self.NAME]
+        response = requests.get(link)
+        html = BeautifulSoup(response.text, "html.parser")
+
+        movie_content = html.find("div", {"class": "movie_content"})
+        description = movie_content.find("p")
+        if description:
+            film.description = description.text
+
+        movie_information = html.find("div", {"class": "movie_in"})
+
+        try:
+            info_line = movie_information.find("div", {"class": "allwithlinemobile"})
+            info = info_line.text.replace("&nbsp", "").strip()
+
+            country, year, language, length = parse.parse(self.INFO_FORMAT, info)
+            country = country.strip()
+            year = year.strip()
+            language = language.strip()
+            length = length.strip()
+            length = "".join(c for c in length if c in "0123456789")
+
+            film.countries = [country]
+            film.year = int(year)
+            film.language = language
+            film.length = length
+        except Exception:
+            # print(f"Basic Info Failed {film.name}")
+            pass
+
+        try:
+            cast_element = movie_information.find("div", {"class": "movie_casts"})
+            director = None
+            cast = None
+            for line in cast_element.text.split("\n"):
+                if line.startswith("בימוי: "):
+                    director = line[7:]
+                if line.startswith("משחק: "):
+                    cast = line[6:]
+
+            if director != None:
+                film.director = director
+            if cast != None:
+                film.cast = cast
+        except Exception as e:
+            # print(f"Cast Failed {film.name}, {e}")
+            pass
+        

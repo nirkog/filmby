@@ -34,7 +34,7 @@ def same_film_heuristic(first, second):
 def merge_films(films):
     i = 0
     found_names = dict()
-    print("AS")
+    print(len(films))
     while i < len(films):
         film = films[i]
 
@@ -51,6 +51,7 @@ def merge_films(films):
             continue
 
         i += 1
+    print(len(films))
 
 def start_film_updating_thread(interval):
     global films
@@ -77,6 +78,12 @@ def get_films_by_date(cinema, date, town, arr, condition):
     with condition:
         condition.notify_all()
 
+def get_film_details(cinema, film, condition):
+    cinema.get_film_details(film)
+
+    with condition:
+        condition.notify_all()
+
 def update_films(interval=None):
     global films
 
@@ -86,11 +93,12 @@ def update_films(interval=None):
 
     country = "Israel"
     town = "Tel Aviv"
-    cinemas = []
+    cinemas = dict()
 
     for cinema in filmby.CINEMAS[country]:
         if town in cinema.TOWNS:
-            cinemas.append(cinema())
+            cinemas[cinema.NAME] = cinema()
+
 
     threads = []
     new_films = []
@@ -100,7 +108,7 @@ def update_films(interval=None):
             if threading.active_count() > MAX_THREAD_COUNT:
                 with condition:
                     condition.wait()
-            threads.append(threading.Thread(target=get_films_by_date, args=(cinema, date.today() + timedelta(i), town, new_films, condition,)))
+            threads.append(threading.Thread(target=get_films_by_date, args=(cinemas[cinema], date.today() + timedelta(i), town, new_films, condition,)))
             threads[-1].start()
 
     for thread in threads:
@@ -108,8 +116,17 @@ def update_films(interval=None):
 
     merge_films(new_films)
 
+    threads = []
     for film in new_films:
-        film.description = TMP_DESC
+        if "Lev" in film.links:
+            if threading.active_count() > MAX_THREAD_COUNT:
+                with condition:
+                    condition.wait()
+            threads.append(threading.Thread(target=get_film_details, args=(cinemas["Lev"], film, condition,)))
+            threads[-1].start()
+
+    for thread in threads:
+        thread.join()
 
     films = new_films
 

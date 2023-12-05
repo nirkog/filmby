@@ -44,6 +44,6 @@ class RavHenCinema(Cinema):
 
             result[-1].add_link(self.NAME, film["link"])
 
-        self._merege_films(result)
+        self._merge_films(result)
 
         return result
