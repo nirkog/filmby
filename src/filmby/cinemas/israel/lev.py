@@ -6,7 +6,7 @@ import parse
 from bs4 import BeautifulSoup
 
 from ...cinema import Cinema
-from ...film import Film
+from ...film import Film, FilmDetails
 
 class LevCinema(Cinema):
     NAME = "Lev"
@@ -73,10 +73,12 @@ class LevCinema(Cinema):
         response = requests.get(link)
         html = BeautifulSoup(response.text, "html.parser")
 
+        details = FilmDetails()
+
         movie_content = html.find("div", {"class": "movie_content"})
         description = movie_content.find("p")
         if description:
-            film.description = description.text
+            details.description = description.text
 
         movie_information = html.find("div", {"class": "movie_in"})
 
@@ -91,10 +93,10 @@ class LevCinema(Cinema):
             length = length.strip()
             length = "".join(c for c in length if c in "0123456789")
 
-            film.countries = [country]
-            film.year = int(year)
-            film.language = language
-            film.length = length
+            details.countries = [country]
+            details.year = int(year)
+            details.language = language
+            details.length = length
         except Exception:
             # print(f"Basic Info Failed {film.name}")
             pass
@@ -110,10 +112,14 @@ class LevCinema(Cinema):
                     cast = line[6:]
 
             if director != None:
-                film.director = director
+                details.director = director
             if cast != None:
-                film.cast = cast
+                details.cast = cast
         except Exception as e:
             # print(f"Cast Failed {film.name}, {e}")
             pass
         
+        return details
+
+    def get_provided_film_details(self):
+        return ["countries", "year", "language", "length", "director", "cast", "description"]

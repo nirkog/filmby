@@ -8,27 +8,53 @@ CONTENT_TYPES_TO_FILE_ENGINGS = {
     "image/jpeg": ".jpg"
 }
 
-# TODO: Add cachable and non-cachable properties (should receive cache in get_films and only update non-cachable properties)
-# TODO: Add description
-# TODO: Add extra details (length, director, etc.)
-# TODO: Support dubbed films
-# TODO: Maybe description_link is needed
+FILM_LENGTH_VARIANCE = 4
 
 def same_date(first, second):
     return (first.year == second.year) and (first.month == second.month) and (first.day == second.day)
+
+class FilmDetails:
+    def __init__(self, description=None, director=None, cast=None, length=None, countries=None, language=None, year=None):
+        self.description = description 
+        self.director = director 
+        self.cast = cast 
+        self.length = length 
+        self.countries = countries 
+        self.language = language 
+        self.year = year
+
+    def get_missing_details(self):
+        details = vars(self)
+        result = []
+        for var in details:
+            if details[var] == None:
+                result.append(var)
+
+        return result
+
+    def merge(self, other):
+        details = vars(self)
+        other_details = vars(other)
+        for var in details:
+            if other_details[var] == None:
+                continue
+
+            if var == "description":
+                if details[var] == None:
+                    setattr(self, var, other_details[var])
+                elif len(other_details[var]) > len(details[var]):
+                    setattr(self, var, other_details[var])
+            else:
+                if details[var] == None:
+                    setattr(self, var, other_details[var])
 
 class Film:
     def __init__(self, name):
         self.name = name
         self.image_url = None
-        self.description = None
-        self.director = None
-        self.cast = None
-        self.length = None
-        self.countries = None
-        self.language = None
         self.dates = dict()
         self.links = dict()
+        self.details = FilmDetails()
 
     def add_link(self, cinema_name, link):
         self.links[cinema_name] = link
@@ -63,10 +89,7 @@ class Film:
 
     def merge(self, other):
         # TODO: Merge based on image url
-        attributes = ["image_url", "description", "director", "cast", "length", "countries", "language"]
-        for attr in attributes:
-            if not getattr(self, attr) and getattr(other, attr) != None:
-                setattr(self, attr, getattr(other, attr))
+        self.details.merge(other.details)
 
         for town in other.dates:
             for cinema in other.dates[town]:
@@ -76,23 +99,34 @@ class Film:
             if not cinema in self.links:
                 self.links[cinema] = other.links[cinema]
 
-    def have_same_name(self, other):
+    def is_identical(self, other):
+        result = False
+
         if self.name == other.name:
-            return True
+            result = True
 
         # TODO: Maybe needs improvement
         
         if self.name.replace("-", "") == other.name.replace("-", ""):
-            return True
+            result = True
         
         if self.name.replace("-", " ") == other.name.replace("-", " "):
-            return True
+            result = True
         
         if fuzz.partial_ratio(self.name, other.name) > 85:
-            print("MERGING", self.name, other.name)
-            return True
+            # print("MERGING", self.name, other.name)
+            result = True
 
-        return False
+        if result and self.details.length and other.details.length:
+            if abs(self.details.length - other.details.length) > FILM_LENGTH_VARIANCE:
+                # print(f"Not identical, legnths too far apart #1 {self.name}, #2 {other.name}")
+                result = False
+        if result and self.details.year and other.details.year:
+            if self.details.year != other.details.year:
+                # print(f"Not identical, years differ #1 {self.name}, #2 {other.name}, {self.details.year}, {other.details.year}")
+                result = False
+
+        return result
     
     def has_screenings_on_date(self, date):
         for town in self.dates:

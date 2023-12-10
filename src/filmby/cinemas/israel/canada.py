@@ -63,11 +63,11 @@ class CanadaCinema(Cinema):
             films[-1].add_link(self.NAME, link)
 
             description = movie_content.find("p", {"id": "extra-details"}).text
-            films[-1].description = description
+            films[-1].details.description = description
 
             try:
                 year = name_element.text[name_element.text.find("(")+1:name_element.text.find(")")]
-                films[-1].year = int(year)
+                films[-1].details.year = int(year)
             except Exception:
                 pass
 
@@ -90,3 +90,6 @@ class CanadaCinema(Cinema):
     
     def get_film_details(self, film):
         return None
+
+    def get_provided_film_details(self):
+        return []

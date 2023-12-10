@@ -2,13 +2,12 @@ import time
 import threading
 import pickle
 import os
+from pathlib import Path
 from datetime import date, timedelta
 
 import filmby
 
 MAX_THREAD_COUNT = 100
-
-films = []
 
 class IntervalThread(threading.Thread):
     def __init__(self, interval, func, args=(), kwargs=dict()):
@@ -19,121 +18,104 @@ class IntervalThread(threading.Thread):
         self.kwargs = kwargs
 
     def run(self):
-        global started
         while True:
             # TODO: Maybe take interval from end to start
             self.func(*self.args, **self.kwargs)
             time.sleep(self.interval)
 
-def same_film_heuristic(first, second):
-    if first.have_same_name(second):
-        return True
-    
-    return False
+class FilmManager:
+    def __init__(self, cache_path="cache/films.bin"):
+        self.films = []
+        self.cache_path = cache_path
 
-def merge_films(films):
-    i = 0
-    found_names = dict()
-    print(len(films))
-    while i < len(films):
-        film = films[i]
+    def start_film_updating_at_interval(self, interval):
+        if os.path.exists(self.cache_path):
+            with open(self.cache_path, "rb") as f:
+                self.films = pickle.load(f)
+                print(f"Loading cache with {len(self.films)} films")
 
-        found = False
-        for j in range(0, i):
-            other = films[j]
-            if same_film_heuristic(film, other):
-                found = True
-                other.merge(film)
-                films.remove(film)
-                break
+        thread = IntervalThread(interval, self.update_films)
+        thread.start()
 
-        if found:
-            continue
+    def update_films(self):
+        start = time.time()
 
-        i += 1
-    print(len(films))
+        print("Updating films")
 
-def start_film_updating_thread(interval):
-    global films
+        country = "Israel"
+        town = "Tel Aviv"
+        cinemas = dict()
 
-    if os.path.exists("cache/films.bin"):
-        with open("cache/films.bin", "rb") as f:
-            films = pickle.load(f)
+        for cinema in filmby.CINEMAS[country]:
+            if town in cinema.TOWNS:
+                cinemas[cinema.NAME] = cinema()
 
-    print(len(films))
+        threads = []
+        new_films = []
+        condition = threading.Condition()
+        for cinema in cinemas:
+            for i in range(0, 7):
+                if threading.active_count() > MAX_THREAD_COUNT:
+                    with condition:
+                        condition.wait()
+                threads.append(threading.Thread(target=self._get_films_by_date, args=(cinemas[cinema], date.today() + timedelta(i), town, new_films, condition,)))
+                threads[-1].start()
 
-    thread = IntervalThread(interval, update_films)
-    thread.start()
+        for thread in threads:
+            thread.join()
 
-TMP_DESC = """
-"חיים שלמים", שהוכתר כבר על ידי המבקרים כ"סרט הגדול הראשון של השנה", הוא דרמה יפהפייה, חכמה ונוגעת ללב, שהוקרנה בפסטיבל ברלין ורבים כבר חוזים שתיקח חלק משמעותי בעונת הפרסים הבאה ובטקס האוסקר. סרט הביכורים של סלין סונג הוא יצירה קולנועית מהפנטת ומדויקת, שנשארת עם הצופה הרבה אחרי היציאה מהאולם.
+        new_films = self._merge_films(new_films)
 
-נורה והא-סונג, שני חברי ילדות בעלי קשר ייחודי כפי שיש רק לילדים, נאלצים להיפרד כשמשפחתה של נורה עוזבת את סיאול ומהגרת לקנדה. שני עשורים לאחר מכן, הם נפגשים שוב בניו יורק. הפגישה המחודשת מעלה שאלות על גורל, אהבה, והבחירות שמעצבות את החיים שלנו.
-"""
+        threads = []
+        for film in new_films:
+            for cinema in film.links:
+                if len([x for x in cinemas[cinema].get_provided_film_details() if x in film.details.get_missing_details()]) == 0:
+                    continue
 
-def get_films_by_date(cinema, date, town, arr, condition):
-    result = cinema.get_films_by_date(date, town)
-    if result != None:
-        arr.extend(result)
-    with condition:
-        condition.notify_all()
+                if threading.active_count() > MAX_THREAD_COUNT:
+                    with condition:
+                        condition.wait()
+                threads.append(threading.Thread(target=self._get_film_details, args=(cinemas[cinema], film, condition,)))
+                threads[-1].start()
 
-def get_film_details(cinema, film, condition):
-    cinema.get_film_details(film)
+        for thread in threads:
+            thread.join()
 
-    with condition:
-        condition.notify_all()
+        self.films = new_films
 
-def update_films(interval=None):
-    global films
+        cache_path = Path(self.cache_path)
+        if not os.path.exists(cache_path.parent):
+            os.makedirs(cache_path.parent, exist_ok=True)
 
-    start = time.time()
+        with open(self.cache_path, "wb") as f:
+            pickle.dump(self.films, f)
 
-    print("Updating films")
+        print(f"Finished updating with {len(self.films)} films, took {time.time() - start}s")
 
-    country = "Israel"
-    town = "Tel Aviv"
-    cinemas = dict()
+    def _merge_films(self, films):
+        new_films = []
+        for film in films:
+            found = False
+            for new_film in new_films:
+                if new_film.is_identical(film):
+                    found = True
+                    new_film.merge(film)
+            if not found:
+                new_films.append(film)
+        return new_films
 
-    for cinema in filmby.CINEMAS[country]:
-        if town in cinema.TOWNS:
-            cinemas[cinema.NAME] = cinema()
+    def _get_films_by_date(self, cinema, date, town, arr, condition):
+        result = cinema.get_films_by_date(date, town)
+        if result != None:
+            arr.extend(result)
+        with condition:
+            condition.notify_all()
 
+    def _get_film_details(self, cinema, film, condition):
+        new_details = cinema.get_film_details(film)
+        film.details.merge(new_details)
 
-    threads = []
-    new_films = []
-    condition = threading.Condition()
-    for cinema in cinemas:
-        for i in range(0, 7):
-            if threading.active_count() > MAX_THREAD_COUNT:
-                with condition:
-                    condition.wait()
-            threads.append(threading.Thread(target=get_films_by_date, args=(cinemas[cinema], date.today() + timedelta(i), town, new_films, condition,)))
-            threads[-1].start()
+        with condition:
+            condition.notify_all()
 
-    for thread in threads:
-        thread.join()
-
-    merge_films(new_films)
-
-    threads = []
-    for film in new_films:
-        if "Lev" in film.links:
-            if threading.active_count() > MAX_THREAD_COUNT:
-                with condition:
-                    condition.wait()
-            threads.append(threading.Thread(target=get_film_details, args=(cinemas["Lev"], film, condition,)))
-            threads[-1].start()
-
-    for thread in threads:
-        thread.join()
-
-    films = new_films
-
-    if not os.path.exists("cache/"):
-        os.mkdir("cache")
-
-    with open("cache/films.bin", "wb") as f:
-        pickle.dump(films, f)
-
-    print(f"Finished updating with {len(films)} films, took {time.time() - start}s")
+film_manager = FilmManager()

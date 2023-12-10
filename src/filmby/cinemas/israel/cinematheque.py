@@ -53,25 +53,25 @@ class CinemathequeCinema(Cinema):
 
             paragraph = grid_box.find("div", {"class": "paragraph"})
             description = paragraph.p.text
-            films[-1].description = description
+            films[-1].details.description = description
 
             h4 = paragraph.find_all("h4")
             if len(h4) == 2:
                 director = h4[0].text.split(":")[1]
-                films[-1].director = director
+                films[-1].details.director = director
 
                 language = h4[1].text.split(":")[1]
-                films[-1].language = language
+                films[-1].details.language = language
 
             basic_details = basic_details.split(" / ")
             for detail in basic_details:
                 detail = detail.strip()
                 if detail.isnumeric():
-                    films[-1].year = int(detail)
+                    films[-1].details.year = int(detail)
                 elif "אורך" in detail:
-                    films[-1].length = int(detail.split(":")[1])
+                    films[-1].details.length = int(detail.split(":")[1])
                 else:
-                    films[-1].countries = detail
+                    films[-1].details.countries = detail
             
         self._merge_films(films)
 
@@ -79,3 +79,6 @@ class CinemathequeCinema(Cinema):
 
     def get_film_details(self, film):
         return None
+
+    def get_provided_film_details(self):
+        return []

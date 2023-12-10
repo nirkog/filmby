@@ -94,3 +94,9 @@ class CinemaCityCinema(Cinema):
         self._merge_films(films)
 
         return films
+
+    def get_film_details(self, film):
+        pass
+
+    def get_provided_film_details(self):
+        return []

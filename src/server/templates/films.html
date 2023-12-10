@@ -1,26 +1,29 @@
 <h1>סרטים</h1>
 {% for film in films %}
-	<div class="film">
+	<div class="film" data-film-index="{{ indices[loop.index - 1] }}">
 		<img src="{{ film.image_url }}" referrerpolicy="no-referrer"/>
 		<div class="film-text">
 			<h2 class="film-header">{{ film.name }}</h2>
-			{% if film.description != None %}
-				<p class="film-description">{{ film.description }}</p>
+			{% if film.details.description != None %}
+				<p class="film-description">{{ film.details.description }}</p>
 			{% endif %}
-			{% if film.director != None %}
-				<p class="film-director">{{ film.director }}</p>
+			{% if film.details.director != None %}
+				<p class="film-director">{{ film.details.director }}</p>
 			{% endif %}
-			{% if film.cast != None %}
-				<p class="film-cast">{{ film.cast }}</p>
+			{% if film.details.cast != None %}
+				<p class="film-cast">{{ film.details.cast }}</p>
 			{% endif %}
-			{% if film.length != None %}
-				<p class="film-length">{{ film.length }}</p>
+			{% if film.details.length != None %}
+				<p class="film-length">{{ film.details.length }}</p>
 			{% endif %}
-			{% if film.countries != None %}
-				<p class="film-countries">{{ film.countries }}</p>
+			{% if film.details.countries != None %}
+				<p class="film-countries">{{ film.details.countries }}</p>
 			{% endif %}
-			{% if film.language != None %}
-				<p class="film-language">{{ film.language }}</p>
+			{% if film.details.language != None %}
+				<p class="film-language">{{ film.details.language }}</p>
+			{% endif %}
+			{% if film.details.year != None %}
+				<p class="film-year">{{ film.details.year }}</p>
 			{% endif %}
 		</div>
 	</div>

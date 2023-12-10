@@ -1,14 +1,22 @@
-class Cinema:
+from abc import ABC, abstractmethod
+
+class Cinema(ABC):
     NAME = None
     TOWNS = None # TODO: Make this dynamic???
 
     def __init__(self):
         pass
 
+    @abstractmethod
     def get_films_by_date(self, date):
         pass
     
+    @abstractmethod
     def get_film_details(self, film):
+        pass
+    
+    @abstractmethod
+    def get_provided_film_details(self):
         pass
 
     def _merge_films(self, films):

@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html lang="he">
+	<head>
+		<meta charset="utf-8" />
+		<title>קולנועית</title>
+
+		<link rel="preconnect" href="https://fonts.googleapis.com">
+		<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+		<link href="https://fonts.googleapis.com/css2?family=Heebo:wght@100;200;300;400;500;600;700;800;900&display=swap" rel="stylesheet">
+
+		<link rel="stylesheet" href="{{ url_for("static", filename="css/common.css") }}">
+		<link rel="stylesheet" href="{{ url_for("static", filename="css/film.css") }}">
+
+		<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@tarekraafat/autocomplete.js@10.2.7/dist/css/autoComplete.min.css">
+	</head>
+
+	<body dir="rtl">
+		<div id="content">
+			<h1>{{ film.name }}</h1>
+			<img src="{{ film.image_url }}" referrerpolicy="no-referrer"/>
+			{% if film.description != None %}
+				<p class="film-description">{{ film.description }}</p>
+			{% endif %}
+			{% if film.director != None %}
+				<p class="film-director">{{ film.director }}</p>
+			{% endif %}
+			{% if film.cast != None %}
+				<p class="film-cast">{{ film.cast }}</p>
+			{% endif %}
+			{% if film.length != None %}
+				<p class="film-length">{{ film.length }}</p>
+			{% endif %}
+			{% if film.countries != None %}
+				<p class="film-countries">{{ film.countries }}</p>
+			{% endif %}
+			{% if film.language != None %}
+				<p class="film-language">{{ film.language }}</p>
+			{% endif %}
+			
+			{% for cinema_name in film.dates[town] %}
+				<div>
+					<h3>{{ cinema_name }}</h3>
+					{% for date in film.dates[town][cinema_name] %}
+						<p>{{ date }}</p>
+					{% endfor %}
+					<a href="{{ film.links[cinema_name] }}" target="_blank">לינק</a>
+				</div>
+			{% endfor %}
+		</div>
+
+		<script src="https://cdn.jsdelivr.net/npm/@tarekraafat/autocomplete.js@10.2.7/dist/autoComplete.min.js"></script>
+		<script src="{{ url_for("static", filename="javascript/film.js") }}"></script>
+	</body>
+</html>
