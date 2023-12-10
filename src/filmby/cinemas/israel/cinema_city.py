@@ -5,7 +5,7 @@ import json
 from bs4 import BeautifulSoup
 
 from ...cinema import Cinema
-from ...film import Film
+from ...film import Film, FilmDetails
 
 class CinemaCityCinema(Cinema):
     NAME = "Cinema City"
@@ -40,13 +40,14 @@ class CinemaCityCinema(Cinema):
 
     def __init__(self):
         super().__init__()
-        self.film_ids = self.get_movie_ids() # TODO: Move this to get_films_by_date
+        self.film_ids, self.film_details = self.get_movie_ids_and_details() # TODO: Move this to get_films_by_date
 
-    def get_movie_ids(self):
+    def get_movie_ids_and_details(self):
         response = requests.get(self.MOVIES_URL)
         html = BeautifulSoup(response.text, "html.parser")
         movies = html.find_all("div", {"class": "movie-thumb"})
         ids = dict()
+        details_dict = dict()
 
         for movie in movies:
             movie_id = movie["data-linkmobile"][7:]
@@ -55,7 +56,19 @@ class CinemaCityCinema(Cinema):
 
             ids[title] = movie_id
 
-        return ids
+            details = FilmDetails()
+            description_element = movie.find("p", {"class": "flip_content"})
+            details.description = description_element.text
+
+            flipcontent = movie.find("div", {"class": "flipcontent"})
+            for child in flipcontent.children:
+                if "אורך" in child.text:
+                    span = child.find("span")
+                    details.length = int(span.text)
+
+            details_dict[movie_id] = details
+        
+        return ids, details_dict
 
     def get_films_by_date(self, date, town):
         theater_id = self.THEATER_IDS[town]
@@ -77,10 +90,10 @@ class CinemaCityCinema(Cinema):
         json_films = json.loads(request.text)
         films = []
 
-        # TODO: Merge duplicates
         for film in json_films:
             name = film["Name"]
-            clean_name = name.replace("-מדובב", "") # ???
+            film_id = self.film_ids[film['Name']]
+            clean_name = name.replace("-מדובב", "") # TODO: Change???
             films.append(Film(clean_name))
              
             encoded_pic_name = urllib.parse.quote(film["Pic"])
@@ -89,7 +102,8 @@ class CinemaCityCinema(Cinema):
             date = datetime.datetime.strptime(film["Dates"]["Date"], self.FILM_DATE_FORMAT)
             films[-1].add_dates(self.NAME, town, [date])
 
-            films[-1].add_link(self.NAME, self.BASE_URL + f"movie/{self.film_ids[film['Name']]}")
+            films[-1].add_link(self.NAME, self.BASE_URL + f"movie/{film_id}")
+            films[-1].details = self.film_details[film_id]
 
         self._merge_films(films)
 
