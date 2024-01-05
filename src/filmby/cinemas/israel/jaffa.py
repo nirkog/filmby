@@ -10,6 +10,7 @@ from ...cinema import Cinema
 from ...film import Film
 
 class JaffaCinema(Cinema):
+    TRANSLATED_NAMES = {"heb": "קולנוע יפו"}
     NAME = "Jaffa"
     TOWNS = ["Tel Aviv"]
     BASE_URL = "https://www.jaffacinema.com/"

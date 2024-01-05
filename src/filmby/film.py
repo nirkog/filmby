@@ -1,6 +1,8 @@
 import requests
 import os
+import logging
 
+from loguru import logger
 from fuzzywuzzy import fuzz
 from fuzzywuzzy import process
 
@@ -49,6 +51,13 @@ class FilmDetails:
             else:
                 if details[var] == None:
                     setattr(self, var, other_details[var])
+
+    def get_countries_string(self):
+        to_replace = ["[", "]", "'"]
+        result = str(self.countries)
+        for c in to_replace:
+            result = result.replace(c, "")
+        return result
 
 class Film:
     def __init__(self, name):
@@ -131,7 +140,7 @@ class Film:
             result = True
 
         if not result and self._without_language_name_heuristic(self.name, other.name):
-            print(f"Merging with new heuristic {self.name}, {other.name}")
+            # logger.debug(f"Merging with new heuristic {self.name}, {other.name}")
             result = True
 
         if result and self.details.length and other.details.length:

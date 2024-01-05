@@ -72,6 +72,7 @@ LANGUAGE_TRANSLATIONS = {
 }
 
 class RavHenCinema(Cinema):
+    TRANSLATED_NAMES = {"heb": "רב חן"}
     NAME = "Rav Hen"
     TOWNS = ["Tel Aviv", "Givatayim", "Kiryat Ono"]
     THEATER_IDS = {

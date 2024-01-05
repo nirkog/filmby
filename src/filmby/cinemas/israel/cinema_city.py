@@ -8,6 +8,7 @@ from ...cinema import Cinema
 from ...film import Film, FilmDetails
 
 class CinemaCityCinema(Cinema):
+    TRANSLATED_NAMES = {"heb": "סינמה סיטי"}
     NAME = "Cinema City"
     TOWNS = ["Tel Aviv", "Rishon", "Jerusalem", "Kfar Saba", "Beer Sheva", "Ashdod", "Hedera", "Netanya"]
     THEATER_IDS = {

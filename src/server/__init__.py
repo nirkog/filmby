@@ -1,3 +1,6 @@
+import sys
+
+from loguru import logger
 from flask import Flask, g
 
 from server.index import bp as index_bp
@@ -11,6 +14,12 @@ UPDATE_INTERVAL_IN_SECONDS = UPDATE_INTERVAL_IN_MINUTES * 60
 def create_app(test_config=None):
     # app = Flask(__name__, template_folder=os.path.abspath("./templates/"), static_folder=os.path.abspath("./static/"))
     app = Flask(__name__)
+
+    logger.remove()
+    if app.debug:
+        logger.add(sys.stdout, format="<green>[{time:HH:mm:ss}]</green> <lvl>{message}</lvl>", level="DEBUG")
+    else:
+        logger.add(sys.stdout, format="<green>[{time:HH:mm:ss}]</green> <lvl>{message}</lvl>", level="INFO")
 
     app.register_blueprint(index_bp)
     app.register_blueprint(show_films_bp)

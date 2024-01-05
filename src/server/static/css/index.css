@@ -37,7 +37,9 @@
 }
 
 #films {
+	margin: auto;
 	margin-bottom: 1rem;
+	max-width: 1400px;
 }
 
 .film {
@@ -45,16 +47,17 @@
 	flex-flow: row nowrap;
 	text-align: right;
 	padding: 1.5rem;
-	background-color: #111;
-	color: white;
-	width: 50%;
+	background-color: #fafafa;
+	color: black;
+	width: 100%;
 	margin: 1rem auto;
 	cursor: pointer;
 	transition: 0.20s all;
+	height: 350px;
 }
 
 .film:hover {
-	background-color: #222;
+	background-color: #f7f7f7;
 	padding: 1.65rem;
 }
 
@@ -72,7 +75,14 @@
 	font-size: 1.2rem;
 }
 
+.film-details p {
+	display: inline;
+}
+
 .film img {
-	min-width: 25%;
-	max-height: 60%;
+	/*min-width: 25%;
+	max-height: 60%;*/
+	object-fit: contain;
+	min-width:40%;
+	max-height:100%;
 }

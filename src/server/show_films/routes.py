@@ -1,5 +1,6 @@
 import datetime
 from flask import render_template, request
+from loguru import logger
 
 from server.show_films import bp
 from server.films import film_manager
@@ -18,5 +19,5 @@ def filter_films(date, town):
 def show_films():
     date = datetime.datetime.strptime(request.args["date"], "%Y-%m-%d")
     indices, filtered_films = filter_films(date, request.args["town"])
-    print(f"Found {len(filtered_films)} relevant films")
+    logger.debug(f"Found {len(filtered_films)} relevant films")
     return render_template('films.html', films=filtered_films, indices=indices)

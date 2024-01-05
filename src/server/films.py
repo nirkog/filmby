@@ -5,6 +5,8 @@ import os
 from pathlib import Path
 from datetime import date, timedelta
 
+from loguru import logger
+
 import filmby
 
 MAX_THREAD_COUNT = 100
@@ -27,20 +29,33 @@ class FilmManager:
     def __init__(self, cache_path="cache/films.bin"):
         self.films = []
         self.cache_path = cache_path
+        self.started = False
+
+        if os.path.exists("/tmp/filmby_update_running"):
+            os.remove("/tmp/filmby_update_running")
 
     def start_film_updating_at_interval(self, interval):
+        if self.started:
+            return
+        self.started = True
+
         if os.path.exists(self.cache_path):
             with open(self.cache_path, "rb") as f:
                 self.films = pickle.load(f)
-                print(f"Loading cache with {len(self.films)} films")
+                logger.info(f"Loading cache with {len(self.films)} films")
 
         thread = IntervalThread(interval, self.update_films)
         thread.start()
 
     def update_films(self):
+        if os.path.exists("/tmp/filmby_update_running"):
+            logger.debug("Redundant thread is exiting")
+            exit()
+        with open("/tmp/filmby_update_running", "w") as f:
+            f.write("RUNNING")
         start = time.time()
 
-        print("Updating films")
+        logger.info("Starting film update procedure")
 
         country = "Israel"
         town = "Tel Aviv"
@@ -90,7 +105,10 @@ class FilmManager:
         with open(self.cache_path, "wb") as f:
             pickle.dump(self.films, f)
 
-        print(f"Finished updating with {len(self.films)} films, took {time.time() - start}s")
+        logger.info(f"Finished updating with {len(self.films)} films, took {time.time() - start:.1f}s")
+
+        if os.path.exists("/tmp/filmby_update_running"):
+            os.remove("/tmp/filmby_update_running")
 
     def _merge_films(self, films):
         new_films = []

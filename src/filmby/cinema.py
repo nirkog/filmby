@@ -1,6 +1,7 @@
 from abc import ABC, abstractmethod
 
 class Cinema(ABC):
+    TRANSLATED_NAMES = None
     NAME = None
     TOWNS = None # TODO: Make this dynamic???
 

@@ -25,9 +25,35 @@ async function get_films(e) {
 
 	films_elemnt.innerHTML = element_data;
 
-	films = document.querySelectorAll(".film");
+	let films = document.querySelectorAll(".film");
 	for (let i = 0; i < films.length; i++) {
 		films[i].addEventListener("click", on_film_click);
+
+		// Sort last |
+		let film_details = films[i].querySelector(".film-details");
+		if (film_details.children.length != 0) {
+			let last_detail = film_details.children[film_details.children.length - 1];
+			last_detail.innerHTML = last_detail.innerHTML.slice(0, -2);
+		}
+
+		// Shorten description
+		const CHARACTER_LIMIT = 500;
+		let film_description = films[i].querySelector(".film-description");
+		let film_description_text = film_description.innerHTML;
+		if (film_description_text.length > CHARACTER_LIMIT)	{ // TODO: Limit should probably be relative to screen size
+			console.log("SHORTENING");
+			console.log(films[i].querySelector("h2").innerHTML);
+			let new_description = film_description_text;
+			for (let j = CHARACTER_LIMIT; j < film_description_text.length; j++) {
+				if (film_description_text[j] == ' ') {
+					new_description = film_description_text.slice(0, j);
+					new_description += "...";
+					console.log("FOUND");
+					break;
+				}
+			}
+			film_description.innerHTML = new_description;
+		}
 	}
 }
 

@@ -16,36 +16,45 @@
 
 	<body dir="rtl">
 		<div id="content">
-			<h1>{{ film.name }}</h1>
-			<img src="{{ film.image_url }}" referrerpolicy="no-referrer"/>
-			{% if film.description != None %}
-				<p class="film-description">{{ film.description }}</p>
-			{% endif %}
-			{% if film.director != None %}
-				<p class="film-director">{{ film.director }}</p>
-			{% endif %}
-			{% if film.cast != None %}
-				<p class="film-cast">{{ film.cast }}</p>
-			{% endif %}
-			{% if film.length != None %}
-				<p class="film-length">{{ film.length }}</p>
-			{% endif %}
-			{% if film.countries != None %}
-				<p class="film-countries">{{ film.countries }}</p>
-			{% endif %}
-			{% if film.language != None %}
-				<p class="film-language">{{ film.language }}</p>
-			{% endif %}
-			
-			{% for cinema_name in film.dates[town] %}
-				<div>
-					<h3>{{ cinema_name }}</h3>
-					{% for date in film.dates[town][cinema_name] %}
-						<p>{{ date }}</p>
-					{% endfor %}
-					<a href="{{ film.links[cinema_name] }}" target="_blank">לינק</a>
+			<div id="film-details">
+				<div id="film-text">
+					<h1>{{ film.name }}</h1>
+					{% if film.details.description != None %}
+						<p class="film-description">{{ film.details.description }}</p>
+					{% endif %}
+					{% if film.details.director != None %}
+						<p class="film-director film-detail">במאי: {{ film.details.director }}</p>
+					{% endif %}
+					{% if film.details.cast != None %}
+						<p class="film-cast film-detail">שחקנים: {{ film.details.cast }}</p>
+					{% endif %}
+					{% if film.details.length != None %}
+						<p class="film-length film-detail">אורך: {{ film.details.length }} דקות</p>
+					{% endif %}
+					{% if film.details.countries != None %}
+						<p class="film-countries film-detail">ארצות: {{ film.details.get_countries_string() }}</p>
+					{% endif %}
+					{% if film.details.language != None %}
+						<p class="film-language film-detail">שפה: {{ film.details.language }}</p>
+					{% endif %}
 				</div>
-			{% endfor %}
+				<img src="{{ film.image_url }}" referrerpolicy="no-referrer"/>
+			</div>
+			
+			<div id="tickets">
+				<h1>הקרנות</h1>
+				{% for cinema_name in film.dates[town] %}
+					<div>
+						<h3>{{ name_translations[cinema_name] }}</h3>
+						{% for date in film.dates[town][cinema_name] %}
+							<div class="date-box">
+								<p>{{ date.day }}/{{ date.month }} - {{ date.hour }}:{{ "%02d" % date.minute }}</p>
+								<a href="{{ film.links[cinema_name] }}" target="_blank">הזמן</a>
+							</div>
+						{% endfor %}
+					</div>
+				{% endfor %}
+			</div>
 		</div>
 
 		<script src="https://cdn.jsdelivr.net/npm/@tarekraafat/autocomplete.js@10.2.7/dist/autoComplete.min.js"></script>
