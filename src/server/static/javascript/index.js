@@ -12,7 +12,7 @@ function on_film_click(e) {
 
 	if (film_element != undefined) {
 		const film_index = film_element.dataset.filmIndex;
-		window.location = `/film/${film_index}`;
+		window.open(`/film/${film_index}`, "_blank");
 	}
 }
 

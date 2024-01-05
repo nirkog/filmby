@@ -73,5 +73,6 @@
 }
 
 .film img {
-	width: 25%;
+	min-width: 25%;
+	max-height: 60%;
 }

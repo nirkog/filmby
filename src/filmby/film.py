@@ -10,6 +10,8 @@ CONTENT_TYPES_TO_FILE_ENGINGS = {
 
 FILM_LENGTH_VARIANCE = 4
 
+LANGUAGE_FILM_NAME_WORDS = ["עברית", "אנגלית", "עם", "-", ":", "מדובב", "כתוביות"]
+
 def same_date(first, second):
     return (first.year == second.year) and (first.month == second.month) and (first.day == second.day)
 
@@ -99,22 +101,37 @@ class Film:
             if not cinema in self.links:
                 self.links[cinema] = other.links[cinema]
 
+        # TODO: Is this good?
+        if len(other.name) < len(self.name):
+            self.name = other.name
+
+    def _without_language_name_heuristic(self, name1, name2):
+        for word in LANGUAGE_FILM_NAME_WORDS:
+            name1 = name1.replace(word, "")
+            name2 = name2.replace(word, "")
+
+        return fuzz.partial_ratio(name1, name2) > 90
+
     def is_identical(self, other):
         result = False
 
-        if self.name == other.name:
+        # TODO: Maybe needs improvement
+
+        if not result and self.name == other.name:
+            result = True
+        
+        if not result and self.name.replace("-", "") == other.name.replace("-", ""):
+            result = True
+        
+        if not result and self.name.replace("-", " ") == other.name.replace("-", " "):
+            result = True
+        
+        if not result and fuzz.partial_ratio(self.name, other.name) > 85:
+            # print("MERGING", self.name, other.name)
             result = True
 
-        # TODO: Maybe needs improvement
-        
-        if self.name.replace("-", "") == other.name.replace("-", ""):
-            result = True
-        
-        if self.name.replace("-", " ") == other.name.replace("-", " "):
-            result = True
-        
-        if fuzz.partial_ratio(self.name, other.name) > 85:
-            # print("MERGING", self.name, other.name)
+        if not result and self._without_language_name_heuristic(self.name, other.name):
+            print(f"Merging with new heuristic {self.name}, {other.name}")
             result = True
 
         if result and self.details.length and other.details.length:

@@ -97,7 +97,7 @@ class JaffaCinema(Cinema):
             films[-1].set_image_url(image)
             films[-1].add_dates(self.NAME, self.TOWNS[0], dates)
             films[-1].add_link(self.NAME, link)
-            films[-1].details.countreis = countries
+            films[-1].details.countries = countries
             films[-1].details.length = length
             films[-1].details.director = director
             films[-1].details.description = description
