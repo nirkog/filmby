@@ -9,7 +9,7 @@ body {
 }
 
 #main-header {
-	font-size: 5rem;
+	font-size: 8rem;
 	font-weight: 400;
 }
 
@@ -17,18 +17,18 @@ body {
 	width: 10%;
 	min-width: 200px;
 	margin-bottom: 0.4rem;
-	font-size: 1.25rem;
+	font-size: 2.00rem;
 	padding: 4px;
 }
 
 #town_input {
-	font-size: 1.25rem;
+	font-size: 2.00rem;
 	padding: 4px;
 }
 
 #search_button {
 	margin-top: 2rem;
-	font-size: 1.5rem;
+	font-size: 2.5rem;
 	padding: 0.5rem 2rem;
 	background-color: #11afed;
 	color: white;
@@ -74,13 +74,13 @@ body {
 }
 
 .film-header {
-	font-size: 2.5rem;
+	font-size: 3.0rem;
 	padding-top: 0;
 	margin-top: 0;
 }
 
 .film-description {
-	font-size: 1.2rem;
+	font-size: 2.0rem;
 }
 
 .film-details p {
