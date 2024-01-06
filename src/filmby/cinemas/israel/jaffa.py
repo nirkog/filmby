@@ -39,7 +39,7 @@ class JaffaCinema(Cinema):
         else:
             hour = minute = 0
 
-        result = datetime.datetime(datetime.datetime.today().year, month, day, hour, day)
+        result = datetime.datetime(datetime.datetime.today().year, month, day, hour, minute)
 
         return result
     
