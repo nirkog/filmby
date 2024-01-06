@@ -43,8 +43,7 @@ async function get_films(e) {
 			CHARACTER_LIMIT = 250;
 		}
 		if (screen.width < 500) {
-			CHARACTER_LIMIT = 100;
-		}
+			CHARACTER_LIMIT = 130;
 		}
 
 		let film_description = films[i].querySelector(".film-description");
