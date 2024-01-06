@@ -17,7 +17,7 @@
 
 	<body dir="rtl">
 		<div id="content">
-			<div id="film-details">
+			<div class="film-details">
 				<div id="film-text">
 					<h1>{{ film.name }}</h1>
 					{% if film.details.description != None %}
@@ -41,7 +41,7 @@
 				</div>
 				<img src="{{ film.image_url }}" referrerpolicy="no-referrer"/>
 			</div>
-			<div id="film-details" class="mobile">
+			<div class="film-details mobile">
 				<h1 id="film-header">{{ film.name }}</h1>
 				<img src="{{ film.image_url }}" referrerpolicy="no-referrer"/>
 				<div id="film-text">
