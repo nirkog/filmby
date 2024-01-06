@@ -2,3 +2,4 @@ flask
 loguru
 beautifulsoup4
 fuzzywuzzy
+parse
