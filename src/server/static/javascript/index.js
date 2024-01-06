@@ -31,9 +31,11 @@ async function get_films(e) {
 
 		// Sort last |
 		let film_details = films[i].querySelector(".film-details");
-		if (film_details.children.length != 0) {
-			let last_detail = film_details.children[film_details.children.length - 1];
-			last_detail.innerHTML = last_detail.innerHTML.slice(0, -2);
+		if (film_details != undefined) {
+			if (film_details.children.length != 0) {
+				let last_detail = film_details.children[film_details.children.length - 1];
+				last_detail.innerHTML = last_detail.innerHTML.slice(0, -2);
+			}
 		}
 
 		// Shorten description
@@ -43,7 +45,7 @@ async function get_films(e) {
 			CHARACTER_LIMIT = 250;
 		}
 		if (screen.width < 500) {
-			CHARACTER_LIMIT = 130;
+			CHARACTER_LIMIT = 180;
 		}
 
 		let film_description = films[i].querySelector(".film-description");
