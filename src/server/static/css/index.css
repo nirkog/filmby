@@ -9,19 +9,20 @@ body {
 }
 
 #main-header {
-	font-size: 5rem;
+	font-size: max(5rem, 400%);
 	font-weight: 400;
 }
 
-#content input {
-	width: 10%;
-	min-width: 200px;
-	margin-bottom: 0.4rem;
-	font-size: 1.25rem;
-	padding: 4px;
+#search-form {
+	width: 90%;
+	margin: auto;
 }
 
-#town_input {
+#search-form input {
+	width: 80%;
+	/* min-width: 200px; */
+	max-width: 250px;
+	margin-bottom: 0.4rem;
 	font-size: 1.25rem;
 	padding: 4px;
 }
@@ -94,3 +95,9 @@ body {
 	min-width:40%;
 	max-height:100%;
 }
+
+/*@media screen and (min-width: 600px) {
+  #main-header {
+	font-size: 
+  }
+}*/
