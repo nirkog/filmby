@@ -65,6 +65,10 @@ body {
 	height: 350px;
 }
 
+.film-mobile {
+	display: none;
+}
+
 .film:hover {
 	background-color: #f7f7f7;
 	padding: 1.65rem;
@@ -95,9 +99,3 @@ body {
 	min-width:40%;
 	max-height:100%;
 }
-
-/*@media screen and (min-width: 600px) {
-  #main-header {
-	font-size: 
-  }
-}*/
