@@ -1,5 +1,11 @@
+body {
+	margin: 0;
+}
+
 #content {
+	margin: auto;
 	text-align: center;
+	width: 85%;
 }
 
 #main-header {
@@ -9,6 +15,7 @@
 
 #content input {
 	width: 10%;
+	min-width: 200px;
 	margin-bottom: 0.4rem;
 	font-size: 1.25rem;
 	padding: 4px;
@@ -47,6 +54,7 @@
 	flex-flow: row nowrap;
 	text-align: right;
 	padding: 1.5rem;
+	padding-left: 0;
 	background-color: #fafafa;
 	color: black;
 	width: 100%;

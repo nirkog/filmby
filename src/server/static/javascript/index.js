@@ -37,18 +37,20 @@ async function get_films(e) {
 		}
 
 		// Shorten description
-		const CHARACTER_LIMIT = 500;
+		let CHARACTER_LIMIT = 500;
+		console.log(screen.width);
+		if (screen.width < 1300) {
+			CHARACTER_LIMIT = 250;
+		}
+
 		let film_description = films[i].querySelector(".film-description");
 		let film_description_text = film_description.innerHTML;
 		if (film_description_text.length > CHARACTER_LIMIT)	{ // TODO: Limit should probably be relative to screen size
-			console.log("SHORTENING");
-			console.log(films[i].querySelector("h2").innerHTML);
 			let new_description = film_description_text;
 			for (let j = CHARACTER_LIMIT; j < film_description_text.length; j++) {
 				if (film_description_text[j] == ' ') {
 					new_description = film_description_text.slice(0, j);
 					new_description += "...";
-					console.log("FOUND");
 					break;
 				}
 			}
