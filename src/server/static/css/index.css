@@ -100,7 +100,6 @@ body {
 	max-height:100%;
 }
 
-
 @media screen and (max-width: 600px) {
 	.film:not(.mobile) {
 		display: none;

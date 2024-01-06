@@ -65,3 +65,7 @@
 .date-box a:hover {
 	background-color: #7ef29d;
 }
+
+.mobile {
+	display: none !important;
+}

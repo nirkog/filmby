@@ -41,6 +41,30 @@
 				</div>
 				<img src="{{ film.image_url }}" referrerpolicy="no-referrer"/>
 			</div>
+			<div id="film-details" class="mobile">
+				<h1 id="film-header">{{ film.name }}</h1>
+				<img src="{{ film.image_url }}" referrerpolicy="no-referrer"/>
+				<div id="film-text">
+					{% if film.details.description != None %}
+						<p class="film-description">{{ film.details.description }}</p>
+					{% endif %}
+					{% if film.details.director != None %}
+						<p class="film-director film-detail">במאי: {{ film.details.director }}</p>
+					{% endif %}
+					{% if film.details.cast != None %}
+						<p class="film-cast film-detail">שחקנים: {{ film.details.cast }}</p>
+					{% endif %}
+					{% if film.details.length != None %}
+						<p class="film-length film-detail">אורך: {{ film.details.length }} דקות</p>
+					{% endif %}
+					{% if film.details.countries != None %}
+						<p class="film-countries film-detail">ארצות: {{ film.details.get_countries_string() }}</p>
+					{% endif %}
+					{% if film.details.language != None %}
+						<p class="film-language film-detail">שפה: {{ film.details.language }}</p>
+					{% endif %}
+				</div>
+			</div>
 			
 			<div id="tickets">
 				<h1>הקרנות</h1>
