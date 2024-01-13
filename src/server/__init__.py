@@ -9,7 +9,8 @@ from server.film_page import bp as film_page_bp
 from server.films import FilmManager, film_manager
 
 UPDATE_INTERVAL_IN_MINUTES = 60
-UPDATE_INTERVAL_IN_SECONDS = UPDATE_INTERVAL_IN_MINUTES * 60
+UPDATE_INTERVAL_IN_HOURS = 4
+UPDATE_INTERVAL_IN_SECONDS = UPDATE_INTERVAL_IN_HOURS * UPDATE_INTERVAL_IN_MINUTES * 60
 
 def create_app(test_config=None):
     # app = Flask(__name__, template_folder=os.path.abspath("./templates/"), static_folder=os.path.abspath("./static/"))
