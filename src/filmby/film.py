@@ -97,6 +97,7 @@ class Film:
             self.dates[town][cinema_name].extend(dates)
 
         self.dates[town][cinema_name] = list(set(self.dates[town][cinema_name]))
+        self.dates[town][cinema_name].sort()
 
     def merge(self, other):
         # TODO: Merge based on image url
