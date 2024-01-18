@@ -70,7 +70,7 @@ body {
 
 .film:hover {
 	background-color: #f7f7f7;
-	padding: 1.65rem;
+	/*padding: 1.65rem;*/
 }
 
 .film .film-text {
@@ -108,10 +108,12 @@ body {
 		display: block;
 		height: 450px;
 		text-overflow: ellipsis;
+		text-align: center;
 	}
 	.film img {
-		width: 95%;
+		width: 90%;
 		max-height: 50%;
+		padding: 0;
 	}
 	.mobile {
 		display: block;
