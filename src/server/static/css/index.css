@@ -54,8 +54,7 @@ body {
 	display: flex;
 	flex-flow: row nowrap;
 	text-align: right;
-	padding: 1.5rem;
-	padding-left: 0;
+	padding: 1.5rem 0;
 	background-color: #fafafa;
 	color: black;
 	width: 100%;
@@ -98,6 +97,7 @@ body {
 	object-fit: contain;
 	min-width:40%;
 	max-height:100%;
+	padding-right: 1.5rem;
 }
 
 @media screen and (max-width: 600px) {
