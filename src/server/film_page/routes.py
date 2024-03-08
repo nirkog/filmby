@@ -21,5 +21,8 @@ def film_page(film_index):
         film = film_manager.films[film_index]
     except Exception as e:
         return redirect("/static/html/404.html")
-
-    return render_template('film.html', film=film, town="Tel Aviv", name_translations=FILM_NAME_TRANSLATIONS)
+    
+    if bool(request.args.get("raw")):
+        return film.json()
+    else:
+        return render_template('film.html', film=film, town="Tel Aviv", name_translations=FILM_NAME_TRANSLATIONS)

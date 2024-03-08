@@ -1,8 +1,7 @@
-function on_film_click(e) {
+async function on_film_click(e) {
 	let current_parent = e.target.parentElement;
 	let film_element = undefined;
 	while (current_parent != undefined) {
-		console.log(current_parent);
 		if (current_parent.classList.contains("film")) {
 			film_element = current_parent;
 			break;
@@ -10,10 +9,28 @@ function on_film_click(e) {
 		current_parent = current_parent.parentElement;
 	}
 
-	if (film_element != undefined) {
-		const film_index = film_element.dataset.filmIndex;
-		window.open(`/film/${film_index}`, "_blank");
-	}
+	//if (film_element != undefined) {
+	//	const film_index = film_element.dataset.filmIndex;
+	//	window.open(`/film/${film_index}`, "_blank");
+	//}
+	
+	//const film_index = film_element.dataset.filmIndex;
+	//const film_data = await fetch(`/film/${film_index}?raw=true`);
+	//const film_json = await film_data.json();
+	//console.log(film_json);
+	//for (const cinema in film_json["dates"]["Tel Aviv"]) {
+	//	let dates = film_json["dates"]["Tel Aviv"][cinema];
+	//	for (let i = 0; i < dates.length; i++) {
+	//		film_json["dates"]["Tel Aviv"][cinema][i] = new Date(Date.parse(dates[i]));
+	//		// console.log(film_json["dates"]["Tel Aviv"][cinema][i]);
+	//		// console.log(film_json["dates"]["Tel Aviv"][cinema][i].getDay());
+	//	}
+	//}
+	
+	//film_element.querySelector(".film-screenings").style.display = "block";
+	film_element.querySelector(".film-screenings").style.opacity = "1";
+	film_element.querySelector(".film-screenings").style.height = "auto";
+	film_element.style.max_height = "600px";
 }
 
 async function get_films(e) {
@@ -40,7 +57,7 @@ async function get_films(e) {
 
 		// Shorten description
 		let CHARACTER_LIMIT = 500;
-		console.log(screen.width);
+		//console.log(screen.width);
 		if (screen.width < 1300) {
 			CHARACTER_LIMIT = 250;
 		}

@@ -1,6 +1,8 @@
 import requests
 import os
 import logging
+import json
+import copy
 
 from loguru import logger
 from fuzzywuzzy import fuzz
@@ -66,6 +68,15 @@ class Film:
         self.dates = dict()
         self.links = dict()
         self.details = FilmDetails()
+
+    def json(self):
+        self_dict = copy.deepcopy(self.__dict__)
+        for town in self_dict["dates"]:
+            for cinema in self_dict["dates"][town]:
+                for i in range(len(self_dict["dates"][town][cinema])):
+                    self_dict["dates"][town][cinema][i] = str(self_dict["dates"][town][cinema][i])
+        self_dict["details"] = self_dict["details"].__dict__.copy()
+        return json.dumps(self_dict)
 
     def add_link(self, cinema_name, link):
         self.links[cinema_name] = link
@@ -163,3 +174,4 @@ class Film:
                         return True
 
         return False
+    
