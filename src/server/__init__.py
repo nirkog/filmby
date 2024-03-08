@@ -12,15 +12,20 @@ UPDATE_INTERVAL_IN_MINUTES = 60
 UPDATE_INTERVAL_IN_HOURS = 4
 UPDATE_INTERVAL_IN_SECONDS = UPDATE_INTERVAL_IN_HOURS * UPDATE_INTERVAL_IN_MINUTES * 60
 
+CONSOLE_LOG_FORMAT = "<green>[{time:HH:mm:ss}]</green> | <lvl>{level}</lvl> | {message}"
+FILE_LOG_FORMAT = "<green>[{time:HH:mm:ss}]</green> | <lvl>{level}</lvl> | {file} | {function} | {message}"
+
 def create_app(test_config=None):
     # app = Flask(__name__, template_folder=os.path.abspath("./templates/"), static_folder=os.path.abspath("./static/"))
     app = Flask(__name__)
 
     logger.remove()
     if app.debug:
-        logger.add(sys.stdout, format="<green>[{time:HH:mm:ss}]</green> <lvl>{message}</lvl>", level="DEBUG")
+        logger.add(sys.stdout, format=CONSOLE_LOG_FORMAT, level="DEBUG")
+        logger.add("filmby.log", format=FILE_LOG_FORMAT, level="DEBUG")
     else:
-        logger.add(sys.stdout, format="<green>[{time:HH:mm:ss}]</green> <lvl>{message}</lvl>", level="INFO")
+        logger.add(sys.stdout, format=CONSOLE_LOG_FORMAT, level="INFO")
+        logger.add("filmby.log", format=FILE_LOG_FORMAT, level="INFO")
 
     app.register_blueprint(index_bp)
     app.register_blueprint(show_films_bp)

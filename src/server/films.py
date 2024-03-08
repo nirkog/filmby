@@ -63,7 +63,10 @@ class FilmManager:
 
         for cinema in filmby.CINEMAS[country]:
             if town in cinema.TOWNS:
-                cinemas[cinema.NAME] = cinema()
+                try:
+                    cinemas[cinema.NAME] = cinema()
+                except Exception as e:
+                    logger.error(f"Could not initialize {cinema.NAME} cinema, error: {str(e)}")
 
         threads = []
         new_films = []

@@ -13,6 +13,7 @@
 
 		<meta charset="utf-8" />
 		<meta name="viewport" content="width=device-width,initial-scale=1.0">
+		<meta name="description" content="קולנועית - אתר המאגד סרטים מכל בתי הקולנוע בעיר!">
 		<title>קולנועית</title>
 
 		<link rel="preconnect" href="https://fonts.googleapis.com">
@@ -75,7 +76,7 @@
 					{% endif %}
 				</div>
 			</div>
-			
+
 			<div id="tickets">
 				<h1>הקרנות</h1>
 				{% for cinema_name in film.dates[town] %}
@@ -83,7 +84,7 @@
 						<h3>{{ name_translations[cinema_name] }}</h3>
 						{% for date in film.dates[town][cinema_name] %}
 							<div class="date-box">
-								<p>{{ date.day }}/{{ date.month }} - {{ date.hour }}:{{ "%02d" % date.minute }}</p>
+								<p>{{ get_day_name(date) }} - {{ date.day }}/{{ date.month }} - {{ date.hour }}:{{ "%02d" % date.minute }}</p>
 								<a href="{{ film.links[cinema_name] }}" target="_blank">הזמן</a>
 							</div>
 						{% endfor %}

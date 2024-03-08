@@ -4,6 +4,7 @@ import datetime
 import urllib.parse
 import json
 import re
+from loguru import logger
 from bs4 import BeautifulSoup
 
 from ...cinema import Cinema
@@ -62,47 +63,50 @@ class JaffaCinema(Cinema):
 
         films = []
         for screening in screenings.children:
-            name = screening.div.div.div.h2.text
-            image = screening.div.div.img["src"]
-            link = self.BASE_URL
-            
-            dates_select = screening.find("select")
-            if dates_select != None:
-                date_options = dates_select.find("option")
-                date_options = [option.text for option in date_options]
-                dates = [self.get_date_from_option(option) for option in date_options]
-                dates = [x for x in dates if x != None]
-            else:
-                date_text = screening.find("div", {"class": "date-btn"}).p.text
-                dates = [self.get_date_from_option(date_text)]
-
-            in_parent = screening.find("div", {"class": "in-parent"}) 
-            paragraphs = in_parent.find_all("p")
             try:
-                countries, year = paragraphs[0].text.split(" / ")
-            except Exception:
-                continue
-            countries = countries.split(", ")
-            year = int(year)
+                name = screening.div.div.div.h2.text
+                image = screening.div.div.img["src"]
+                link = self.BASE_URL
+                
+                dates_select = screening.find("select")
+                if dates_select != None:
+                    date_options = dates_select.find("option")
+                    date_options = [option.text for option in date_options]
+                    dates = [self.get_date_from_option(option) for option in date_options]
+                    dates = [x for x in dates if x != None]
+                else:
+                    date_text = screening.find("div", {"class": "date-btn"}).p.text
+                    dates = [self.get_date_from_option(date_text)]
 
-            if len(paragraphs) > 1:
-                description = paragraphs[1].text
-            else:
-                description = in_parent.find("span").text
+                in_parent = screening.find("div", {"class": "in-parent"}) 
+                paragraphs = in_parent.find_all("p")
+                try:
+                    countries, year = paragraphs[0].text.split(" / ")
+                except Exception:
+                    continue
+                countries = countries.split(", ")
+                year = int(year)
 
-            info_title = screening.find("div", {"class": "info-title"})
-            length, director = info_title.p.text.split(" | ")
-            length = self.parse_length(length)
-            
-            films.append(Film(name))
-            films[-1].set_image_url(image)
-            films[-1].add_dates(self.NAME, self.TOWNS[0], dates)
-            films[-1].add_link(self.NAME, link)
-            films[-1].details.countries = countries
-            films[-1].details.length = length
-            films[-1].details.director = director
-            films[-1].details.description = description
-            films[-1].details.year = year
+                if len(paragraphs) > 1:
+                    description = paragraphs[1].text
+                else:
+                    description = in_parent.find("span").text
+
+                info_title = screening.find("div", {"class": "info-title"})
+                length, director = info_title.p.text.split(" | ")
+                length = self.parse_length(length)
+                
+                films.append(Film(name))
+                films[-1].set_image_url(image)
+                films[-1].add_dates(self.NAME, self.TOWNS[0], dates)
+                films[-1].add_link(self.NAME, link)
+                films[-1].details.countries = countries
+                films[-1].details.length = length
+                films[-1].details.director = director
+                films[-1].details.description = description
+                films[-1].details.year = year
+            except Exception as e:
+                logger.error(f"Could not parse screening, error: {str(e)}")
 
         return films
 
