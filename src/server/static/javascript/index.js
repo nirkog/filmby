@@ -12,7 +12,8 @@ function on_film_click(e) {
 
 	if (film_element != undefined) {
 		const film_index = film_element.dataset.filmIndex;
-		window.open(`/film/${film_index}`, "_blank");
+		//window.open(`/film/${film_index}`, "_blank");
+		window.open(`/film/${film_index}`, "_self");
 	}
 }
 
@@ -40,7 +41,7 @@ async function get_films(e) {
 
 		// Shorten description
 		let CHARACTER_LIMIT = 500;
-		console.log(screen.width);
+		//console.log(screen.width);
 		if (screen.width < 1300) {
 			CHARACTER_LIMIT = 250;
 		}
@@ -62,7 +63,33 @@ async function get_films(e) {
 			film_description.innerHTML = new_description;
 		}
 	}
+
+	let state = {};
+	state.films_html = films_elemnt.innerHTML;
+	state.date = date_element.value;
+
+	localStorage.setItem("state", JSON.stringify(state));
+}
+
+function load_state() {
+	let state = localStorage.getItem("state");
+	
+	if (null == state) {
+		return;
+	}
+
+	state = JSON.parse(state);
+
+	const films_elemnt = document.querySelector("#films");
+	films_elemnt.innerHTML = state.films_html;
+
+	let films = document.querySelectorAll(".film");
+	for (let i = 0; i < films.length; i++) {
+		films[i].addEventListener("click", on_film_click);
+	}
 }
 
 const search_button = document.querySelector("#search_button");
 search_button.addEventListener("click", get_films);
+
+window.addEventListener("load", load_state);

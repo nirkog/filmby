@@ -11,6 +11,8 @@ import filmby
 
 MAX_THREAD_COUNT = 100
 
+SPAN_IN_DAYS = 14
+
 class IntervalThread(threading.Thread):
     def __init__(self, interval, func, args=(), kwargs=dict()):
         super(IntervalThread, self).__init__()
@@ -72,7 +74,7 @@ class FilmManager:
         new_films = []
         condition = threading.Condition()
         for cinema in cinemas:
-            for i in range(0, 7):
+            for i in range(SPAN_IN_DAYS):
                 if threading.active_count() > MAX_THREAD_COUNT:
                     with condition:
                         condition.wait()

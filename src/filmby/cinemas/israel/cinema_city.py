@@ -3,6 +3,7 @@ import datetime
 import urllib.parse
 import json
 from bs4 import BeautifulSoup
+from loguru import logger
 
 from ...cinema import Cinema
 from ...film import Film, FilmDetails
@@ -51,23 +52,26 @@ class CinemaCityCinema(Cinema):
         details_dict = dict()
 
         for movie in movies:
-            movie_id = movie["data-linkmobile"][7:]
-            children = movie.find(recursive=True)
-            title = children.find("h4", {"class": "title"}).text
+            try:
+                movie_id = movie["data-linkmobile"][7:]
+                children = movie.find(recursive=True)
+                title = children.find("h4", {"class": "title"}).text
 
-            ids[title] = movie_id
+                ids[title] = movie_id
 
-            details = FilmDetails()
-            description_element = movie.find("p", {"class": "flip_content"})
-            details.description = description_element.text
+                details = FilmDetails()
+                description_element = movie.find("p", {"class": "flip_content"})
+                details.description = description_element.text
 
-            flipcontent = movie.find("div", {"class": "flipcontent"})
-            for child in flipcontent.children:
-                if "אורך" in child.text:
-                    span = child.find("span")
-                    details.length = int(span.text)
+                flipcontent = movie.find("div", {"class": "flipcontent"})
+                for child in flipcontent.children:
+                    if "אורך" in child.text:
+                        span = child.find("span")
+                        details.length = int(span.text)
 
-            details_dict[movie_id] = details
+                details_dict[movie_id] = details
+            except Exception as e:
+                logger.error(f"Failed to parse film, error: {str(e)}")
         
         return ids, details_dict
 
@@ -92,19 +96,22 @@ class CinemaCityCinema(Cinema):
         films = []
 
         for film in json_films:
-            name = film["Name"]
-            film_id = self.film_ids[film['Name']]
-            clean_name = name.replace("-מדובב", "") # TODO: Change???
-            films.append(Film(clean_name))
-             
-            encoded_pic_name = urllib.parse.quote(film["Pic"])
-            films[-1].set_image_url(self.IMAGE_URL.format(encoded_pic_name, 300, 300))
+            try:
+                name = film["Name"]
+                film_id = self.film_ids[film['Name']]
+                clean_name = name.replace("-מדובב", "") # TODO: Change???
+                films.append(Film(clean_name))
+                 
+                encoded_pic_name = urllib.parse.quote(film["Pic"])
+                films[-1].set_image_url(self.IMAGE_URL.format(encoded_pic_name, 300, 300))
 
-            date = datetime.datetime.strptime(film["Dates"]["Date"], self.FILM_DATE_FORMAT)
-            films[-1].add_dates(self.NAME, town, [date])
+                date = datetime.datetime.strptime(film["Dates"]["Date"], self.FILM_DATE_FORMAT)
+                films[-1].add_dates(self.NAME, town, [date])
 
-            films[-1].add_link(self.NAME, self.BASE_URL + f"movie/{film_id}")
-            films[-1].details = self.film_details[film_id]
+                films[-1].add_link(self.NAME, self.BASE_URL + f"movie/{film_id}")
+                films[-1].details = self.film_details[film_id]
+            except Exception as e:
+                logger.error(f"Failed to add film, error: {str(e)}")
 
         self._merge_films(films)
 
