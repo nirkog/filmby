@@ -113,6 +113,7 @@ class JaffaCinema(Cinema):
     def get_films_by_date(self, date, town):
         if time.time() - self.last_update > self.UPDATE_INTERVAL:
             self.films = self.get_films()
+            self.last_update = time.time()
 
         films = []
         for film in self.films:

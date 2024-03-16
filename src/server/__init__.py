@@ -8,9 +8,8 @@ from server.show_films import bp as show_films_bp
 from server.film_page import bp as film_page_bp
 from server.films import FilmManager, film_manager
 
-UPDATE_INTERVAL_IN_MINUTES = 60
 UPDATE_INTERVAL_IN_HOURS = 4
-UPDATE_INTERVAL_IN_SECONDS = UPDATE_INTERVAL_IN_HOURS * UPDATE_INTERVAL_IN_MINUTES * 60
+UPDATE_INTERVAL_IN_SECONDS = UPDATE_INTERVAL_IN_HOURS * 60 * 60
 
 CONSOLE_LOG_FORMAT = "<green>[{time:HH:mm:ss}]</green> | <lvl>{level}</lvl> | {message}"
 FILE_LOG_FORMAT = "<green>[{time:HH:mm:ss}]</green> | <lvl>{level}</lvl> | {file} | {function} | {message}"
