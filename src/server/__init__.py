@@ -12,7 +12,7 @@ UPDATE_INTERVAL_IN_HOURS = 4
 UPDATE_INTERVAL_IN_SECONDS = UPDATE_INTERVAL_IN_HOURS * 60 * 60
 
 CONSOLE_LOG_FORMAT = "<green>[{time:HH:mm:ss}]</green> | <lvl>{level}</lvl> | {message}"
-FILE_LOG_FORMAT = "<green>[{time:HH:mm:ss}]</green> | <lvl>{level}</lvl> | {file} | {function} | {message}"
+FILE_LOG_FORMAT = "<green>[{time:DD-MM-YY HH:mm:ss}]</green> | <lvl>{level}</lvl> | {file} | {function} | {message}"
 
 def create_app(test_config=None):
     # app = Flask(__name__, template_folder=os.path.abspath("./templates/"), static_folder=os.path.abspath("./static/"))
