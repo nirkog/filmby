@@ -67,6 +67,7 @@ async function get_films(e) {
 	let state = {};
 	state.films_html = films_elemnt.innerHTML;
 	state.date = date_element.value;
+	state.time = new Date();
 
 	localStorage.setItem("state", JSON.stringify(state));
 }
@@ -80,6 +81,16 @@ function load_state() {
 
 	state = JSON.parse(state);
 
+	const now = new Date();
+	const max_delta = 1 * 60 * 60 * 1000;
+	const state_time = Date.parse(state.time);
+	if (now - state_time > max_delta) {
+		console.log("State is old");
+		return;
+	} else {
+		console.log("Delta is ", now - state_time);
+	}
+
 	const films_elemnt = document.querySelector("#films");
 	films_elemnt.innerHTML = state.films_html;
 
@@ -87,6 +98,9 @@ function load_state() {
 	for (let i = 0; i < films.length; i++) {
 		films[i].addEventListener("click", on_film_click);
 	}
+
+	const date_element = document.querySelector("#date_input");
+	date_element.value = state.date;
 }
 
 const search_button = document.querySelector("#search_button");
