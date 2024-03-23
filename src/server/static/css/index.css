@@ -29,6 +29,11 @@ body {
 	margin: auto;
 }
 
+#date-search-form label {
+	font-size: 1.1rem;
+	padding-left: 10px;
+}
+
 #date-search-form input {
 	width: 80%;
 	/* min-width: 200px; */
