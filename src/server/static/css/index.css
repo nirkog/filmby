@@ -201,27 +201,36 @@ body {
 	.film:not(.mobile) {
 		display: none;
 	}
+
 	.film {
 		display: block;
 		height: 450px;
 		text-overflow: ellipsis;
 		text-align: center;
 	}
+
 	.film img {
 		width: 90%;
 		max-height: 50%;
 		padding: 0;
 	}
+
 	.mobile {
 		display: block;
 	}
+
 	.film-header {
 		font-size: 1.5rem;
 	}
+
 	.film-description {
 		font-size: 1.2rem;
 		text-overflow: ellipsis;
 		overflow: hidden;
 		max-height: 130px;
+	}
+
+	#view_menu {
+		width: 100%;
 	}
 }

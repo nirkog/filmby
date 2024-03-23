@@ -111,10 +111,6 @@ async function load_films() {
 }
 
 async function on_load() {
-	// @TODO: Remove this
-	const search_input = document.querySelector("#film_search_input");
-	search_input.focus(); 
-
 	load_state();
 	await load_films();
 }

@@ -32,11 +32,11 @@
 			</div>
 
 			<div id="view_menu">
-				<div data-view-id="by_date_view">לפי תאריך</div>
-				<div data-view-id="by_film_view" class="selected">לפי סרט</div>
+				<div data-view-id="by_date_view" class="selected">לפי תאריך</div>
+				<div data-view-id="by_film_view">לפי סרט</div>
 			</div>
 
-			<div id="by_date_view" class="view">
+			<div id="by_date_view" class="view selected">
 				<div id="date-search-form">
 					<!--<input type="text" id="town_input" placeholder="עיר" value="Tel Aviv" disabled /> <br>-->
 					<input type="date" id="date_input" min="{{ min_date }}" max="{{ max_date }}" value="{{ min_date }}"/> <br>
@@ -46,7 +46,7 @@
 				<div id="films"></div>
 			</div>
 
-			<div id="by_film_view" class="view selected">
+			<div id="by_film_view" class="view">
 				<div id="film-search-form">
 					<input type="text" id="film_search_input" placeholder="חפש סרט"/>
 					<div id="film_autocomplete_container"></div>
