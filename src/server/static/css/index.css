@@ -11,14 +11,25 @@ body {
 #main-header {
 	font-size: max(5rem, 400%);
 	font-weight: 400;
+	margin-bottom: 0;
 }
 
-#search-form {
+#second-header {
+	font-size: 1.7rem;
+	font-weight: 200;
+	margin-top: 0;
+}
+
+#header {
+	margin-bottom: 4rem;
+}
+
+#date-search-form {
 	width: 90%;
 	margin: auto;
 }
 
-#search-form input {
+#date-search-form input {
 	width: 80%;
 	/* min-width: 200px; */
 	max-width: 250px;
@@ -28,7 +39,7 @@ body {
 }
 
 #search_button {
-	margin-top: 2rem;
+	margin-top: 1rem;
 	font-size: 1.5rem;
 	padding: 0.5rem 2rem;
 	background-color: #11afed;
@@ -98,6 +109,92 @@ body {
 	min-width:40%;
 	max-height:100%;
 	padding-right: 1.5rem;
+}
+
+#view_menu {
+	display: flex;
+	justify-content: cneter;
+	margin: auto;
+	width: 30%;
+	margin-bottom: 3rem;
+}
+
+#view_menu div {
+	flex-basis: 100%;
+	text-align: center;
+	padding: 1rem 0;
+	border: 1px solid black;
+	border-top: 0;
+	border-right: 0;
+	cursor: pointer;
+	font-weight: 300;
+}
+
+#view_menu div:not(.selected):hover {
+	font-weight: 400;
+}
+
+#view_menu div:last-child {
+	border-left: 0;
+}
+
+#view_menu .selected {
+	font-weight: 500;
+}
+
+.view.selected {
+	display: block;
+}
+
+.view:not(.selected) {
+	display: none;
+}
+
+#film-search-form {
+	width: 75%;
+	max-width: 300px;
+	margin: auto;
+}
+
+#film_search_input {
+	font-size: 1.5rem;
+	border-top: 0;
+	border-left: 0;
+	border-right: 0;
+	outline: none;
+	border-bottom: 1px black solid;
+	background-color: var(--background-color);
+	padding-right: 10px;
+	padding-bottom: 5px;
+	width: 100%;
+}
+
+#film_search_input:focus {
+	outline: none;
+	border-bottom: 2px black solid;
+}
+
+#film_autocomplete_container {
+	width: 100%;
+}
+
+#film_autocomplete_container div {
+	width: 100%;
+	font-size: 1.3rem;
+	padding-right: 10px;
+	padding-bottom: 5px;
+	background-color: white;
+	text-align: right;
+	border-bottom: 1px #aaa solid;
+	cursor: default;
+}
+
+#film_autocomplete_container div:hover {
+	background-color: #f5f5f5;
+}
+
+#film_autocomplete_container div.selected {
+	background-color: #f0f0f0;
 }
 
 @media screen and (max-width: 600px) {

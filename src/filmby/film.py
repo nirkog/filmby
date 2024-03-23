@@ -1,6 +1,7 @@
 import requests
 import os
 import logging
+import copy
 
 from loguru import logger
 from fuzzywuzzy import fuzz
@@ -66,6 +67,16 @@ class Film:
         self.dates = dict()
         self.links = dict()
         self.details = FilmDetails()
+
+    def json_serializable(self):
+        result = copy.deepcopy(self.__dict__)
+        result["details"] = copy.deepcopy(self.details.__dict__)
+
+        for town in result["dates"]:
+            for cinema in result["dates"][town]:
+                result["dates"][town][cinema] = [str(x) for x in result["dates"][town][cinema]]
+
+        return result
 
     def add_link(self, cinema_name, link):
         self.links[cinema_name] = link

@@ -1,5 +1,6 @@
 body {
-	background-color: #F6F5F2;
+	--background-color: #F6F5F2;
+	background-color: var(--background-color);
 }
 
 * {

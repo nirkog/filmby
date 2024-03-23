@@ -22,24 +22,39 @@
 
 		<link rel="stylesheet" href="{{ url_for("static", filename="css/common.css") }}">
 		<link rel="stylesheet" href="{{ url_for("static", filename="css/index.css") }}">
-
-		<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@tarekraafat/autocomplete.js@10.2.7/dist/css/autoComplete.min.css">
 	</head>
 
 	<body dir="rtl">
 		<div id="content">
-			<h1 id="main-header">קולנועית</h1>
-			<div id="search-form">
-				<!--<input type="text" id="town_input" placeholder="עיר" /> <br>-->
-				<input type="text" id="town_input" placeholder="עיר" value="Tel Aviv" disabled /> <br>
-				<input type="date" id="date_input" min="{{ min_date }}" max="{{ max_date }}" value="{{ min_date }}"/> <br>
-				<button id="search_button">מצא סרטים</button>
+			<div id="header">
+				<h1 id="main-header">קולנועית</h1>
+				<h2 id="second-header">כל הסרטים מכל בתי הקולנוע בתל אביב!</h2>
 			</div>
 
-			<div id="films"></div>
+			<div id="view_menu">
+				<div data-view-id="by_date_view">לפי תאריך</div>
+				<div data-view-id="by_film_view" class="selected">לפי סרט</div>
+			</div>
+
+			<div id="by_date_view" class="view">
+				<div id="date-search-form">
+					<!--<input type="text" id="town_input" placeholder="עיר" value="Tel Aviv" disabled /> <br>-->
+					<input type="date" id="date_input" min="{{ min_date }}" max="{{ max_date }}" value="{{ min_date }}"/> <br>
+					<button id="search_button">מצא סרטים</button>
+				</div>
+
+				<div id="films"></div>
+			</div>
+
+			<div id="by_film_view" class="view selected">
+				<div id="film-search-form">
+					<input type="text" id="film_search_input" placeholder="חפש סרט"/>
+					<div id="film_autocomplete_container"></div>
+				</div>
+			</div>
 		</div>
 
-		<script src="https://cdn.jsdelivr.net/npm/@tarekraafat/autocomplete.js@10.2.7/dist/autoComplete.min.js"></script>
+		<script src="https://cdn.jsdelivr.net/npm/fuse.js@7.0.0"></script>
 		<script src="{{ url_for("static", filename="javascript/index.js") }}"></script>
 	</body>
 </html>
