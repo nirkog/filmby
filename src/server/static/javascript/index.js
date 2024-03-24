@@ -143,9 +143,7 @@ function add_autocomplete_item(text) {
 	let element = document.createElement("div");
 	element.innerHTML = text;
 	element.addEventListener("click", film_search_item_click_handler);
-	element.addEventListener("touchstart", film_search_item_click_handler);
 	element.classList.add("autocomplete-item");
-	console.log(element);
 
 	container.appendChild(element);
 }
@@ -243,7 +241,7 @@ function film_search_input_handler(e) {
 }
 
 function film_search_focus_handler(e) {
-	clear_autocomplete_list();
+	setTimeout(clear_autocomplete_list, 10);
 }
 
 const search_button = document.querySelector("#search_button");
