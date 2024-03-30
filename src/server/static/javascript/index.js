@@ -113,6 +113,7 @@ async function load_films() {
 async function on_load() {
 	load_state();
 	await load_films();
+	enable_or_disable_by_film_button();
 }
 
 function change_view(e) {
@@ -201,6 +202,28 @@ function film_search_item_click_handler(e) {
 
 	clear_autocomplete_list();
 	input.value = element.innerHTML;
+
+	enable_or_disable_by_film_button();
+}
+
+function enable_or_disable_by_film_button() {
+	const input = document.querySelector("#film_search_input");
+	const value = input.value;
+
+	let real_name = false;
+	for (let i = 0; i < g_films.length; i++) {
+		if (value == g_films[i].name) {
+			real_name = true;
+			break;
+		}
+	}
+
+	const button = document.querySelector("#by_film_view button");
+	if (real_name) {
+		button.classList.remove("disabled");
+	} else {
+		button.classList.add("disabled");
+	}
 }
 
 function film_search_input_handler(e) {
@@ -232,16 +255,33 @@ function film_search_input_handler(e) {
 		}
 
 		let item = result[i];	
-		add_autocomplete_item(item.item);
+
+		if (item.item != value) {
+			add_autocomplete_item(item.item);
+		}
 
 		if (item.score == 0) {
 			break;
 		}
 	}
+
+	enable_or_disable_by_film_button();
 }
 
 function film_search_focus_handler(e) {
 	setTimeout(clear_autocomplete_list, 150);
+}
+
+function by_film_button_click_handler(e) {
+	const input = document.querySelector("#film_search_input");
+	const value = input.value;
+	for (let i = 0; i < g_films.length; i++) {
+		if (value == g_films[i].name) {
+			const index = g_films[i].index;
+			window.open(`/film/${index}`, "_self");
+			break;
+		}
+	}
 }
 
 const search_button = document.querySelector("#search_button");
@@ -261,3 +301,6 @@ film_search_input.addEventListener("keydown", film_search_keydown_handler);
 film_search_input.addEventListener("input", film_search_input_handler);
 film_search_input.addEventListener("focus", film_search_focus_handler);
 film_search_input.addEventListener("focusout", film_search_focus_handler);
+
+const by_film_button = document.querySelector("#by_film_view button");
+by_film_button.addEventListener("click", by_film_button_click_handler);

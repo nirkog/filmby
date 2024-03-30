@@ -43,7 +43,7 @@ body {
 	padding: 4px;
 }
 
-#search_button {
+.big-button {
 	margin-top: 1rem;
 	font-size: 1.5rem;
 	padding: 0.5rem 2rem;
@@ -56,8 +56,13 @@ body {
 	transition: 0.1s all;
 }
 
-#search_button:hover {
+.big-button:hover {
 	background-color: #0ca0dd;
+}
+
+.big-button.disabled {
+	background-color: #1b82ad;
+	cursor: default;
 }
 
 #films {

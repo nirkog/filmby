@@ -41,7 +41,7 @@
 					<!--<input type="text" id="town_input" placeholder="עיר" value="Tel Aviv" disabled /> <br>-->
 					<label for="date_inpute">בחר תאריך:</label>
 					<input type="date" id="date_input" min="{{ min_date }}" max="{{ max_date }}" value="{{ min_date }}"/> <br>
-					<button id="search_button">מצא סרטים</button>
+					<button class="big-button" id="search_button">מצא סרטים</button>
 				</div>
 
 				<div id="films"></div>
@@ -51,6 +51,9 @@
 				<div id="film-search-form">
 					<input type="text" id="film_search_input" placeholder="חפש סרט"/>
 					<div id="film_autocomplete_container"></div>
+					<div id="film-view-button-box">
+						<button class="big-button">לסרט</button>
+					</div>
 				</div>
 			</div>
 		</div>
