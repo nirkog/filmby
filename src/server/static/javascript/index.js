@@ -241,7 +241,7 @@ function film_search_input_handler(e) {
 }
 
 function film_search_focus_handler(e) {
-	setTimeout(clear_autocomplete_list, 10);
+	setTimeout(clear_autocomplete_list, 150);
 }
 
 const search_button = document.querySelector("#search_button");
