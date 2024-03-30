@@ -1,3 +1,17 @@
+function toggle_description_expansion(film_element, expanding) {
+	const description_container = film_element.querySelector(".film-description");
+	const description = film_element.querySelector(".film-description p");
+
+	if (expanding) {
+		description_container.style.maxHeight = null;
+		description.innerHTML = description.dataset.long_text;
+	} else {
+		description_container.style.maxHeight = "130px";
+		description.innerHTML = description.dataset.short_text;
+		console.log(description.innerHTML);
+	}
+}
+
 function on_film_click(e) {
 	let current_parent = e.target.parentElement;
 	let film_element = undefined;
@@ -16,64 +30,28 @@ function on_film_click(e) {
 
 	const film_index = film_element.dataset.filmIndex;
 
-	//window.open(`/film/${film_index}`, "_blank");
-	//window.open(`/film/${film_index}`, "_self");
-	
-	/*
-	let film = null;
-	for (let i = 0; i < g_films.length; i++) {
-		if (g_films[i].index == film_index) {
-			film = g_films[i];
-			break;
-		}
-	}
-
-	if (film == null) {
-		return;
-	}
-
-
-	const date_element = document.querySelector("#date_input");
-	const chosen_date = new Date(Date.parse(date_element.value));
-	let cinema_dates = film.dates["Tel Aviv"];
-	let result_dates = {};
-
-	for (let cinema in cinema_dates) {
-		let dates = cinema_dates[cinema];
-		for (let i = 0; i < dates.length; i++) {
-			let date = new Date(Date.parse(dates[i]));
-
-			if (chosen_date.getDate() == date.getDate() &&
-				chosen_date.getMonth() == date.getMonth() &&
-				chosen_date.getYear() == date.getYear()) {
-				if (cinema in result_dates) {
-					result_dates[cinema].push(date);
-				} else {
-					result_dates[cinema] = [date];
-				}
-			}
-		}
-	}
-
-	console.log(result_dates);
-
-	const screenings_element = film_element.querySelector(".screenings");
-
-	let a = document.createElement("div");
-	a.innerHTML = "TA DA";
-	screenings_element.appendChild(a);
-	*/
-
 	const screenings_element = film_element.querySelector(".screenings");
 	const expand_icon = film_element.querySelector(".expand i");
 	if (screenings_element.style.maxHeight) {
 		screenings_element.style.maxHeight = null;
 		expand_icon.classList.remove("fa-chevron-up");
 		expand_icon.classList.add("fa-chevron-down");
+
+		if (g_mobile) {
+			toggle_description_expansion(film_element, false);
+		}
+
+		film_element.classList.remove("open");
 	} else {
 		screenings_element.style.maxHeight = screenings_element.scrollHeight + "px";
 		expand_icon.classList.add("fa-chevron-up");
 		expand_icon.classList.remove("fa-chevron-down");
+
+		if (g_mobile) {
+			toggle_description_expansion(film_element, true);
+		}
+		
+		film_element.classList.add("open");
 	}
 }
 
@@ -109,8 +87,10 @@ async function get_films(e) {
 			CHARACTER_LIMIT = 180;
 		}
 
-		let film_description = films[i].querySelector(".film-description");
+		let film_description = films[i].querySelector(".film-description p");
 		let film_description_text = film_description.innerHTML;
+		film_description.dataset.long_text = film_description_text;
+		film_description.dataset.short_text = film_description_text;
 		if (film_description_text.length > CHARACTER_LIMIT)	{ // TODO: Limit should probably be relative to screen size
 			let new_description = film_description_text;
 			for (let j = CHARACTER_LIMIT; j < film_description_text.length; j++) {
@@ -120,8 +100,14 @@ async function get_films(e) {
 					break;
 				}
 			}
+
 			film_description.innerHTML = new_description;
+			film_description.dataset.short_text = new_description;
 		}
+
+		//if (g_mobile) {
+		//	toggle_description_expansion(films[i], false);
+		//}
 	}
 
 	let state = {};
@@ -170,9 +156,15 @@ async function load_films() {
 	g_films = json_data;
 }
 
+var g_mobile = false;
+
 async function on_load() {
 	load_state();
 	await load_films();
+
+	if (screen.width < 600) {
+		g_mobile = true;
+	}
 }
 
 function change_view(e) {

@@ -66,5 +66,28 @@
 				{% endif %}
 			</div>
 		</div>
+		<div class="screenings">
+			<h2>הקרנות בתאריך</h2>
+			{% for cinema_name in film.dates[town] %}
+				{% set dates = filter_dates(film.dates[town][cinema_name], date) %} 
+				{% if dates|length > 0 %}
+					<div class="cinema-box">
+						<h3>{{ name_translations[cinema_name] }}</h3>
+						{% for screening_date in dates %}
+							<div class="date-box">
+								<p>{{ get_day_name(screening_date) }} - {{ screening_date.day }}/{{ screening_date.month }} - {{ screening_date.hour }}:{{ "%02d" % screening_date.minute }}</p>
+								<a href="{{ film.links[cinema_name] }}" target="_blank">הזמן</a>
+							</div>
+						{% endfor %}
+					</div>
+				{% endif %}
+			{% endfor %}
+			<div class="button-box">
+				<a class="film-button big-button" href="/film/{{ indices[loop.index - 1] }}">לפרטים ותאריכים נוספים</a>
+			</div>	
+		</div>
+		<div class="expand">
+			<i class="fa-solid fa-chevron-down"></i>
+		</div>
 	</div>
 {% endfor %}

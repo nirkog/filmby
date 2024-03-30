@@ -78,6 +78,9 @@ body {
 	padding-bottom: 0;
 }
 
+.film.open {
+}
+
 .date-box {
 	padding: 0.8rem 0;
 	margin: 0.8rem 0;
@@ -269,14 +272,13 @@ body {
 
 	.film {
 		display: block;
-		height: 450px;
-		text-overflow: ellipsis;
+		/* text-overflow: ellipsis; */
 		text-align: center;
 	}
 
 	.film img {
-		width: 90%;
-		max-height: 50%;
+		min-width: 80%;
+		max-height: 200px;
 		padding: 0;
 	}
 
@@ -289,13 +291,32 @@ body {
 	}
 
 	.film-description {
-		font-size: 1.2rem;
-		text-overflow: ellipsis;
-		overflow: hidden;
-		max-height: 130px;
+		font-size: 1rem;
+		text-align: right;
+		width: 100%;
+		/* text-overflow: ellipsis;
+		overflow: hidden; */
+		transition: max-height 9.35s ease-out;
 	}
 
 	#view_menu {
 		width: 100%;
+	}
+
+	.film .screenings {
+		text-align: right;
+		transition: max-height 0.35s ease-out;
+	}
+
+	.film .screenings .big-button {
+		font-size: 1rem;
+	}
+
+	.film .screenings h2 {
+		text-align: center;
+	}
+
+	.date-box {
+		font-size: 0.9rem;
 	}
 }
