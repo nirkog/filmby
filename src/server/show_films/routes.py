@@ -6,6 +6,24 @@ from loguru import logger
 from server.show_films import bp
 from server.films import film_manager
 
+# TODO: This is a patch, fix this
+FILM_NAME_TRANSLATIONS = {
+        "Canada": "קולנוע קנדה",
+        "Cinema City": "סינמה סיטי",
+        "Cinematheque": "סינמטק",
+        "Jaffa": "קולנוע יפו",
+        "Lev": "קולנוע לב",
+        "Rav Hen": "רב חן"
+}
+
+DAY_NAMES = ["שני", "שלישי", "רביעי", "חמישי", "שישי", "שבת", "ראשון"]
+
+def get_day_name(date):
+    try:
+        return DAY_NAMES[date.weekday()]
+    except Exception:
+        return ""
+
 def filter_films(date, town):
     films = []
     indices = []
@@ -18,6 +36,20 @@ def filter_films(date, town):
             indices.append(i)
 
     return indices, films
+
+def get_day_name(date):
+    try:
+        return DAY_NAMES[date.weekday()]
+    except Exception:
+        return ""
+
+def filter_dates(dates, chosen_date):
+    filtered = []
+    for date in dates:
+        if date.day == chosen_date.day and date.month == chosen_date.month and date.year == chosen_date.year:
+            filtered.append(date)
+    
+    return filtered
 
 @bp.route('/films')
 def show_films():
@@ -34,4 +66,14 @@ def show_films():
                 film["index"] = indices[i]
             return json.dumps(result)
 
-    return render_template('films.html', films=filtered_films, indices=indices)
+    # screenings = get_screenings(filtered_films, date)
+
+    return render_template(
+            'films.html',
+            films=filtered_films,
+            indices=indices,
+            town="Tel Aviv",
+            date=date,
+            name_translations=FILM_NAME_TRANSLATIONS,
+            get_day_name=get_day_name,
+            filter_dates=filter_dates)

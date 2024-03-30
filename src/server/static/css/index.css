@@ -43,7 +43,7 @@ body {
 	padding: 4px;
 }
 
-#search_button {
+.big-button {
 	margin-top: 1rem;
 	font-size: 1.5rem;
 	padding: 0.5rem 2rem;
@@ -56,7 +56,7 @@ body {
 	transition: 0.1s all;
 }
 
-#search_button:hover {
+.big-button:hover {
 	background-color: #0ca0dd;
 }
 
@@ -67,17 +67,75 @@ body {
 }
 
 .film {
-	display: flex;
-	flex-flow: row nowrap;
 	text-align: right;
 	padding: 1.5rem 0;
 	background-color: #fafafa;
 	color: black;
 	width: 100%;
 	margin: 1rem auto;
-	cursor: pointer;
+	/* cursor: pointer; */
 	transition: 0.20s all;
+	padding-bottom: 0;
+}
+
+.date-box {
+	background-color: #fcfcfc;
+	padding: 0.8rem 0;
+	margin: 0.8rem 0;
+	border-radius: 20px;
+	display: flex;
+	justify-content: space-between;
+}
+
+.date-box p {
+	margin: auto 0;
+	padding-right: 1.3rem;
+	display: inline;
+}
+
+.date-box a {
+	display: inline;
+	margin-left: 1.3rem;
+	border: none;
+	cursor: pointer;
+	background-color: #6be88c;
+	border-radius: 10px;
+	font-weight: 400;
+	font-size: 1rem;
+	padding: 0.2rem 1rem;
+	text-decoration: none;
+	color: black;
+}
+
+.film-top {
+	display: flex;
+	flex-flow: row nowrap;
+	width: 100%;
 	height: 350px;
+}
+
+.film .expand {
+	text-align: center;
+	font-size: 2rem;
+	color: #84a8d7;
+}
+
+.film .screenings {
+	overflow: hidden;
+	max-height: 0;
+	transition: max-height 0.2s ease-out;
+	padding: 0 1.5rem;
+}
+
+.film .screenings .big-button {
+	margin: auto;
+	font-size: 1.15rem;
+}
+
+.film .screenings .button-box {
+	margin: auto;
+	text-align: center;
+	padding: 1rem 0;
 }
 
 .mobile {

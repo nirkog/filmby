@@ -2,7 +2,7 @@ function on_film_click(e) {
 	let current_parent = e.target.parentElement;
 	let film_element = undefined;
 	while (current_parent != undefined) {
-		console.log(current_parent);
+		//console.log(current_parent);
 		if (current_parent.classList.contains("film")) {
 			film_element = current_parent;
 			break;
@@ -10,10 +10,70 @@ function on_film_click(e) {
 		current_parent = current_parent.parentElement;
 	}
 
-	if (film_element != undefined) {
-		const film_index = film_element.dataset.filmIndex;
-		//window.open(`/film/${film_index}`, "_blank");
-		window.open(`/film/${film_index}`, "_self");
+	if (film_element == undefined) {
+		return
+	}
+
+	const film_index = film_element.dataset.filmIndex;
+
+	//window.open(`/film/${film_index}`, "_blank");
+	//window.open(`/film/${film_index}`, "_self");
+	
+	/*
+	let film = null;
+	for (let i = 0; i < g_films.length; i++) {
+		if (g_films[i].index == film_index) {
+			film = g_films[i];
+			break;
+		}
+	}
+
+	if (film == null) {
+		return;
+	}
+
+
+	const date_element = document.querySelector("#date_input");
+	const chosen_date = new Date(Date.parse(date_element.value));
+	let cinema_dates = film.dates["Tel Aviv"];
+	let result_dates = {};
+
+	for (let cinema in cinema_dates) {
+		let dates = cinema_dates[cinema];
+		for (let i = 0; i < dates.length; i++) {
+			let date = new Date(Date.parse(dates[i]));
+
+			if (chosen_date.getDate() == date.getDate() &&
+				chosen_date.getMonth() == date.getMonth() &&
+				chosen_date.getYear() == date.getYear()) {
+				if (cinema in result_dates) {
+					result_dates[cinema].push(date);
+				} else {
+					result_dates[cinema] = [date];
+				}
+			}
+		}
+	}
+
+	console.log(result_dates);
+
+	const screenings_element = film_element.querySelector(".screenings");
+
+	let a = document.createElement("div");
+	a.innerHTML = "TA DA";
+	screenings_element.appendChild(a);
+	*/
+
+	const screenings_element = film_element.querySelector(".screenings");
+	const expand_icon = film_element.querySelector(".expand i");
+	if (screenings_element.style.maxHeight) {
+		screenings_element.style.maxHeight = null;
+		expand_icon.classList.remove("fa-chevron-up");
+		expand_icon.classList.add("fa-chevron-down");
+	} else {
+		screenings_element.style.maxHeight = screenings_element.scrollHeight + "px";
+		expand_icon.classList.add("fa-chevron-up");
+		expand_icon.classList.remove("fa-chevron-down");
 	}
 }
 
@@ -261,3 +321,14 @@ film_search_input.addEventListener("keydown", film_search_keydown_handler);
 film_search_input.addEventListener("input", film_search_input_handler);
 film_search_input.addEventListener("focus", film_search_focus_handler);
 film_search_input.addEventListener("focusout", film_search_focus_handler);
+
+let film_buttons = document.querySelectorAll(".film .big-button");
+for (let i = 0; i < film_buttons.length; i++) {
+	film_buttons[i].addEventListener("click", (e) => {
+		const element = e.target;
+		const link = element.dataset.link;
+
+		console.log(link);
+		//window.open(link, "_self");
+	});
+}

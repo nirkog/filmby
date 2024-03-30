@@ -41,7 +41,7 @@
 					<!--<input type="text" id="town_input" placeholder="עיר" value="Tel Aviv" disabled /> <br>-->
 					<label for="date_inpute">בחר תאריך:</label>
 					<input type="date" id="date_input" min="{{ min_date }}" max="{{ max_date }}" value="{{ min_date }}"/> <br>
-					<button id="search_button">מצא סרטים</button>
+					<button class="big-button" id="search_button">מצא סרטים</button>
 				</div>
 
 				<div id="films"></div>
@@ -57,5 +57,6 @@
 
 		<script src="https://cdn.jsdelivr.net/npm/fuse.js@7.0.0"></script>
 		<script src="{{ url_for("static", filename="javascript/index.js") }}"></script>
+		<script src="https://kit.fontawesome.com/7a95bb9d46.js" crossorigin="anonymous"></script>
 	</body>
 </html>
