@@ -85,7 +85,11 @@ class JaffaCinema(Cinema):
                 except Exception:
                     continue
                 countries = countries.split(", ")
-                year = int(year)
+                try:
+                    year = int(year)
+                except Exception as e:
+                    logger.warning(f"Could not year (string was \"{year}\"), error: {str(e)}")
+                    year = None
 
                 if len(paragraphs) > 1:
                     description = paragraphs[1].text
