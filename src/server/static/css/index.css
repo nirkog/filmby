@@ -79,12 +79,12 @@ body {
 }
 
 .date-box {
-	background-color: #fcfcfc;
 	padding: 0.8rem 0;
 	margin: 0.8rem 0;
 	border-radius: 20px;
 	display: flex;
 	justify-content: space-between;
+	border: 1px solid #aaa;
 }
 
 .date-box p {
@@ -118,6 +118,7 @@ body {
 	text-align: center;
 	font-size: 2rem;
 	color: #84a8d7;
+	padding-top: 0.5rem;
 }
 
 .film .screenings {
@@ -170,6 +171,7 @@ body {
 	max-height: 60%;*/
 	object-fit: contain;
 	min-width:40%;
+	max-width:40%;
 	max-height:100%;
 	padding-right: 1.5rem;
 }

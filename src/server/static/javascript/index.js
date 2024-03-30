@@ -301,7 +301,7 @@ function film_search_input_handler(e) {
 }
 
 function film_search_focus_handler(e) {
-	setTimeout(clear_autocomplete_list, 10);
+	setTimeout(clear_autocomplete_list, 150);
 }
 
 const search_button = document.querySelector("#search_button");
@@ -321,14 +321,3 @@ film_search_input.addEventListener("keydown", film_search_keydown_handler);
 film_search_input.addEventListener("input", film_search_input_handler);
 film_search_input.addEventListener("focus", film_search_focus_handler);
 film_search_input.addEventListener("focusout", film_search_focus_handler);
-
-let film_buttons = document.querySelectorAll(".film .big-button");
-for (let i = 0; i < film_buttons.length; i++) {
-	film_buttons[i].addEventListener("click", (e) => {
-		const element = e.target;
-		const link = element.dataset.link;
-
-		console.log(link);
-		//window.open(link, "_self");
-	});
-}
