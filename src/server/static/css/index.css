@@ -60,6 +60,11 @@ body {
 	background-color: #0ca0dd;
 }
 
+.big-button.disabled {
+	background-color: #1b82ad;
+	cursor: default;
+}
+
 #films {
 	margin: auto;
 	margin-bottom: 1rem;
