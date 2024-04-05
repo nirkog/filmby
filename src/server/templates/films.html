@@ -1,93 +1,97 @@
-<h1>סרטים</h1>
-{% for film in films %}
-	<div class="film" data-film-index="{{ indices[loop.index - 1] }}">
-		<div class="film-top">
+{% if films|length > 0 %}
+	<h1>סרטים</h1>
+	{% for film in films %}
+		<div class="film" data-film-index="{{ indices[loop.index - 1] }}">
+			<div class="film-top">
+				<img src="{{ film.image_url }}" referrerpolicy="no-referrer"/>
+				<div class="film-text">
+					<h2 class="film-header">{{ film.name }}</h2>
+					<div class="film-description">
+						{% if film.details.description != None %}
+							<p>{{ film.details.description }}</p>
+						{% endif %}
+					</div>
+					<div class="film-details">
+						{% if film.details.director != None %}
+							<p class="film-director">במאי: {{ film.details.director }} | </p>
+						{% endif %}
+						{% if film.details.cast != None %}
+							<p class="film-cast">שחקנים: {{ film.details.cast }} | </p>
+						{% endif %}
+						{% if film.details.length != None %}
+							<p class="film-length">אורך: {{ film.details.length }} | </p>
+						{% endif %}
+						{% if film.details.countries != None %}
+							<p class="film-countries">ארצות: {{ film.details.get_countries_string() }} | </p>
+						{% endif %}
+						{% if film.details.language != None %}
+							<p class="film-language">שפות: {{ film.details.language }} | </p>
+						{% endif %}
+						{% if film.details.year != None %}
+							<p class="film-year">שנה: {{ film.details.year }} | </p>
+						{% endif %}
+					</div>
+				</div>
+			</div>
+			<div class="screenings">
+				<h2>הקרנות בתאריך</h2>
+				{% for cinema_name in film.dates[town] %}
+					{% set dates = filter_dates(film.dates[town][cinema_name], date) %} 
+					{% if dates|length > 0 %}
+						<div class="cinema-box">
+							<h3>{{ name_translations[cinema_name] }}</h3>
+							{% for screening_date in dates %}
+								<div class="date-box">
+									<p>{{ get_day_name(screening_date) }} - {{ screening_date.day }}/{{ screening_date.month }} - {{ screening_date.hour }}:{{ "%02d" % screening_date.minute }}</p>
+									<a href="{{ film.links[cinema_name] }}" target="_blank">הזמן</a>
+								</div>
+							{% endfor %}
+						</div>
+					{% endif %}
+				{% endfor %}
+				<div class="button-box">
+					<a class="film-button big-button" href="/film/{{ indices[loop.index - 1] }}">לפרטים ותאריכים נוספים</a>
+				</div>	
+			</div>
+			<div class="expand">
+				<i class="fa-solid fa-chevron-down"></i>
+			</div>
+		</div>
+		<div class="film mobile" data-film-index="{{ indices[loop.index - 1] }}">
+			<h2 class="film-header">{{ film.name }}</h2>
 			<img src="{{ film.image_url }}" referrerpolicy="no-referrer"/>
 			<div class="film-text">
-				<h2 class="film-header">{{ film.name }}</h2>
 				<div class="film-description">
 					{% if film.details.description != None %}
 						<p>{{ film.details.description }}</p>
 					{% endif %}
 				</div>
-				<div class="film-details">
-					{% if film.details.director != None %}
-						<p class="film-director">במאי: {{ film.details.director }} | </p>
+			</div>
+			<div class="screenings">
+				<h2>הקרנות בתאריך</h2>
+				{% for cinema_name in film.dates[town] %}
+					{% set dates = filter_dates(film.dates[town][cinema_name], date) %} 
+					{% if dates|length > 0 %}
+						<div class="cinema-box">
+							<h3>{{ name_translations[cinema_name] }}</h3>
+							{% for screening_date in dates %}
+								<div class="date-box">
+									<p>{{ get_day_name(screening_date) }} - {{ screening_date.day }}/{{ screening_date.month }} - {{ screening_date.hour }}:{{ "%02d" % screening_date.minute }}</p>
+									<a href="{{ film.links[cinema_name] }}" target="_blank">הזמן</a>
+								</div>
+							{% endfor %}
+						</div>
 					{% endif %}
-					{% if film.details.cast != None %}
-						<p class="film-cast">שחקנים: {{ film.details.cast }} | </p>
-					{% endif %}
-					{% if film.details.length != None %}
-						<p class="film-length">אורך: {{ film.details.length }} | </p>
-					{% endif %}
-					{% if film.details.countries != None %}
-						<p class="film-countries">ארצות: {{ film.details.get_countries_string() }} | </p>
-					{% endif %}
-					{% if film.details.language != None %}
-						<p class="film-language">שפות: {{ film.details.language }} | </p>
-					{% endif %}
-					{% if film.details.year != None %}
-						<p class="film-year">שנה: {{ film.details.year }} | </p>
-					{% endif %}
-				</div>
+				{% endfor %}
+				<div class="button-box">
+					<a class="film-button big-button" href="/film/{{ indices[loop.index - 1] }}">לפרטים ותאריכים נוספים</a>
+				</div>	
+			</div>
+			<div class="expand">
+				<i class="fa-solid fa-chevron-down"></i>
 			</div>
 		</div>
-		<div class="screenings">
-			<h2>הקרנות בתאריך</h2>
-			{% for cinema_name in film.dates[town] %}
-				{% set dates = filter_dates(film.dates[town][cinema_name], date) %} 
-				{% if dates|length > 0 %}
-					<div class="cinema-box">
-						<h3>{{ name_translations[cinema_name] }}</h3>
-						{% for screening_date in dates %}
-							<div class="date-box">
-								<p>{{ get_day_name(screening_date) }} - {{ screening_date.day }}/{{ screening_date.month }} - {{ screening_date.hour }}:{{ "%02d" % screening_date.minute }}</p>
-								<a href="{{ film.links[cinema_name] }}" target="_blank">הזמן</a>
-							</div>
-						{% endfor %}
-					</div>
-				{% endif %}
-			{% endfor %}
-			<div class="button-box">
-				<a class="film-button big-button" href="/film/{{ indices[loop.index - 1] }}">לפרטים ותאריכים נוספים</a>
-			</div>	
-		</div>
-		<div class="expand">
-			<i class="fa-solid fa-chevron-down"></i>
-		</div>
-	</div>
-	<div class="film mobile" data-film-index="{{ indices[loop.index - 1] }}">
-		<h2 class="film-header">{{ film.name }}</h2>
-		<img src="{{ film.image_url }}" referrerpolicy="no-referrer"/>
-		<div class="film-text">
-			<div class="film-description">
-				{% if film.details.description != None %}
-					<p>{{ film.details.description }}</p>
-				{% endif %}
-			</div>
-		</div>
-		<div class="screenings">
-			<h2>הקרנות בתאריך</h2>
-			{% for cinema_name in film.dates[town] %}
-				{% set dates = filter_dates(film.dates[town][cinema_name], date) %} 
-				{% if dates|length > 0 %}
-					<div class="cinema-box">
-						<h3>{{ name_translations[cinema_name] }}</h3>
-						{% for screening_date in dates %}
-							<div class="date-box">
-								<p>{{ get_day_name(screening_date) }} - {{ screening_date.day }}/{{ screening_date.month }} - {{ screening_date.hour }}:{{ "%02d" % screening_date.minute }}</p>
-								<a href="{{ film.links[cinema_name] }}" target="_blank">הזמן</a>
-							</div>
-						{% endfor %}
-					</div>
-				{% endif %}
-			{% endfor %}
-			<div class="button-box">
-				<a class="film-button big-button" href="/film/{{ indices[loop.index - 1] }}">לפרטים ותאריכים נוספים</a>
-			</div>	
-		</div>
-		<div class="expand">
-			<i class="fa-solid fa-chevron-down"></i>
-		</div>
-	</div>
-{% endfor %}
+	{% endfor %}
+{% else %}
+	<h1 id="no-films">לא נמצאו סרטים רלוונטיים :(</h1>
+{% endif %}
