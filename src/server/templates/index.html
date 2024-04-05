@@ -1,67 +1,41 @@
-<!DOCTYPE html>
-<html lang="he">
-	<head>
-		<!-- Google tag (gtag.js) -->
-		<script async src="https://www.googletagmanager.com/gtag/js?id=G-C0T9D5E49J"></script>
-		<script>
-		  window.dataLayer = window.dataLayer || [];
-		  function gtag(){dataLayer.push(arguments);}
-		  gtag('js', new Date());
+{% extends "base.html" %}
+{% block head %}
+	{{ super() }}
+	<link rel="stylesheet" href="{{ url_for("static", filename="css/index.css") }}">
+{% endblock %}
+{% block content %}
+	<div id="header">
+		<h1 id="main-header">קולנועית</h1>
+		<h2 id="second-header">כל הסרטים מכל בתי הקולנוע בתל אביב!</h2>
+	</div>
 
-		  gtag('config', 'G-C0T9D5E49J');
-		</script>	
+	<div id="view_menu">
+		<div data-view-id="by_date_view" class="selected">לפי תאריך</div>
+		<div data-view-id="by_film_view">לפי סרט</div>
+	</div>
 
-		<meta charset="utf-8" />
-		<meta name="viewport" content="width=device-width,initial-scale=1.0">
-		<meta name="description" content="קולנועית - אתר המאגד סרטים מכל בתי הקולנוע בעיר!">
-		<title>קולנועית</title>
-
-		<link rel="preconnect" href="https://fonts.googleapis.com">
-		<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-		<link href="https://fonts.googleapis.com/css2?family=Heebo:wght@100;200;300;400;500;600;700;800;900&display=swap" rel="stylesheet">
-
-		<link rel="icon" type="image/x-icon" href="{{ url_for("static", filename="images/logo.png") }}">
-
-		<link rel="stylesheet" href="{{ url_for("static", filename="css/common.css") }}">
-		<link rel="stylesheet" href="{{ url_for("static", filename="css/index.css") }}">
-	</head>
-
-	<body dir="rtl">
-		<div id="content">
-			<div id="header">
-				<h1 id="main-header">קולנועית</h1>
-				<h2 id="second-header">כל הסרטים מכל בתי הקולנוע בתל אביב!</h2>
-			</div>
-
-			<div id="view_menu">
-				<div data-view-id="by_date_view" class="selected">לפי תאריך</div>
-				<div data-view-id="by_film_view">לפי סרט</div>
-			</div>
-
-			<div id="by_date_view" class="view selected">
-				<div id="date-search-form">
-					<!--<input type="text" id="town_input" placeholder="עיר" value="Tel Aviv" disabled /> <br>-->
-					<label for="date_inpute">בחר תאריך:</label>
-					<input type="date" id="date_input" min="{{ min_date }}" max="{{ max_date }}" value="{{ min_date }}"/> <br>
-					<button class="big-button" id="search_button">מצא סרטים</button>
-				</div>
-
-				<div id="films"></div>
-			</div>
-
-			<div id="by_film_view" class="view">
-				<div id="film-search-form">
-					<input type="text" id="film_search_input" placeholder="חפש סרט"/>
-					<div id="film_autocomplete_container"></div>
-					<div id="film-view-button-box">
-						<button class="big-button">לסרט</button>
-					</div>
-				</div>
-			</div>
+	<div id="by_date_view" class="view selected">
+		<div id="date-search-form">
+			<!--<input type="text" id="town_input" placeholder="עיר" value="Tel Aviv" disabled /> <br>-->
+			<label for="date_inpute">בחר תאריך:</label>
+			<input type="date" id="date_input" min="{{ min_date }}" max="{{ max_date }}" value="{{ min_date }}"/> <br>
+			<button class="big-button" id="search_button">מצא סרטים</button>
 		</div>
 
-		<script src="https://cdn.jsdelivr.net/npm/fuse.js@7.0.0"></script>
-		<script src="{{ url_for("static", filename="javascript/index.js") }}"></script>
-		<script src="https://kit.fontawesome.com/7a95bb9d46.js" crossorigin="anonymous"></script>
-	</body>
-</html>
+		<div id="films"></div>
+	</div>
+
+	<div id="by_film_view" class="view">
+		<div id="film-search-form">
+			<input type="text" id="film_search_input" placeholder="חפש סרט"/>
+			<div id="film_autocomplete_container"></div>
+			<div id="film-view-button-box">
+				<button class="big-button">לסרט</button>
+			</div>
+		</div>
+	</div>
+{% endblock %}
+{% block scripts %}
+	<script src="https://cdn.jsdelivr.net/npm/fuse.js@7.0.0"></script>
+	<script src="{{ url_for("static", filename="javascript/index.js") }}"></script>
+{% endblock %}

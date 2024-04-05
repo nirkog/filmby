@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html lang="he">
+	<head>
+		{% block head %}
+		<!-- Google tag (gtag.js) -->
+		<script async src="https://www.googletagmanager.com/gtag/js?id=G-C0T9D5E49J"></script>
+		<script>
+		  window.dataLayer = window.dataLayer || [];
+		  function gtag(){dataLayer.push(arguments);}
+		  gtag('js', new Date());
+
+		  gtag('config', 'G-C0T9D5E49J');
+		</script>	
+
+		<meta charset="utf-8" />
+		<meta name="viewport" content="width=device-width,initial-scale=1.0">
+		<meta name="description" content="קולנועית - אתר המאגד סרטים מכל בתי הקולנוע בעיר!">
+		<title>{% block title %}קולנועית{% endblock %}</title>
+
+		<link rel="preconnect" href="https://fonts.googleapis.com">
+		<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+		<link href="https://fonts.googleapis.com/css2?family=Heebo:wght@100;200;300;400;500;600;700;800;900&display=swap" rel="stylesheet">
+
+		<link rel="icon" type="image/x-icon" href="{{ url_for("static", filename="images/logo.png") }}">
+
+		<link rel="stylesheet" href="{{ url_for("static", filename="css/common.css") }}">
+		{% endblock %}
+	</head>
+
+	<body dir="rtl">
+		<div id="content">
+			{% block content %}{% endblock %}
+		</div>
+
+		<script src="https://kit.fontawesome.com/7a95bb9d46.js" crossorigin="anonymous"></script>
+		{% block scripts %}
+		{% endblock %} 
+	</body>
+</html>
