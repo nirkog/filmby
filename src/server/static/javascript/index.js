@@ -78,7 +78,7 @@ async function get_films(e) {
 		}
 
 		// Shorten description
-		let CHARACTER_LIMIT = 500;
+		let CHARACTER_LIMIT = 420;
 		//console.log(screen.width);
 		if (screen.width < 1300) {
 			CHARACTER_LIMIT = 250;
