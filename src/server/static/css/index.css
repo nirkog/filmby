@@ -327,4 +327,8 @@ body {
 	.date-box {
 		font-size: 0.9rem;
 	}
+
+	#date_input {
+		margin-top: 0.5rem;
+	}
 }

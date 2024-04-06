@@ -2,6 +2,15 @@
 {% block head %}
 	{{ super() }}
 	<link rel="stylesheet" href="{{ url_for("static", filename="css/index.css") }}">
+
+	<script type="application/ld+json">
+    {
+      "@context" : "https://schema.org",
+      "@type" : "WebSite",
+      "name" : "קולנועית",
+      "url" : "https://filmsnear.com/"
+    }
+	</script>
 {% endblock %}
 {% block content %}
 	<div id="header">
