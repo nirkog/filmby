@@ -2,6 +2,7 @@ import requests
 import os
 import logging
 import copy
+import string
 
 from loguru import logger
 from fuzzywuzzy import fuzz
@@ -14,6 +15,8 @@ CONTENT_TYPES_TO_FILE_ENGINGS = {
 FILM_LENGTH_VARIANCE = 4
 
 LANGUAGE_FILM_NAME_WORDS = ["עברית", "אנגלית", "עם", "-", ":", "מדובב", "כתוביות"]
+
+HEBREW_ENGLISH_LETTERS = string.ascii_lowercase + string.ascii_uppercase + "_.:|!?,0123456789" + "אבגדהוזחטיכלמנסעפצקרשת"
 
 def same_date(first, second):
     return (first.year == second.year) and (first.month == second.month) and (first.day == second.day)
@@ -36,6 +39,24 @@ class FilmDetails:
                 result.append(var)
 
         return result
+    
+    def _get_hebrew_english_score(self, text):
+        return (len([x for x in text if x in HEBREW_ENGLISH_LETTERS]) / len(text)) * 100
+
+    def _get_better_description(self, first, second):
+        if self._get_hebrew_english_score(first) < 50:
+            return second
+
+        if self._get_hebrew_english_score(first) < 50:
+            return first
+
+        if len(first) > len(second):
+            return first
+
+        if len(second) > len(first):
+            return first
+        
+        return first
 
     def merge(self, other):
         details = vars(self)
@@ -47,8 +68,8 @@ class FilmDetails:
             if var == "description":
                 if details[var] == None:
                     setattr(self, var, other_details[var])
-                elif len(other_details[var]) > len(details[var]):
-                    setattr(self, var, other_details[var])
+                else:
+                    setattr(self, var, self._get_better_description(details[var], other_details[var]))
             else:
                 if details[var] == None:
                     setattr(self, var, other_details[var])
@@ -133,6 +154,19 @@ class Film:
 
         return fuzz.partial_ratio(name1, name2) > 90
 
+    def _same_cinema_heuristic(self, other):
+        self_cinemas = []
+        for town in self.dates:
+            for cinema in self.dates[town]:
+                self_cinemas.append(cinema)
+
+        other_cinemas = []
+        for town in other.dates:
+            for cinema in other.dates[town]:
+                other_cinemas.append(cinema)
+
+        return self_cinemas == other_cinemas
+
     def is_identical(self, other):
         result = False
 
@@ -146,10 +180,20 @@ class Film:
         
         if not result and self.name.replace("-", " ") == other.name.replace("-", " "):
             result = True
-        
-        if not result and fuzz.partial_ratio(self.name, other.name) > 85:
+
+        fuzzy_score_partial = fuzz.partial_ratio(self.name, other.name)
+        fuzzy_score = fuzz.ratio(self.name, other.name)
+        if not result and fuzzy_score_partial > 70:
             # print("MERGING", self.name, other.name)
-            result = True
+
+            if self._same_cinema_heuristic(other) and fuzzy_score_partial < 85:
+                # print(f"NOT MERGING SAME {self.name}, {other.name}")
+                pass
+            elif fuzzy_score_partial < 90 and fuzzy_score < 50:
+                # print(f"NOT MERGING FUZZY {self.name}, {other.name}")
+                pass
+            else:
+                result = True
 
         if not result and self._without_language_name_heuristic(self.name, other.name):
             # logger.debug(f"Merging with new heuristic {self.name}, {other.name}")
@@ -163,6 +207,9 @@ class Film:
             if self.details.year != other.details.year:
                 # print(f"Not identical, years differ #1 {self.name}, #2 {other.name}, {self.details.year}, {other.details.year}")
                 result = False
+
+        # if result:
+        #     print(f"MERGING {self.name} | {other.name} | {fuzzy_score_partial} | {fuzzy_score} | {self.details.length} | {other.details.length}")
 
         return result
     

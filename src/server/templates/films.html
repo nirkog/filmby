@@ -43,7 +43,7 @@
 							{% for screening_date in dates %}
 								<div class="date-box">
 									<p>{{ get_day_name(screening_date) }} - {{ screening_date.day }}/{{ screening_date.month }} - {{ screening_date.hour }}:{{ "%02d" % screening_date.minute }}</p>
-									<a href="{{ film.links[cinema_name] }}" target="_blank">הזמן</a>
+									<a class="screening-link" href="{{ film.links[cinema_name] }}" target="_blank">הזמן</a>
 								</div>
 							{% endfor %}
 						</div>
@@ -77,7 +77,7 @@
 							{% for screening_date in dates %}
 								<div class="date-box">
 									<p>{{ get_day_name(screening_date) }} - {{ screening_date.day }}/{{ screening_date.month }} - {{ screening_date.hour }}:{{ "%02d" % screening_date.minute }}</p>
-									<a href="{{ film.links[cinema_name] }}" target="_blank">הזמן</a>
+									<a class="screening-link" href="{{ film.links[cinema_name] }}" target="_blank">הזמן</a>
 								</div>
 							{% endfor %}
 						</div>

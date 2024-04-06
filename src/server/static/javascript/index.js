@@ -64,6 +64,9 @@ async function get_films(e) {
 
 	films_elemnt.innerHTML = element_data;
 
+	const screening_link_elements = document.querySelectorAll(".screening-link");
+	const film_button_elements = document.querySelectorAll(".film-button");
+
 	let films = document.querySelectorAll(".film");
 	for (let i = 0; i < films.length; i++) {
 		films[i].addEventListener("click", on_film_click);
@@ -108,6 +111,14 @@ async function get_films(e) {
 		//if (g_mobile) {
 		//	toggle_description_expansion(films[i], false);
 		//}
+	}
+
+	for (let i = 0; i < screening_link_elements.length; i++) {
+		screening_link_elements[i].addEventListener("click", (e) => e.stopPropagation());
+	}
+
+	for (let i = 0; i < film_button_elements.length; i++) {
+		film_button_elements[i].addEventListener("click", (e) => e.stopPropagation());
 	}
 
 	let state = {};
