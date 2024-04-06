@@ -21,6 +21,9 @@ HEBREW_ENGLISH_LETTERS = string.ascii_lowercase + string.ascii_uppercase + "_.:|
 def same_date(first, second):
     return (first.year == second.year) and (first.month == second.month) and (first.day == second.day)
 
+def get_hebrew_english_score(text):
+    return (len([x for x in text if x in HEBREW_ENGLISH_LETTERS]) / len(text)) * 100
+
 class FilmDetails:
     def __init__(self, description=None, director=None, cast=None, length=None, countries=None, language=None, year=None):
         self.description = description 
@@ -40,14 +43,12 @@ class FilmDetails:
 
         return result
     
-    def _get_hebrew_english_score(self, text):
-        return (len([x for x in text if x in HEBREW_ENGLISH_LETTERS]) / len(text)) * 100
 
     def _get_better_description(self, first, second):
-        if self._get_hebrew_english_score(first) < 50:
+        if get_hebrew_english_score(first) < 50:
             return second
 
-        if self._get_hebrew_english_score(first) < 50:
+        if get_hebrew_english_score(first) < 50:
             return first
 
         if len(first) > len(second):
@@ -72,8 +73,8 @@ class FilmDetails:
                     setattr(self, var, self._get_better_description(details[var], other_details[var]))
             else:
                 if details[var] == None:
-                    setattr(self, var, other_details[var])
 
+                    setattr(self, var, other_details[var])
     def get_countries_string(self):
         to_replace = ["[", "]", "'"]
         result = str(self.countries)
@@ -132,7 +133,6 @@ class Film:
         self.dates[town][cinema_name].sort()
 
     def merge(self, other):
-        # TODO: Merge based on image url
         self.details.merge(other.details)
 
         for town in other.dates:
@@ -143,8 +143,11 @@ class Film:
             if not cinema in self.links:
                 self.links[cinema] = other.links[cinema]
 
-        # TODO: Is this good?
-        if len(other.name) < len(self.name):
+        if get_hebrew_english_score(self.name) < 70:
+            self.name = other.name
+        elif get_hebrew_english_score(other.name) < 70:
+            pass
+        elif len(other.name) < len(self.name):
             self.name = other.name
 
     def _without_language_name_heuristic(self, name1, name2):

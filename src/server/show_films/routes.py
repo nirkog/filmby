@@ -59,6 +59,8 @@ def show_films():
     indices, filtered_films = filter_films(date, request.args["town"])
     logger.debug(f"Found {len(filtered_films)} relevant films")
 
+    logger.info(f"PAGE REQUEST /films - date {date}")
+
     if "json" in request.args:
         if bool(request.args["json"]):
             result = [film.json_serializable() for film in filtered_films]
