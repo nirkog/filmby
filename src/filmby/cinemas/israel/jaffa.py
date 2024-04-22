@@ -70,7 +70,7 @@ class JaffaCinema(Cinema):
                 
                 dates_select = screening.find("select")
                 if dates_select != None:
-                    date_options = dates_select.find("option")
+                    date_options = dates_select.find_all("option")
                     date_options = [option.text for option in date_options]
                     dates = [self.get_date_from_option(option) for option in date_options]
                     dates = [x for x in dates if x != None]
