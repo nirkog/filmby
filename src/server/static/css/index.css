@@ -331,4 +331,13 @@ body {
 	#date_input {
 		margin-top: 0.5rem;
 	}
+
+	#film_autocomplete_container {
+		position: absolute;
+		width: 65%;
+		margin-left: auto;
+		margin-right: auto;
+		left: 0;
+		right: 0;
+	}
 }
