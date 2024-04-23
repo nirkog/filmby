@@ -215,6 +215,20 @@ class Film:
         #     print(f"MERGING {self.name} | {other.name} | {fuzzy_score_partial} | {fuzzy_score} | {self.details.length} | {other.details.length}")
 
         return result
+
+    def get_screenings_on_date(self, date, hour_filter=False):
+        dates = []
+        for town in self.dates:
+            for cinema in self.dates[town]:
+                for d in self.dates[town][cinema]:
+                    if same_date(d, date):
+                        if hour_filter:
+                            d_minutes = d.hour * 60 + d.minute
+                            date_minutes = date.hour * 60 + date.minute
+                            if d_minutes < date_minutes:
+                                continue
+                        dates.append(d)
+        return dates
     
     def has_screenings_on_date(self, date):
         for town in self.dates:

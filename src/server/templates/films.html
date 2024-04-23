@@ -36,7 +36,7 @@
 			<div class="screenings">
 				<h2>הקרנות בתאריך</h2>
 				{% for cinema_name in film.dates[town] %}
-					{% set dates = filter_dates(film.dates[town][cinema_name], date) %} 
+					{% set dates = screenings[loop.index - 1] %} 
 					{% if dates|length > 0 %}
 						<div class="cinema-box">
 							<h3>{{ name_translations[cinema_name] }}</h3>
@@ -70,7 +70,7 @@
 			<div class="screenings">
 				<h2>הקרנות בתאריך</h2>
 				{% for cinema_name in film.dates[town] %}
-					{% set dates = filter_dates(film.dates[town][cinema_name], date) %} 
+					{% set dates = screenings[loop.index - 1] %} 
 					{% if dates|length > 0 %}
 						<div class="cinema-box">
 							<h3>{{ name_translations[cinema_name] }}</h3>
