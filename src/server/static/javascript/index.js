@@ -242,6 +242,10 @@ function film_search_keydown_handler(e) {
 		set_active_film_autocomplete();
     } else if (e.keyCode == 13) {
       	e.preventDefault();
+      	if (g_current_film_focus > -1) {
+			const container = document.querySelector("#film_autocomplete_container");
+			container.children[g_current_film_focus].click();
+      	}
 
 		const input = document.querySelector("#film_search_input");
 		const value = input.value;
@@ -253,11 +257,6 @@ function film_search_keydown_handler(e) {
 				break;
 			}
 		}
-
-      	if (g_current_film_focus > -1) {
-			const container = document.querySelector("#film_autocomplete_container");
-			container.children[g_current_film_focus].click();
-      	}
     }
 }
 
