@@ -80,21 +80,35 @@ class JaffaCinema(Cinema):
 
                 in_parent = screening.find("div", {"class": "in-parent"}) 
                 paragraphs = in_parent.find_all("p")
+                countries = None
+                year = None
                 try:
-                    countries, year = paragraphs[0].text.split(" / ")
+                    raw_str = paragraphs[0].text
+                    countries, year = raw_str.split(" / ")
+                    countries = countries.split(", ")
                 except Exception:
-                    continue
-                countries = countries.split(", ")
+                    logger.warning(f"Could not parse countries and year (string was \"{raw_str}\"), error: {str(e)}")
+                    countries = None
+
                 try:
-                    year = int(year)
+                    year = int(year.strip().replace(" ", "")[:4])
+                    assert year > 1900 and year < 2100
                 except Exception as e:
-                    logger.warning(f"Could not year (string was \"{year}\"), error: {str(e)}")
+                    logger.warning(f"Could not parse year (string was \"{year}\"), error: {str(e)}")
                     year = None
 
-                if len(paragraphs) > 1:
-                    description = paragraphs[1].text
-                else:
-                    description = in_parent.find("span").text
+                try:
+                    if len(paragraphs) > 1:
+                        description = paragraphs[1].text
+                    else:
+                        if in_parent.find("spand") != None:
+                            description = in_parent.find("span").text
+                        else:
+                            description = "\n".join(paragraphs[0].text.split("\n")[1:])
+                            # TODO: In this case, paragraphs[0].text also contains the year and countries, should parse this
+                except Exception as e:
+                    logger.warning(f"Could not parse description, error: {str(e)}")
+                    description = None
 
                 info_title = screening.find("div", {"class": "info-title"})
                 length, director = info_title.p.text.split(" | ")
