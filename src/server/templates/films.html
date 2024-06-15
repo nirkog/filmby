@@ -35,8 +35,9 @@
 			</div>
 			<div class="screenings">
 				<h2>הקרנות בתאריך</h2>
-				{% for cinema_name in film.dates[town] %}
-					{% set dates = screenings[loop.index - 1] %} 
+				{% set film_screenings = screenings[loop.index - 1] %} 
+				{% for cinema_name in film_screenings %}
+					{% set dates = film_screenings[cinema_name] %} 
 					{% if dates|length > 0 %}
 						<div class="cinema-box">
 							<h3>{{ name_translations[cinema_name] }}</h3>
@@ -69,8 +70,9 @@
 			</div>
 			<div class="screenings">
 				<h2>הקרנות בתאריך</h2>
-				{% for cinema_name in film.dates[town] %}
-					{% set dates = screenings[loop.index - 1] %} 
+				{% set film_screenings = screenings[loop.index - 1] %} 
+				{% for cinema_name in film_screenings %}
+					{% set dates = film_screenings[cinema_name] %} 
 					{% if dates|length > 0 %}
 						<div class="cinema-box">
 							<h3>{{ name_translations[cinema_name] }}</h3>

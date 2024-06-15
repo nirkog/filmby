@@ -217,7 +217,7 @@ class Film:
         return result
 
     def get_screenings_on_date(self, date, hour_filter=False):
-        dates = []
+        dates = dict()
         for town in self.dates:
             for cinema in self.dates[town]:
                 for d in self.dates[town][cinema]:
@@ -227,7 +227,10 @@ class Film:
                             date_minutes = date.hour * 60 + date.minute
                             if d_minutes < date_minutes:
                                 continue
-                        dates.append(d)
+                        if not cinema in dates:
+                            dates[cinema] = [d]
+                        else:
+                            dates[cinema].append(d)
         return dates
     
     def has_screenings_on_date(self, date):

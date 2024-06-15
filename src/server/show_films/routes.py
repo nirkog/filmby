@@ -33,9 +33,11 @@ def filter_films(date, town, hour_filter):
         if town in film.dates:
             if date != None:
                 dates = film.get_screenings_on_date(date, hour_filter=hour_filter) 
-                if dates == []:
+                if dates == dict():
                     continue
                 screenings.append(dates)
+            else:
+                screenings.append(dict())
             films.append(film)
             indices.append(i)
 
