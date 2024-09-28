@@ -86,7 +86,7 @@ class JaffaCinema(Cinema):
                     raw_str = paragraphs[0].text
                     countries, year = raw_str.split(" / ")
                     countries = countries.split(", ")
-                except Exception:
+                except Exception as e:
                     logger.warning(f"Could not parse countries and year (string was \"{raw_str}\"), error: {str(e)}")
                     countries = None
 

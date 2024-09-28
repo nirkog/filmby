@@ -13,6 +13,7 @@ CONTENT_TYPES_TO_FILE_ENGINGS = {
 }
 
 FILM_LENGTH_VARIANCE = 4
+FILM_YEAR_VARIANCE = 4
 
 LANGUAGE_FILM_NAME_WORDS = ["עברית", "אנגלית", "עם", "-", ":", "מדובב", "כתוביות"]
 
@@ -22,6 +23,9 @@ def same_date(first, second):
     return (first.year == second.year) and (first.month == second.month) and (first.day == second.day)
 
 def get_hebrew_english_score(text):
+    if len(text) == 0:
+        return 0
+
     return (len([x for x in text if x in HEBREW_ENGLISH_LETTERS]) / len(text)) * 100
 
 class FilmDetails:
@@ -73,8 +77,8 @@ class FilmDetails:
                     setattr(self, var, self._get_better_description(details[var], other_details[var]))
             else:
                 if details[var] == None:
-
                     setattr(self, var, other_details[var])
+
     def get_countries_string(self):
         to_replace = ["[", "]", "'"]
         result = str(self.countries)
@@ -207,7 +211,7 @@ class Film:
                 # print(f"Not identical, legnths too far apart #1 {self.name}, #2 {other.name}")
                 result = False
         if result and self.details.year and other.details.year:
-            if self.details.year != other.details.year:
+            if abs(self.details.year - other.details.year) > FILM_YEAR_VARIANCE:
                 # print(f"Not identical, years differ #1 {self.name}, #2 {other.name}, {self.details.year}, {other.details.year}")
                 result = False
 
