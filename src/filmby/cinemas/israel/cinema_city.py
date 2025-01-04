@@ -118,7 +118,7 @@ class CinemaCityCinema(Cinema):
         return films
 
     def get_film_details(self, film):
-        pass
+        return None
 
     def get_provided_film_details(self):
         return []

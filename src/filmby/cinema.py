@@ -6,7 +6,16 @@ class Cinema(ABC):
     TOWNS = None # TODO: Make this dynamic???
 
     def __init__(self):
-        pass
+        self.details_cache = dict()
+
+    def _add_to_details_cache(self, film, details):
+        self.details_cache[film.links[self.NAME]] = details
+
+    def _get_details_from_cache(self, film):
+        if self.NAME in film.links:
+            if film.links[self.NAME] in self.details_cache:
+                return self.details_cache[film.links[self.NAME]] 
+        return None
 
     @abstractmethod
     def get_films_by_date(self, date):
@@ -31,3 +40,6 @@ class Cinema(ABC):
             else:
                 found_names[film.name] = i
                 i += 1
+
+    def clean_cache(self):
+        self.details_cache = dict()

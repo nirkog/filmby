@@ -84,8 +84,6 @@ class FilmManager:
         for thread in threads:
             thread.join()
 
-        new_films = self._merge_films(new_films)
-
         threads = []
         for film in new_films:
             for cinema in film.links:
@@ -101,6 +99,7 @@ class FilmManager:
         for thread in threads:
             thread.join()
 
+        new_films = self._merge_films(new_films)
         self.films = new_films
 
         cache_path = Path(self.cache_path)
@@ -136,7 +135,8 @@ class FilmManager:
 
     def _get_film_details(self, cinema, film, condition):
         new_details = cinema.get_film_details(film)
-        film.details.merge(new_details)
+        if new_details != None:
+            film.details.merge(new_details)
 
         with condition:
             condition.notify_all()

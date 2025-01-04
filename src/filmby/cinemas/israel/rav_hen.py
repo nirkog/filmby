@@ -114,6 +114,10 @@ class RavHenCinema(Cinema):
         return result
 
     def get_film_details(self, film):
+        cache = self._get_details_from_cache(film)
+        if cache != None:
+            return cache
+
         response = requests.get(film.links[self.NAME])
         html = BeautifulSoup(response.text, "html.parser")
         body = html.find("body")
@@ -131,15 +135,17 @@ class RavHenCinema(Cinema):
                 obj = line[line.index("{"):-1]
                 film_details = json.loads(obj)
                 details.countries = [film_details["releaseCountry"]]
-                details.year = film_details["releaseYear"]
+                details.year = int(film_details["releaseYear"])
                 details.language = LANGUAGE_TRANSLATIONS[film_details["originalLanguage"][0]]
-                details.length = film_details["length"]
+                details.length = int(film_details["length"])
                 details.director = film_details["directors"]
                 details.cast = film_details["cast"]
                 details.description = film_details["synopsis"]
                 details.description = details.description.replace("<p>", "")
                 details.description = details.description.replace("<br>", "")
                 break
+
+        self._add_to_details_cache(film, details)
 
         return details
 

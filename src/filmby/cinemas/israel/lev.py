@@ -19,13 +19,30 @@ class LevCinema(Cinema):
     BASE_URL = "https://www.lev.co.il/"
     FILMS_URL = "wp-content/themes/lev/ajax_data.php?clang=he&action=movie_on_location_new&loc={0}&date={1}-{2}-{3}"
     INFO_FORMAT = "{0},{1}|{2}|{3}" # TODO: Add other formats
+    REQUEST_HEADERS = {
+        "accept": "*/*",
+        "accept-language": "en-US,en;q=0.9,he-IL;q=0.8,he;q=0.7",
+        "cache-control": "no-cache",
+        "cookie": "loc=לב תל אביב".encode("utf-8"),
+        "pragma": "no-cache",
+        "priority": "u=1, i",
+        "referer": "https://www.lev.co.il/",
+        "sec-ch-ua": '"Google Chrome";v="131", "Chromium";v="131", "Not_A Brand";v="24"',
+        "sec-ch-ua-mobile": "?0",
+        "sec-ch-ua-platform": '"Windows"',
+        "sec-fetch-dest": "empty",
+        "sec-fetch-mode": "cors",
+        "sec-fetch-site": "same-origin",
+        "user-agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/131.0.0.0 Safari/537.36",
+        "x-requested-with": "XMLHttpRequest"
+	}
 
     def __init__(self):
         super().__init__()
         self.image_urls = self.get_image_urls()
 
     def get_image_urls(self):
-        response = requests.get(self.BASE_URL + "/movie/")
+        response = requests.get(self.BASE_URL + "/movie/", headers=self.REQUEST_HEADERS)
         html = BeautifulSoup(response.text, "html.parser")
         movies = html.find_all("li", {"class": "featureItem"})
         urls = dict()
@@ -39,7 +56,7 @@ class LevCinema(Cinema):
 
     def get_films_by_date(self, date, town):
         encoded_theater_name = urllib.parse.quote(self.THEATER_NAMES[town])
-        response = requests.get(self.BASE_URL + self.FILMS_URL.format(encoded_theater_name, date.year, date.month, date.day))
+        response = requests.get(self.BASE_URL + self.FILMS_URL.format(encoded_theater_name, date.year, date.month, date.day), headers=self.REQUEST_HEADERS)
         html = BeautifulSoup(response.text, "html.parser")
         movies = html.find_all("li")
         movie_links = html.find_all("a", {"class": "smovielink"})
@@ -67,19 +84,28 @@ class LevCinema(Cinema):
         return films
 
     def get_film_details(self, film):
+        cache = self._get_details_from_cache(film)
+        if cache != None:
+            return cache
+
         if not self.NAME in film.links:
             return None
         
         link = film.links[self.NAME]
-        response = requests.get(link)
+        response = requests.get(link, headers=self.REQUEST_HEADERS)
         html = BeautifulSoup(response.text, "html.parser")
 
         details = FilmDetails()
 
         movie_content = html.find("div", {"class": "movie_content"})
-        description = movie_content.find("p")
-        if description:
-            details.description = description.text
+        ps = movie_content.find_all("p")
+        description = ""
+        for p in ps:
+            span = p.find("span")
+            if None == span:
+                description += p.text + "\n"
+            else:
+                description += span.text + "\n"
 
         movie_information = html.find("div", {"class": "movie_in"})
 
@@ -97,9 +123,8 @@ class LevCinema(Cinema):
             details.countries = [country]
             details.year = int(year)
             details.language = language
-            details.length = length
+            details.length = int(length)
         except Exception:
-            # print(f"Basic Info Failed {film.name}")
             pass
 
         try:
@@ -117,8 +142,9 @@ class LevCinema(Cinema):
             if cast != None:
                 details.cast = cast
         except Exception as e:
-            # print(f"Cast Failed {film.name}, {e}")
             pass
+
+        self._add_to_details_cache(film, details)
         
         return details
 

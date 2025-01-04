@@ -8,7 +8,7 @@ from .cinemas.israel.cinematheque import CinemathequeCinema
 CINEMAS = {
     "Israel": [
         CinemathequeCinema,
-        CanadaCinema,
+        # CanadaCinema, # SHUT DOWN :(
         JaffaCinema,
         CinemaCityCinema,
         LevCinema,

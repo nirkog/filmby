@@ -94,6 +94,9 @@ class Film:
         self.links = dict()
         self.details = FilmDetails()
 
+    def __str__(self):
+        return f"{self.name}, {self.details.director}, {self.details.length}, {self.details.language}, {self.details.year}, {self.links}, {self.dates}"
+
     def json_serializable(self):
         result = copy.deepcopy(self.__dict__)
         result["details"] = copy.deepcopy(self.details.__dict__)
