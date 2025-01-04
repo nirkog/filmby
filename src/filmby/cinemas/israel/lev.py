@@ -68,7 +68,6 @@ class LevCinema(Cinema):
 
             name = urllib.parse.unquote(movie_links[i]["href"][29:-1])
             clean_name = name.replace("-", " ")
-            # clean_name = clean_name.replace("-מדובב", "") # ???
             films.append(Film(clean_name))
 
             films[-1].set_image_url(self.image_urls[name])
