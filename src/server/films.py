@@ -55,7 +55,7 @@ class FilmManager:
 
                 if time.time() - cache["timestamp"] < interval:
                     first_sleep_duration = interval - (time.time() - cache["timestamp"])
-                    logger.info(f"Loading films from cache, next update will be in {first_sleep_duration} seconds")
+                    logger.info(f"Loading films from cache, next update will be in {int(first_sleep_duration)} seconds")
 
         thread = IntervalThread(interval, first_sleep_duration, self.update_films)
         thread.start()

@@ -105,6 +105,7 @@ class LevCinema(Cinema):
                 description += p.text + "\n"
             else:
                 description += span.text + "\n"
+        details.description = description
 
         movie_information = html.find("div", {"class": "movie_in"})
 
