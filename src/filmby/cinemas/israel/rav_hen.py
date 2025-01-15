@@ -129,7 +129,7 @@ class RavHenCinema(Cinema):
         script = scripts[0]
         lines = script.text.split("\n")
 
-        details = FilmDetails
+        details = FilmDetails()
         for line in lines:
             if "filmDetails" in line:
                 obj = line[line.index("{"):-1]
