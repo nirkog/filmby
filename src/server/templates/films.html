@@ -7,9 +7,11 @@
 				<div class="film-text">
 					<h2 class="film-header">{{ film.name }}</h2>
 					<div class="film-description">
+						<p>
 						{% if film.details.description != None %}
-							<p>{{ film.details.description }}</p>
+							{{ film.details.description }}
 						{% endif %}
+						</p>
 					</div>
 					<div class="film-details">
 						{% if film.details.director != None %}
@@ -63,9 +65,11 @@
 			<img src="{{ film.image_url }}" referrerpolicy="no-referrer"/>
 			<div class="film-text">
 				<div class="film-description">
+					<p>
 					{% if film.details.description != None %}
-						<p>{{ film.details.description }}</p>
+						{{ film.details.description }}
 					{% endif %}
+					</p>
 				</div>
 			</div>
 			<div class="screenings">

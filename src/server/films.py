@@ -2,6 +2,7 @@ import time
 import threading
 import pickle
 import os
+import time
 from pathlib import Path
 from datetime import date, timedelta
 
@@ -14,14 +15,17 @@ MAX_THREAD_COUNT = 100
 SPAN_IN_DAYS = 14
 
 class IntervalThread(threading.Thread):
-    def __init__(self, interval, func, args=(), kwargs=dict()):
+    def __init__(self, interval, first_sleep_duration, func, args=(), kwargs=dict()):
         super(IntervalThread, self).__init__()
         self.interval = interval
+        self.first_sleep_duration = first_sleep_duration
         self.func = func
         self.args = args
         self.kwargs = kwargs
 
     def run(self):
+        if self.first_sleep_duration > 0:
+            time.sleep(self.first_sleep_duration)
         while True:
             # TODO: Maybe take interval from end to start
             self.func(*self.args, **self.kwargs)
@@ -36,17 +40,24 @@ class FilmManager:
         if os.path.exists("/tmp/filmby_update_running"):
             os.remove("/tmp/filmby_update_running")
 
-    def start_film_updating_at_interval(self, interval):
+    def start_film_updating_at_interval(self, interval, ignore_cache=False):
         if self.started:
             return
         self.started = True
 
-        if os.path.exists(self.cache_path):
+        cache = None
+        first_sleep_duration = 0
+        if os.path.exists(self.cache_path) and not ignore_cache:
             with open(self.cache_path, "rb") as f:
-                self.films = pickle.load(f)
+                cache = pickle.load(f)
+                self.films = cache["films"]
                 logger.info(f"Loading cache with {len(self.films)} films")
 
-        thread = IntervalThread(interval, self.update_films)
+                if time.time() - cache["timestamp"] < interval:
+                    first_sleep_duration = interval - (time.time() - cache["timestamp"])
+                    logger.info(f"Loading films from cache, next update will be in {first_sleep_duration} seconds")
+
+        thread = IntervalThread(interval, first_sleep_duration, self.update_films)
         thread.start()
 
     def update_films(self):
@@ -106,8 +117,9 @@ class FilmManager:
         if not os.path.exists(cache_path.parent):
             os.makedirs(cache_path.parent, exist_ok=True)
 
+        cache = {"films": self.films, "timestamp": time.time()}
         with open(self.cache_path, "wb") as f:
-            pickle.dump(self.films, f)
+            pickle.dump(cache, f)
 
         logger.info(f"Finished updating with {len(self.films)} films, took {time.time() - start:.1f}s")
 

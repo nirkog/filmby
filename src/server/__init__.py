@@ -1,4 +1,5 @@
 import sys
+import os
 
 from loguru import logger
 from flask import Flask, g
@@ -18,6 +19,10 @@ def create_app(test_config=None):
     # app = Flask(__name__, template_folder=os.path.abspath("./templates/"), static_folder=os.path.abspath("./static/"))
     app = Flask(__name__)
 
+    ignore_cache = False
+    if "IGNORE_CACHE" in os.environ:
+        ignore_cache = bool(os.environ["IGNORE_CACHE"])
+
     logger.remove()
     if app.debug:
         logger.add(sys.stdout, format=CONSOLE_LOG_FORMAT, level="DEBUG")
@@ -30,7 +35,10 @@ def create_app(test_config=None):
     app.register_blueprint(show_films_bp)
     app.register_blueprint(film_page_bp)
 
-    film_manager.start_film_updating_at_interval(UPDATE_INTERVAL_IN_SECONDS)
+    if ignore_cache:
+        logger.info("Ignoring cache")
+
+    film_manager.start_film_updating_at_interval(UPDATE_INTERVAL_IN_SECONDS, ignore_cache=ignore_cache)
 
     app.config["TEMPLATES_AUTO_RELOAD"] = True
 
