@@ -10,7 +10,7 @@ CINEMAS = {
         CinemathequeCinema,
         # CanadaCinema, # SHUT DOWN :(
         JaffaCinema,
-        CinemaCityCinema,
+        # CinemaCityCinema,
         LevCinema,
         RavHenCinema
     ]
