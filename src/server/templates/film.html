@@ -13,7 +13,7 @@
 			<img class="wide-image" src="{{ film.image_url }}" referrerpolicy="no-referrer"/>
 			<div class="film-text">
 				{% if film.details.description != None %}
-					<p class="film-description">{{ film.details.description }}</p>
+					<p class="film-description">{{ film.details.description | safe }}</p>
 				{% endif %}
 				<br>
 				<br>
@@ -45,7 +45,7 @@
 			<img src="{{ film.image_url }}" referrerpolicy="no-referrer"/>
 			<div class="film-text">
 				{% if film.details.description != None %}
-					<p class="film-description">{{ film.details.description }}</p>
+					<p class="film-description">{{ film.details.description | safe }}</p>
 				{% endif %}
 				<br>
 				<br>

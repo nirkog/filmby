@@ -18,8 +18,50 @@ class CinemathequeCinema(Cinema):
     HOUR_PATTERN = "\d\d:\d\d"
     UPDATE_INTERVAL = 60 * 60
 
+    CINE499_LINK = "https://linktr.ee/cine499"
+
+    def _get_499_films(self):
+        headers = {
+            "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/109.0.0.0 Safari/537.36"
+        }
+        response = requests.get(self.CINE499_LINK, headers=headers)
+        html = BeautifulSoup(response.text, "html.parser")
+
+        self.cine499_films = []
+        boxes = html.find_all("div", {"class": "h-full w-full"})
+        for box in boxes:
+            text = box.p.text.strip()
+            if text.count("|") != 1:
+                continue
+
+            name, date = text.split(" | ")
+            if date.count(".") != 1:
+                continue
+
+            day, month = date.split(".")
+            if not month.isnumeric() or not day.isnumeric():
+                continue
+            day = int(day)
+            month = int(month)
+            date = datetime.datetime(datetime.datetime.now().year, month, day, 21, 0)
+
+            film = Film(name)
+            film.add_dates(self.NAME, self.TOWNS[0], [date])
+
+            image_url = box.div.img["src"]
+            film.set_image_url(image_url)
+
+            link = box.parent["href"]
+            film.add_link(self.NAME, link)
+
+            film.details.description = f"סינמטק 499 - סרט כל יום רביעי בתשעה שקלים בשעה 21:00."
+
+            self.cine499_films.append(film)
+
     def __init__(self):
         super().__init__()
+
+        self._get_499_films()
 
     def get_films_by_date(self, date, town):
         headers = {
@@ -74,6 +116,12 @@ class CinemathequeCinema(Cinema):
                 else:
                     films[-1].details.countries = detail
             
+        for film in self.cine499_films:
+            dates = film.dates[town][self.NAME]
+            for _date in dates:
+                if _date.year == date.year and _date.month == date.month and _date.day == date.day:
+                    films.append(film)
+
         self._merge_films(films)
 
         return films

@@ -9,7 +9,7 @@
 					<div class="film-description">
 						<p>
 						{% if film.details.description != None %}
-							{{ film.details.description }}
+							{{ film.details.description | safe }}
 						{% endif %}
 						</p>
 					</div>
@@ -67,7 +67,7 @@
 				<div class="film-description">
 					<p>
 					{% if film.details.description != None %}
-						{{ film.details.description }}
+						{{ film.details.description | safe }}
 					{% endif %}
 					</p>
 				</div>
