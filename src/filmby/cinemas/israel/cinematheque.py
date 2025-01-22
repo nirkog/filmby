@@ -5,6 +5,7 @@ import urllib.parse
 import json
 import re
 from bs4 import BeautifulSoup
+from loguru import logger
 
 from ...cinema import Cinema
 from ...film import Film
@@ -110,9 +111,15 @@ class CinemathequeCinema(Cinema):
             for detail in basic_details:
                 detail = detail.strip()
                 if detail.isnumeric():
-                    films[-1].details.year = int(detail)
+                    try:
+                        films[-1].details.year = int(detail)
+                    except Exception as e:
+                        logger.warning(f"Could not parse year, error: {str(e)}")
                 elif "אורך" in detail:
-                    films[-1].details.length = int(detail.split(":")[1])
+                    try:
+                        films[-1].details.length = int(detail.split(":")[1])
+                    except Exception as e:
+                        logger.warning(f"Could not parse length, error: {str(e)}")
                 else:
                     films[-1].details.countries = detail
             
