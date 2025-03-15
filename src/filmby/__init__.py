@@ -4,6 +4,7 @@ from .cinemas.israel.jaffa import JaffaCinema
 from .cinemas.israel.rav_hen import RavHenCinema
 from .cinemas.israel.canada import CanadaCinema
 from .cinemas.israel.cinematheque import CinemathequeCinema
+from .cinemas.israel.limbo import LimboCinema
 
 CINEMAS = {
     "Israel": [
@@ -12,6 +13,7 @@ CINEMAS = {
         JaffaCinema,
         # CinemaCityCinema,
         LevCinema,
-        RavHenCinema
+        RavHenCinema,
+        LimboCinema
     ]
 }

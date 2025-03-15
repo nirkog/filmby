@@ -4,3 +4,4 @@ beautifulsoup4
 fuzzywuzzy
 parse
 python-Levenshtein
+emoji

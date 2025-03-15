@@ -6,7 +6,6 @@ import string
 
 from loguru import logger
 from fuzzywuzzy import fuzz
-from fuzzywuzzy import process
 
 CONTENT_TYPES_TO_FILE_ENGINGS = {
     "image/jpeg": ".jpg"
