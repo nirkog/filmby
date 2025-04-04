@@ -26,6 +26,7 @@ LANGUAGE_TRANSLATIONS = {
     "original-lang-en-ca": "אנגלית",
     "original-lang-en-gb": "אנגלית",
     "original-lang-en-us": "אנגלית",
+    "original-lang-en": "אנגלית",
     "original-lang-fr-ca": "צרפתית",
     "original-lang-fr-fr": "צרפתית",
     "original-lang-de": "גרמנית",
