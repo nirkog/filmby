@@ -8,7 +8,7 @@ function toggle_description_expansion(film_element, expanding) {
 	} else {
 		description_container.style.maxHeight = "130px";
 		description.innerHTML = description.dataset.short_text;
-		console.log(description.innerHTML);
+		//console.log(description.innerHTML);
 	}
 }
 
@@ -32,6 +32,7 @@ function on_film_click(e) {
 
 	const screenings_element = film_element.querySelector(".screenings");
 	const expand_icon = film_element.querySelector(".expand i");
+	const description = film_element.querySelector(".film-description p");
 	if (screenings_element.style.maxHeight) {
 		screenings_element.style.maxHeight = null;
 		expand_icon.classList.remove("fa-chevron-up");
@@ -39,6 +40,8 @@ function on_film_click(e) {
 
 		if (g_mobile) {
 			toggle_description_expansion(film_element, false);
+		} else {
+			description.innerHTML = description.dataset.short_text;
 		}
 
 		film_element.classList.remove("open");
@@ -49,6 +52,8 @@ function on_film_click(e) {
 
 		if (g_mobile) {
 			toggle_description_expansion(film_element, true);
+		} else {
+			description.innerHTML = description.dataset.long_text;
 		}
 		
 		film_element.classList.add("open");
@@ -82,7 +87,6 @@ async function get_films(e) {
 
 		// Shorten description
 		let CHARACTER_LIMIT = 420;
-		//console.log(screen.width);
 		if (screen.width < 1300) {
 			CHARACTER_LIMIT = 250;
 		}
@@ -142,10 +146,10 @@ function load_state() {
 	const max_delta = 1 * 60 * 60 * 1000;
 	const state_time = Date.parse(state.time);
 	if (now - state_time > max_delta) {
-		console.log("State is old");
+		//console.log("State is old");
 		return;
 	} else {
-		console.log("Delta is ", now - state_time);
+		//console.log("Delta is ", now - state_time);
 	}
 
 	const films_elemnt = document.querySelector("#films");
