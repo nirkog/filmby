@@ -15,8 +15,6 @@ class JaffaCinema(Cinema):
     NAME = "Jaffa"
     TOWNS = ["Tel Aviv"]
     BASE_URL = "https://www.jaffacinema.com/"
-    DATE_FORMAT = "%d/%m/%y"
-    HOUR_FORMAT = "%H:%M"
     UPDATE_INTERVAL = 60 * 60
     DATE_PATTERN = "\d\d/\d\d"
     HOUR_PATTERN = "\d\d:\d\d"
@@ -24,7 +22,6 @@ class JaffaCinema(Cinema):
     def __init__(self):
         super().__init__()
         self.films = self.get_films()
-        self.last_update = time.time()
 
     def get_date_from_option(self, text):
         date = re.findall(self.DATE_PATTERN, text)
@@ -126,12 +123,13 @@ class JaffaCinema(Cinema):
             except Exception as e:
                 logger.error(f"Could not parse screening, error: {str(e)}")
 
+        self.last_update = time.time()
+
         return films
 
     def get_films_by_date(self, date, town):
         if time.time() - self.last_update > self.UPDATE_INTERVAL:
             self.films = self.get_films()
-            self.last_update = time.time()
 
         films = []
         for film in self.films:

@@ -29,7 +29,6 @@ class LimboCinema(Cinema):
         super().__init__()
 
         self.films = self.get_films()
-        self.last_update = time.time()
 
     def get_films(self):
         response = requests.get(self.BASE_URL, headers=self.HEADERS)
@@ -93,6 +92,8 @@ class LimboCinema(Cinema):
             description = "שימו לב! השעות של הסרטים בקולנוע לימבו לא מדויקות, גשו ללינק שמופיע גדי לקבל את השעה המדויקת.<br>" + description
             # print("HI4")
             films[-1].details.description = description
+
+        self.last_update = time.time()
 
         return films
 
