@@ -4,25 +4,7 @@ from loguru import logger
 
 from server.film_page import bp
 from server.films import film_manager
-
-# TODO: This is a patch, fix this
-FILM_NAME_TRANSLATIONS = {
-        "Canada": "קולנוע קנדה",
-        "Cinema City": "סינמה סיטי",
-        "Cinematheque": "סינמטק",
-        "Jaffa": "קולנוע יפו",
-        "Lev": "קולנוע לב",
-        "Rav Hen": "רב חן",
-        "Limbo": "קולנוע לימבו"
-}
-
-DAY_NAMES = ["שני", "שלישי", "רביעי", "חמישי", "שישי", "שבת", "ראשון"]
-
-def get_day_name(date):
-    try:
-        return DAY_NAMES[date.weekday()]
-    except Exception:
-        return ""
+import server.utils as utils
 
 @bp.route('/film/<film_index>')
 def film_page(film_index):
@@ -38,5 +20,5 @@ def film_page(film_index):
             'film.html',
             film=film,
             town="Tel Aviv",
-            name_translations=FILM_NAME_TRANSLATIONS,
-            get_day_name=get_day_name)
+            name_translations=utils.get_film_name_translations(),
+            get_day_name=utils.get_day_name)

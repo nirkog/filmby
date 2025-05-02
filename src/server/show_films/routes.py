@@ -6,25 +6,7 @@ from loguru import logger
 
 from server.show_films import bp
 from server.films import film_manager
-
-# TODO: This is a patch, fix this
-FILM_NAME_TRANSLATIONS = {
-        "Canada": "קולנוע קנדה",
-        "Cinema City": "סינמה סיטי",
-        "Cinematheque": "סינמטק",
-        "Jaffa": "קולנוע יפו",
-        "Lev": "קולנוע לב",
-        "Rav Hen": "רב חן",
-        "Limbo": "קולנוע לימבו"
-}
-
-DAY_NAMES = ["שני", "שלישי", "רביעי", "חמישי", "שישי", "שבת", "ראשון"]
-
-def get_day_name(date):
-    try:
-        return DAY_NAMES[date.weekday()]
-    except Exception:
-        return ""
+import server.utils as utils
 
 def filter_films(date, town, hour_filter):
     films = []
@@ -43,12 +25,6 @@ def filter_films(date, town, hour_filter):
             indices.append(i)
 
     return indices, films, screenings
-
-def get_day_name(date):
-    try:
-        return DAY_NAMES[date.weekday()]
-    except Exception:
-        return ""
 
 def filter_dates(dates, chosen_date):
     filtered = []
@@ -87,6 +63,6 @@ def show_films():
             films=filtered_films,
             indices=indices,
             town="Tel Aviv",
-            name_translations=FILM_NAME_TRANSLATIONS,
-            get_day_name=get_day_name,
+            name_translations=utils.get_film_name_translations(),
+            get_day_name=utils.get_day_name,
             screenings=screenings)
