@@ -1,9 +1,6 @@
 import time
 import requests
 import datetime
-import urllib.parse
-import json
-import re
 import emoji
 from bs4 import BeautifulSoup
 from loguru import logger
@@ -15,11 +12,10 @@ class LimboCinema(Cinema):
     TRANSLATED_NAMES = {"heb": "קולנוע לימבו"}
     NAME = "Limbo"
     TOWNS = ["Tel Aviv"]
-    # BASE_URL = "https://www.hameretz2.org/limbo"
     BASE_URL = "https://test.hameretz2.org/"
     DATE_FORMAT = "%H:%M"
     NEW_DATE_FORMAT = "%d.%m"
-    UPDATE_INTERVAL = 60 * 60
+    UPDATE_INTERVAL = 60 * 60 * 12
     HEADERS = {
         "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/109.0.0.0 Safari/537.36"
     }
@@ -41,11 +37,8 @@ class LimboCinema(Cinema):
         for list_item in list_items:
             if not "filter-%d7%9c%d7%99%d7%9e%d7%91%d7%95" in list_item['class']:
                 continue
-            # print("HI")
             image_url = list_item.find("img")["src"]
-            # name = list_item.find("div", {"class": "event-title"}).text
             name = list_item.find(class_="event-title").text
-            # print("HI2")
             name = emoji.replace_emoji(name)
             if name.endswith("קולנוע לימבו"):
                 name = name[:-len("קולנוע לימבו")]
@@ -58,39 +51,15 @@ class LimboCinema(Cinema):
             link = list_item["href"]
             films[-1].add_link(self.NAME, link)
 
-            # image_url = image_url[:image_url.find(".png") + 4]
             films[-1].set_image_url(image_url) 
 
-            # date = list_item.find("div", {"data-hook": "date"}).text
-            # print("HI3")
-            # date, hour = date.split(",")[:2]
-
-            # hour = hour.strip()[:5]
-            # hour = datetime.datetime.strptime(hour, self.DATE_FORMAT)
-            # 
-            # date = date.strip()
-            # day, month, year = date.split(" ")
-            # year = int(year)
-            # day = int(day)
-            # 
-            # for i, name in enumerate(self.HEBREW_MONTHS):
-            #     if name in month:
-            #         month = i + 1
-            #         break
-            # else:
-            #     month = 1
-
-
-            # date = datetime.datetime(year, month, day, hour.hour, hour.minute) 
             date = list_item.find("div", {"class": "event-datetime"}).text
             date = datetime.datetime.strptime(date, self.NEW_DATE_FORMAT)
             date = datetime.datetime(datetime.datetime.now().year, date.month, date.day, 19)
-            # print("DATE", date)
             films[-1].add_dates(self.NAME, self.TOWNS[0], [date])
 
             description = list_item.find("div", {"class": "event-summary"}).text
             description = "שימו לב! השעות של הסרטים בקולנוע לימבו לא מדויקות, גשו ללינק שמופיע גדי לקבל את השעה המדויקת.<br>" + description
-            # print("HI4")
             films[-1].details.description = description
 
         self.last_update = time.time()

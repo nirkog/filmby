@@ -49,7 +49,6 @@ class TLVMuseumCinema(Cinema):
         film_id_to_index = dict()
 
         for date in response["items"]:
-            date_parsed = datetime.datetime.strptime(date, self.PARTIAL_DATE_FORMAT)
             for film_json in response["items"][date]:
                 if film_json["id"] in film_id_to_index:
                     index = film_id_to_index[film_json["id"]]
@@ -68,8 +67,6 @@ class TLVMuseumCinema(Cinema):
 
 
         self.last_update = time.time()
-
-        print("LENGTH", len(films))
 
         return films
 

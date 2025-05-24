@@ -7,6 +7,7 @@ from .cinemas.israel.cinematheque import CinemathequeCinema
 from .cinemas.israel.limbo import LimboCinema
 from .cinemas.israel.tlvmuseum import TLVMuseumCinema
 from .cinemas.israel.jaffa_hill import JaffaHillCinema
+from .cinemas.israel.radical import RadicalCinema
 
 CINEMAS = {
     "Israel": [
@@ -18,6 +19,7 @@ CINEMAS = {
         RavHenCinema,
         LimboCinema,
         TLVMuseumCinema,
-        JaffaHillCinema
+        JaffaHillCinema,
+        RadicalCinema
     ]
 }

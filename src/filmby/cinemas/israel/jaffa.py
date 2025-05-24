@@ -16,8 +16,8 @@ class JaffaCinema(Cinema):
     TOWNS = ["Tel Aviv"]
     BASE_URL = "https://www.jaffacinema.com/"
     UPDATE_INTERVAL = 60 * 60
-    DATE_PATTERN = "\d\d/\d\d"
-    HOUR_PATTERN = "\d\d:\d\d"
+    DATE_PATTERN = "\\d\\d/\\d\\d"
+    HOUR_PATTERN = "\\d\\d:\\d\\d"
 
     def __init__(self):
         super().__init__()
