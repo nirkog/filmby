@@ -80,31 +80,31 @@ class JaffaCinema(Cinema):
                 countries = None
                 year = None
                 try:
-                    raw_str = paragraphs[0].text
+                    raw_str = list(in_parent.children)[0].text
                     countries, year = raw_str.split(" / ")
                     countries = countries.split(", ")
                 except Exception as e:
-                    logger.warning(f"Could not parse countries and year (string was \"{raw_str}\"), error: {str(e)}")
+                    logger.warning(f"Could not parse countries and year for film {name} (string was \"{raw_str}\"), error: {str(e)}")
                     countries = None
 
                 try:
                     year = int(year.strip().replace(" ", "")[:4])
                     assert year > 1900 and year < 2100
                 except Exception as e:
-                    logger.warning(f"Could not parse year (string was \"{year}\"), error: {str(e)}")
+                    logger.warning(f"Could not parse year for film {name} (string was \"{year}\"), error: {str(e)}")
                     year = None
 
                 try:
-                    if len(paragraphs) > 1:
-                        description = paragraphs[1].text
-                    else:
-                        if in_parent.find("spand") != None:
-                            description = in_parent.find("span").text
-                        else:
-                            description = "\n".join(paragraphs[0].text.split("\n")[1:])
-                            # TODO: In this case, paragraphs[0].text also contains the year and countries, should parse this
+                    description = ""
+                    elements = in_parent.find_all("p") + in_parent.find_all("span")
+                    for element in elements:
+                        if element.text == raw_str:
+                            continue
+
+                        description += element.text + "<br>"
+                    description = description[:-4]
                 except Exception as e:
-                    logger.warning(f"Could not parse description, error: {str(e)}")
+                    logger.warning(f"Could not parse description for film {name}, error: {str(e)}")
                     description = None
 
                 info_title = screening.find("div", {"class": "info-title"})

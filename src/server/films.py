@@ -33,6 +33,7 @@ class IntervalThread(threading.Thread):
 
 class FilmManager:
     def __init__(self, cache_path="cache/films.bin"):
+        self.manual_films = []
         self.films = []
         self.cache_path = cache_path
         self.started = False
@@ -56,6 +57,14 @@ class FilmManager:
                 if time.time() - cache["timestamp"] < interval:
                     first_sleep_duration = interval - (time.time() - cache["timestamp"])
                     logger.info(f"Loading films from cache, next update will be in {int(first_sleep_duration)} seconds")
+
+        if os.path.exists("./data/manual_films.bin"):
+            with open("./data/manual_films.bin", "rb") as f:
+                manual_films = pickle.load(f)
+            self.manual_films = manual_films
+            self.films.extend(manual_films)
+
+        logger.info(f"Initialized films with {len(self.manual_films)} manual films")
 
         thread = IntervalThread(interval, first_sleep_duration, self.update_films)
         thread.start()
@@ -112,6 +121,7 @@ class FilmManager:
 
         new_films = self._merge_films(new_films)
         self.films = new_films
+        self.films.extend(self.manual_films)
 
         cache_path = Path(self.cache_path)
         if not os.path.exists(cache_path.parent):

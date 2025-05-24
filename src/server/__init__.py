@@ -12,7 +12,7 @@ from server.films import FilmManager, film_manager
 UPDATE_INTERVAL_IN_HOURS = 4
 UPDATE_INTERVAL_IN_SECONDS = UPDATE_INTERVAL_IN_HOURS * 60 * 60
 
-CONSOLE_LOG_FORMAT = "<green>[{time:HH:mm:ss}]</green> | <lvl>{level}</lvl> | {message}"
+CONSOLE_LOG_FORMAT = "<green>[{time:HH:mm:ss}]</green> | <lvl>{level}</lvl> | {file} | {message}"
 FILE_LOG_FORMAT = "<green>[{time:DD-MM-YY HH:mm:ss}]</green> | <lvl>{level}</lvl> | {file} | {function} | {message}"
 
 def create_app(test_config=None):
