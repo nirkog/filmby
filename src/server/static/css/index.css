@@ -183,6 +183,54 @@ body {
 	padding-right: 1.5rem;
 }
 
+.film-cinema-tag-container {
+	margin: 1.5rem 0;
+}
+
+.film-cinema-tag {
+	display: inline-block;
+	padding: 0.2rem 0.65rem;
+	background-color: lightblue;
+	border-radius: 8px;
+	margin: 0 0.1rem;
+	font-weight: 600;
+}
+
+.cinema-tag-jaffa {
+	background-color: #8eb1fe;
+}
+
+.cinema-tag-lev {
+	background-color: #f1f5a0;
+}
+
+.cinema-tag-ravhen {
+	background-color: #f56363;
+}
+
+.cinema-tag-cinematheque {
+	background-color: #f799ee;
+}
+
+.cinema-tag-radical {
+	background-color: #109ba9;
+	color: #fafafa;
+}
+
+.cinema-tag-tlvmuseum {
+	background-color: #3c3c3b;
+	color: #fcfcfc;
+}
+
+.cinema-tag-limbo {
+	background-color: #af25c8;
+	color: #fafafa;
+}
+
+.cinema-tag-jaffahill {
+	background-color: #cce2e3;
+}
+
 #view_menu {
 	display: flex;
 	justify-content: cneter;

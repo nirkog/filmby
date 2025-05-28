@@ -33,6 +33,14 @@
 							<p class="film-year">שנה: {{ film.details.year }} | </p>
 						{% endif %}
 					</div>
+					<div class="film-cinema-tag-container">
+						{% set film_screenings = screenings[loop.index - 1] %} 
+						{% for cinema_name in film_screenings %}
+							<div class="film-cinema-tag cinema-tag-{{ cinema_name.replace(" ", "").lower() }}">
+								{{ name_translations[cinema_name] }}
+							</div>
+						{% endfor %}
+					</div>
 				</div>
 			</div>
 			<div class="screenings">
@@ -71,6 +79,14 @@
 					{% endif %}
 					</p>
 				</div>
+			</div>
+			<div class="film-cinema-tag-container">
+				{% set film_screenings = screenings[loop.index - 1] %} 
+				{% for cinema_name in film_screenings %}
+					<div class="film-cinema-tag cinema-tag-{{ cinema_name.replace(" ", "").lower() }}">
+						{{ name_translations[cinema_name] }}
+					</div>
+				{% endfor %}
 			</div>
 			<div class="screenings">
 				<h2>הקרנות בתאריך</h2>
