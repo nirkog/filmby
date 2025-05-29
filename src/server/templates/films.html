@@ -99,14 +99,14 @@
 							{% for screening_date in dates %}
 								<div class="date-box">
 									<p>{{ get_day_name(screening_date) }} - {{ screening_date.day }}/{{ screening_date.month }} - {{ screening_date.hour }}:{{ "%02d" % screening_date.minute }}</p>
-									<a class="screening-link" href="{{ film.links[cinema_name] }}" target="_blank">הזמן</a>
+									<a class="screening-link button" href="{{ film.links[cinema_name] }}" target="_blank">הזמן</a>
 								</div>
 							{% endfor %}
 						</div>
 					{% endif %}
 				{% endfor %}
 				<div class="button-box">
-					<a class="film-button big-button" href="/film/{{ indices[loop.index - 1] }}">לפרטים ותאריכים נוספים</a>
+					<a class="film-button big-button button" href="/film/{{ indices[loop.index - 1] }}">לפרטים ותאריכים נוספים</a>
 				</div>	
 			</div>
 			<div class="expand">
