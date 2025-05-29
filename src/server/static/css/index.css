@@ -43,26 +43,33 @@ body {
 	padding: 4px;
 }
 
-.big-button {
-	margin-top: 1rem;
+.search-button {
 	font-size: 1.5rem;
+	margin-top: 1rem;
 	padding: 0.5rem 2rem;
 	background-color: #11afed;
 	color: white;
-	text-decoration: none;
-	border: none;
-	border-radius: 12px;
-	cursor: pointer;
-	transition: 0.1s all;
 }
 
-.big-button:hover {
+.search-button:hover {
 	background-color: #0ca0dd;
 }
 
-.big-button.disabled {
+.search-button.disabled {
 	background-color: #1b82ad;
 	cursor: default;
+}
+
+.film-button {
+	font-size: 1.5rem;
+	margin-top: 1rem;
+	padding: 0.5rem 2rem;
+	background-color: #11afed;
+	color: white;
+}
+
+.film-button:hover {
+	background-color: #0ca0dd;
 }
 
 #films {
@@ -78,30 +85,25 @@ body {
 .date-box {
 	padding: 0.8rem 0;
 	margin: 0.8rem 0;
-	border-radius: 20px;
+	border-radius: 12px;
 	display: flex;
 	justify-content: space-between;
-	border: 1px solid #aaa;
+	border: 1px solid #333;
+	/* background-color: white; */
+}
+
+.screening-link {
+	background-color: #6be88c;
+}
+
+.screening-link:hover {
+	background-color: #5bdf7f;
 }
 
 .date-box p {
 	margin: auto 0;
 	padding-right: 1.3rem;
 	display: inline;
-}
-
-.date-box a {
-	display: inline;
-	margin-left: 1.3rem;
-	border: none;
-	cursor: pointer;
-	background-color: #6be88c;
-	border-radius: 10px;
-	font-weight: 400;
-	font-size: 1rem;
-	padding: 0.2rem 1rem;
-	text-decoration: none;
-	color: black;
 }
 
 .film-top {
@@ -124,7 +126,7 @@ body {
 	padding: 0 1.5rem;
 }
 
-.film .screenings .big-button {
+.film-button {
 	margin: auto;
 	font-size: 1.15rem;
 }

@@ -79,7 +79,7 @@
 				{% for date in film.dates[town][cinema_name] %}
 					<div class="date-box card">
 						<p>{{ get_day_name(date) }} - {{ date.day }}/{{ date.month }} - {{ date.hour }}:{{ "%02d" % date.minute }}</p>
-						<a href="{{ film.links[cinema_name] }}" target="_blank">הזמן</a>
+						<a class="button" href="{{ film.links[cinema_name] }}" target="_blank">הזמן</a>
 					</div>
 				{% endfor %}
 			</div>

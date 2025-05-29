@@ -27,11 +27,14 @@
 	padding: 0 1rem;
 }
 
+.film-block img {
+	width: 100%;	
+}
+
 .film-block {
-	background-color: white;
-	padding: 1rem 1.5rem;
-	padding-bottom: 2.25rem;
-	border-radius: 20px;
+	margin: 1rem auto;
+	margin-bottom: 2.5rem;
+	width: 93%;
 }
 
 .film-block p {
@@ -62,7 +65,6 @@
 }
 
 .date-box {
-	background-color: #fcfcfc;
 	padding: 0.8rem 0;
 	margin: 0.8rem 0;
 	border-radius: 20px;
@@ -74,24 +76,6 @@
 	margin: auto 0;
 	padding-right: 1.3rem;
 	display: inline;
-}
-
-.date-box a {
-	display: inline;
-	margin-left: 1.3rem;
-	border: none;
-	cursor: pointer;
-	background-color: #89f9fe;
-	border-radius: 10px;
-	font-weight: 400;
-	font-size: 1rem;
-	padding: 0.2rem 1rem;
-	text-decoration: none;
-	color: black;
-}
-
-.date-box a:hover {
-	background-color: #86f2f7;
 }
 
 .mobile {
@@ -109,6 +93,8 @@
 
 	.film-details h1 {
 		font-size: 2rem;
+		padding-top: 1rem;
+		padding-bottom: 0;
 	}
 
     .film-details {
@@ -125,4 +111,10 @@
     #content {
     	margin: 1rem;
     }
+
+	.film-block {
+		padding-top: 0;
+		margin-top: 0;
+		width: 88%;
+	}
 }

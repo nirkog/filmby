@@ -63,3 +63,21 @@ body {
 .cinema-tag-jaffahill {
 	background-color: #cce2e3;
 }
+
+.button {
+	display: inline;
+	margin-left: 1.3rem;
+	border: none;
+	cursor: pointer;
+	background-color: #89f9fe;
+	border-radius: 10px;
+	font-weight: 400;
+	font-size: 1rem;
+	padding: 0.2rem 1rem;
+	text-decoration: none;
+	color: black;
+}
+
+.button:hover {
+	background-color: #86f2f7;
+}
