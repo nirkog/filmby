@@ -7,7 +7,7 @@
 	{{ super() }} - {{ film.name }}
 {% endblock %}
 {% block content %}
-	<div class="film-details">
+	<div class="film-details card">
 		<h1>{{ film.name }}</h1>
 		<div class="film-block">
 			<img class="wide-image" src="{{ film.image_url }}" referrerpolicy="no-referrer"/>
@@ -39,7 +39,7 @@
 			<img class="tall-image" src="{{ film.image_url }}" referrerpolicy="no-referrer"/>
 		</div>
 	</div>
-	<div class="film-details mobile">
+	<div class="film-details mobile card">
 		<h1>{{ film.name }}</h1>
 		<div class="film-block">
 			<img src="{{ film.image_url }}" referrerpolicy="no-referrer"/>
@@ -75,9 +75,9 @@
 		<h1>הקרנות</h1>
 		{% for cinema_name in film.dates[town] %}
 			<div>
-				<h3>{{ name_translations[cinema_name] }}</h3>
+				<div class="film-cinema-tag cinema-tag-{{ cinema_name.replace(" ", "").lower() }}">{{ name_translations[cinema_name] }}</div>
 				{% for date in film.dates[town][cinema_name] %}
-					<div class="date-box">
+					<div class="date-box card">
 						<p>{{ get_day_name(date) }} - {{ date.day }}/{{ date.month }} - {{ date.hour }}:{{ "%02d" % date.minute }}</p>
 						<a href="{{ film.links[cinema_name] }}" target="_blank">הזמן</a>
 					</div>

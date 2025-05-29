@@ -1,7 +1,7 @@
 {% if films|length > 0 %}
 	<h1>סרטים</h1>
 	{% for film in films %}
-		<div class="film" data-film-index="{{ indices[loop.index - 1] }}">
+		<div class="film card" data-film-index="{{ indices[loop.index - 1] }}">
 			<div class="film-top">
 				<img src="{{ film.image_url }}" referrerpolicy="no-referrer"/>
 				<div class="film-text">
@@ -68,7 +68,7 @@
 				<i class="fa-solid fa-chevron-down"></i>
 			</div>
 		</div>
-		<div class="film mobile" data-film-index="{{ indices[loop.index - 1] }}">
+		<div class="film mobile card" data-film-index="{{ indices[loop.index - 1] }}">
 			<h2 class="film-header">{{ film.name }}</h2>
 			<img src="{{ film.image_url }}" referrerpolicy="no-referrer"/>
 			<div class="film-text">

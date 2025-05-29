@@ -73,20 +73,6 @@ body {
 
 .film {
 	text-align: right;
-	padding: 1.5rem 0;
-	background-color: #fafafa;
-	color: black;
-	width: 100%;
-	margin: 1rem auto;
-	/* cursor: pointer; */
-	transition: 0.20s all;
-	padding-bottom: 0;
-	border: 1px solid #ccc;
-	border-radius: 8px;
-	box-shadow: 0 0 3px 3px #eee;
-}
-
-.film.open {
 }
 
 .date-box {
