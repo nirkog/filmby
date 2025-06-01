@@ -36,7 +36,7 @@
 					<div class="film-cinema-tag-container">
 						{% set film_screenings = screenings[loop.index - 1] %} 
 						{% for cinema_name in film_screenings %}
-							<div class="film-cinema-tag cinema-tag-{{ cinema_name.replace(" ", "").lower() }}">
+							<div data-name="{{ cinema_name }}" class="film-cinema-tag cinema-tag-{{ cinema_name.replace(" ", "").lower() }}">
 								{{ name_translations[cinema_name] }}
 							</div>
 						{% endfor %}
@@ -83,7 +83,7 @@
 			<div class="film-cinema-tag-container">
 				{% set film_screenings = screenings[loop.index - 1] %} 
 				{% for cinema_name in film_screenings %}
-					<div class="film-cinema-tag cinema-tag-{{ cinema_name.replace(" ", "").lower() }}">
+					<div data-name="{{ cinema_name }}" class="film-cinema-tag cinema-tag-{{ cinema_name.replace(" ", "").lower() }}">
 						{{ name_translations[cinema_name] }}
 					</div>
 				{% endfor %}

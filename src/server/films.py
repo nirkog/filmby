@@ -128,7 +128,6 @@ class FilmManager:
             os.makedirs(cache_path.parent, exist_ok=True)
 
         cache_films = [film for film in self.films if not film in self.manual_films]
-        print(len(cache_films), len(self.films))
         cache = {"films": cache_films, "timestamp": time.time()}
         with open(self.cache_path, "wb") as f:
             pickle.dump(cache, f)

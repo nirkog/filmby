@@ -108,6 +108,7 @@ class TLVMuseumCinema(Cinema):
         director = None
         language = None
         length = None
+        countries = None
 
         for p in description_ps:
             if "טריילר" in p.text:

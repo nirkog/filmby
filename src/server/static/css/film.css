@@ -78,6 +78,10 @@
 	display: inline;
 }
 
+.date-box .button {
+	margin-left: 1.3rem;
+}
+
 .mobile {
 	display: none !important;
 }

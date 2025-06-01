@@ -29,12 +29,12 @@ body {
 	margin: auto;
 }
 
-#date-search-form label {
+#date-search-form > label {
 	font-size: 1.1rem;
 	padding-left: 10px;
 }
 
-#date-search-form input {
+#date-search-form > input {
 	width: 80%;
 	/* min-width: 200px; */
 	max-width: 250px;
@@ -93,6 +93,7 @@ body {
 }
 
 .screening-link {
+	margin-left: 1.3rem;
 	background-color: #6be88c;
 }
 
@@ -220,6 +221,36 @@ body {
 
 .cinema-tag-jaffahill {
 	background-color: #cce2e3;
+}
+
+#search-filters-toggle-button {
+	margin-right: 1rem;
+	background-color: white;
+}
+
+#search-filters-toggle-button:hover {
+	background-color: #f8f8f8;
+}
+
+#search-filters {
+	max-height: 0px;
+	overflow: hidden;
+	transition: max-height 0.2s;
+	text-align: right;
+	width: 33%;
+	margin: auto;
+}
+
+#cinema-filters h2 {
+	margin: 0.5rem 0;
+}
+
+#cinema-filters input {
+	margin: 0;
+}
+
+#cinema-filters label {
+	padding-right: 0.25rem;
 }
 
 #view_menu {
@@ -382,6 +413,7 @@ body {
 
 	.date-box {
 		font-size: 0.9rem;
+		border-color: #888;
 	}
 
 	#date_input {
@@ -399,5 +431,18 @@ body {
 		left: 0;
 		right: 0;
 		*/
+	}
+
+	#date-search-form > label {
+		padding-left: 0;
+	}
+
+	#search-filters-toggle-button {
+		margin-right: 0;
+		margin-top: 0.5rem;
+	}
+
+	#search-filters {
+		width: 84%;
 	}
 }

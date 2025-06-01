@@ -26,8 +26,20 @@
 	<div id="by_date_view" class="view selected">
 		<div id="date-search-form">
 			<!--<input type="text" id="town_input" placeholder="עיר" value="Tel Aviv" disabled /> <br>-->
-			<label for="date_inpute">בחר תאריך:</label>
-			<input type="date" id="date_input" min="{{ min_date }}" max="{{ max_date }}" value="{{ min_date }}"/> <br>
+				<label for="date_input">בחר תאריך:</label>
+				<input type="date" id="date_input" min="{{ min_date }}" max="{{ max_date }}" value="{{ min_date }}"/>
+				<button class="button" id="search-filters-toggle-button">הצג אפשרויות סינון</button>
+			<div id="search-filters">
+				<div id="cinema-filters">
+					<h2>בתי קולנוע</h2>
+					{% for cinema in cinemas %}
+						<input checked data-cinema="{{ cinema.NAME }}" type="checkbox"/>
+						<label>{{ cinema.TRANSLATED_NAMES["heb"] }}</label>
+						<br>
+					{% endfor %}
+				</div>	
+			</div>
+			<br>
 			<button class="search-button button" id="search_button">מצא סרטים</button>
 		</div>
 

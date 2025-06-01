@@ -6,7 +6,7 @@ function toggle_description_expansion(film_element, expanding) {
 		description_container.style.maxHeight = null;
 		description.innerHTML = description.dataset.long_text;
 	} else {
-		description_container.style.maxHeight = "130px";
+		description_container.style.maxHeight = description_container.scrollHeight + "px";
 		description.innerHTML = description.dataset.short_text;
 		//console.log(description.innerHTML);
 	}
@@ -123,6 +123,30 @@ async function get_films(e) {
 
 	for (let i = 0; i < film_button_elements.length; i++) {
 		film_button_elements[i].addEventListener("click", (e) => e.stopPropagation());
+	}
+
+	let checked_cinema_names = [];
+	const cinema_checkboxes = document.querySelectorAll("#cinema-filters input");
+	for (let i = 0; i < cinema_checkboxes.length; i++) {
+		if (cinema_checkboxes[i].checked) {
+			checked_cinema_names.push(cinema_checkboxes[i].dataset.cinema);
+		}
+	}
+
+	for (let i = 0; i < films.length; i++) {
+		let should_filter_out = true;
+		const film = films[i];
+		const cinema_tags = film.querySelectorAll(".film-cinema-tag");
+		for (let j = 0; j < cinema_tags.length; j++) {
+			if (checked_cinema_names.includes(cinema_tags[j].dataset.name)) {
+				should_filter_out = false;
+				break;
+			}
+		}
+
+		if (should_filter_out) {
+			film.style.display = "none";
+		}
 	}
 
 	let state = {};
@@ -352,6 +376,47 @@ function by_film_button_click_handler(e) {
 	}
 }
 
+function toggle_search_filters(e) {
+	const search_filters = document.querySelector("#search-filters");
+
+	console.log(search_filters.style.maxHeight);
+	if (search_filters.style.maxHeight) {
+		search_filters.style.maxHeight = null;
+	} else {
+		search_filters.style.maxHeight = search_filters.scrollHeight + "px";
+	}
+}
+
+function cinema_filter_checkbox_handler(e) {
+	const films = document.querySelectorAll(".film");
+	const cinema_checkboxes = document.querySelectorAll("#cinema-filters input");
+	let checked_cinema_names = [];
+	for (let i = 0; i < cinema_checkboxes.length; i++) {
+		if (cinema_checkboxes[i].checked) {
+			checked_cinema_names.push(cinema_checkboxes[i].dataset.cinema);
+		}
+	}
+
+	for (let i = 0; i < films.length; i++) {
+		const film = films[i];
+		const cinema_tags = film.querySelectorAll(".film-cinema-tag");
+		let should_filter_out = true;
+		for (let j = 0; j < cinema_tags.length; j++) {
+			if (checked_cinema_names.includes(cinema_tags[j].dataset.name)) {
+				should_filter_out = false;
+				break;
+			}
+		}
+
+		if (should_filter_out) {
+			console.log("FILTERING");
+			film.style.display = "none";
+		} else{
+			film.style.display = null;
+		}
+	}
+}
+
 const search_button = document.querySelector("#search_button");
 search_button.addEventListener("click", get_films);
 
@@ -372,3 +437,11 @@ film_search_input.addEventListener("focusout", film_search_focus_handler);
 
 const by_film_button = document.querySelector("#by_film_view button");
 by_film_button.addEventListener("click", by_film_button_click_handler);
+
+const toggle_search_filters_button = document.querySelector("#search-filters-toggle-button");
+toggle_search_filters_button.addEventListener("click", toggle_search_filters);
+
+const cinema_filter_checkboxes = document.querySelectorAll("#cinema-filters input");
+for (let i = 0; i < cinema_filter_checkboxes.length; i++) {
+	cinema_filter_checkboxes[i].addEventListener("change", cinema_filter_checkbox_handler);
+}
