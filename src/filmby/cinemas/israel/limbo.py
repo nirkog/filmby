@@ -59,7 +59,8 @@ class LimboCinema(Cinema):
             films[-1].add_dates(self.NAME, self.TOWNS[0], [date])
 
             description = list_item.find("div", {"class": "event-summary"}).text
-            description = "שימו לב! השעות של הסרטים בקולנוע לימבו לא מדויקות, גשו ללינק שמופיע גדי לקבל את השעה המדויקת.<br>" + description
+            description = "<span class=\"limbo-comment\">שימו לב! השעות של הסרטים בקולנוע לימבו לא מדויקות, גשו ללינק שמופיע גדי לקבל את השעה המדויקת.</span><br><br>" + description
+            print("Better description")
             films[-1].details.description = description
 
         self.last_update = time.time()

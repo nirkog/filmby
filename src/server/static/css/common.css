@@ -80,3 +80,10 @@ body {
 .button:hover {
 	background-color: #86f2f7;
 }
+
+.limbo-comment {
+	color: #666;
+	font-weight: 600;
+	font-size: 1.1rem;
+	font-style: italic;
+}
