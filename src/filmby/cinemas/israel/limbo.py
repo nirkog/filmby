@@ -12,7 +12,7 @@ class LimboCinema(Cinema):
     TRANSLATED_NAMES = {"heb": "קולנוע לימבו"}
     NAME = "Limbo"
     TOWNS = ["Tel Aviv"]
-    BASE_URL = "https://test.hameretz2.org/"
+    BASE_URL = "https://hameretz2.org/"
     DATE_FORMAT = "%H:%M"
     NEW_DATE_FORMAT = "%d.%m"
     UPDATE_INTERVAL = 60 * 60 * 12
@@ -60,7 +60,6 @@ class LimboCinema(Cinema):
 
             description = list_item.find("div", {"class": "event-summary"}).text
             description = "<span class=\"limbo-comment\">שימו לב! השעות של הסרטים בקולנוע לימבו לא מדויקות, גשו ללינק שמופיע גדי לקבל את השעה המדויקת.</span><br><br>" + description
-            print("Better description")
             films[-1].details.description = description
 
         self.last_update = time.time()
