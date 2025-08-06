@@ -9,8 +9,10 @@ def send_email(subject, content):
     with open(os.path.expanduser("~/email_password.txt"), "r") as f:
         password = f.read().strip()
 
+    with open(os.path.expanduser("~/email_user.txt"), "r") as f:
+        email = f.read().strip()
+
     host = "smtp.mailersend.net"
-    email = "MS_vMWqja@test-r83ql3px01pgzw1j.mlsender.net"
     to = "nirkog@gmail.com"
 
     message = MIMEMultipart("alternative")
