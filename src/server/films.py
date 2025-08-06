@@ -10,6 +10,8 @@ from loguru import logger
 
 import filmby
 
+from .utils import send_email
+
 MAX_THREAD_COUNT = 100
 
 SPAN_IN_DAYS = 14
@@ -73,8 +75,10 @@ class FilmManager:
         if os.path.exists("/tmp/filmby_update_running"):
             logger.debug("Redundant thread is exiting")
             exit()
+
         with open("/tmp/filmby_update_running", "w") as f:
             f.write("RUNNING")
+
         start = time.time()
 
         logger.info("Starting film update procedure")
@@ -119,8 +123,25 @@ class FilmManager:
         for thread in threads:
             thread.join()
 
+
         new_films = self._merge_films(new_films)
         self.films = new_films
+
+        excluded_cinemas = ["Jaffa Hill"]
+        unfound_cinema_names = [cinema for cinema in cinemas if cinema not in excluded_cinemas]
+        for film in new_films:
+            for cinema_name in unfound_cinema_names:
+                if cinema_name in film.dates["Tel Aviv"]:
+                    if len(film.dates["Tel Aviv"][cinema_name]) > 0:
+                        print(cinema_name, film.name, film.dates["Tel Aviv"])
+                        unfound_cinema_names.remove(cinema_name)
+        
+        if len(unfound_cinema_names) > 0:
+            logger.info(f"{len(unfound_cinema_names)} Cinemas are possibly broken")
+            content = "\n".join(unfound_cinema_names)
+            subject = f"{len(unfound_cinema_names)} Cinemas are possibly broken"
+            send_email(subject, content)
+
         self.films.extend(self.manual_films)
 
         cache_path = Path(self.cache_path)
