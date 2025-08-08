@@ -133,7 +133,6 @@ class FilmManager:
             for cinema_name in unfound_cinema_names:
                 if cinema_name in film.dates["Tel Aviv"]:
                     if len(film.dates["Tel Aviv"][cinema_name]) > 0:
-                        print(cinema_name, film.name, film.dates["Tel Aviv"])
                         unfound_cinema_names.remove(cinema_name)
         
         if len(unfound_cinema_names) > 0:
