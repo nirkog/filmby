@@ -21,7 +21,7 @@ class JaffaHillCinema(Cinema):
     TRANSLATED_NAMES = {"heb": "קולנוע הפסגה"}
     NAME = "Jaffa Hill"
     TOWNS = ["Tel Aviv"]
-    UPDATE_INTERVAL = 60 * 60
+    UPDATE_INTERVAL = 60 * 60 * 3
     DATE_FORMAT = "%d.%m"
 
     def __init__(self):
