@@ -30,7 +30,10 @@ class IntervalThread(threading.Thread):
             time.sleep(self.first_sleep_duration)
         while True:
             # TODO: Maybe take interval from end to start
-            self.func(*self.args, **self.kwargs)
+            try:
+                self.func(*self.args, **self.kwargs)
+            except Exception as e:
+                logger.error(f"Some fucked up error {e}")
             time.sleep(self.interval)
 
 class FilmManager:
