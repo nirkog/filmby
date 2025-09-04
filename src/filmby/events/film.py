@@ -1,10 +1,8 @@
 import requests
 import os
-import logging
 import copy
 import string
 
-from loguru import logger
 from fuzzywuzzy import fuzz
 
 CONTENT_TYPES_TO_FILE_ENGINGS = {
