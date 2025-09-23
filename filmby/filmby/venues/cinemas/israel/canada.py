@@ -6,8 +6,8 @@ import json
 import re
 from bs4 import BeautifulSoup
 
-from ...cinema import Cinema
-from ...film import Film
+from filmby.events.film import Film, FilmDetails
+from filmby.venues.cinema import Cinema
 
 class CanadaCinema(Cinema):
     TRANSLATED_NAMES = {"heb": "קולנוע קנדה"}

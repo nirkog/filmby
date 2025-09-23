@@ -7,8 +7,8 @@ import re
 from bs4 import BeautifulSoup
 from loguru import logger
 
-from ...cinema import Cinema
-from ...film import Film
+from filmby.venues.cinemas.cinema import Cinema
+from filmby.events.film import Film, FilmDetails
 
 class CinemathequeCinema(Cinema):
     TRANSLATED_NAMES = {"heb": "סינמטק"}

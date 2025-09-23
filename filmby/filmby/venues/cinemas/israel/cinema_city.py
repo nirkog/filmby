@@ -5,8 +5,8 @@ import json
 from bs4 import BeautifulSoup
 from loguru import logger
 
-from ...cinema import Cinema
-from ...film import Film, FilmDetails
+from filmby.events.film import Film, FilmDetails
+from filmby.venues.cinema import Cinema
 
 class CinemaCityCinema(Cinema):
     TRANSLATED_NAMES = {"heb": "סינמה סיטי"}

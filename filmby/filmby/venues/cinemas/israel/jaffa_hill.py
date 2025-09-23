@@ -1,4 +1,5 @@
-from ...cinema import Cinema
+from filmby.events.film import Film, FilmDetails
+from filmby.venues.cinema import Cinema
 
 class JaffaHillCinema(Cinema):
     TRANSLATED_NAMES = {"heb": "קולנוע הפסגה"}
