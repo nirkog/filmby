@@ -4,4 +4,4 @@ if [ "$#" -gt 0 ]; then
 	fi
 fi
 
-flask --app src/server/ run -h 0.0.0.0 -p 80 --debug
+flask --app ./server/ run -h 0.0.0.0 -p 80 --debug

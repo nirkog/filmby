@@ -4,8 +4,8 @@ import urllib.parse
 import parse
 from bs4 import BeautifulSoup
 
-from ...cinema import Cinema
-from ...film import Film, FilmDetails
+from filmby.events.film import Film, FilmDetails
+from filmby.venues.cinema import Cinema
 
 class LevCinema(Cinema):
     TRANSLATED_NAMES = {"heb": "קולנוע לב"}

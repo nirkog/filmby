@@ -12,7 +12,7 @@ if [ "$#" -gt 0 ]; then
 fi
 
 change_socket_permissions &
-gunicorn --bind unix:filmby.sock -m 007 --pythonpath src server.wsgi:app --log-level DEBUG
+gunicorn --bind unix:filmby.sock -m 007 --pythonpath ./ server.wsgi:app --log-level DEBUG
 # fg
 # while true
 # do

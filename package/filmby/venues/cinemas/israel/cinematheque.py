@@ -7,7 +7,7 @@ import re
 from bs4 import BeautifulSoup
 from loguru import logger
 
-from filmby.venues.cinemas.cinema import Cinema
+from filmby.venues.cinema import Cinema
 from filmby.events.film import Film, FilmDetails
 
 class CinemathequeCinema(Cinema):
@@ -16,7 +16,7 @@ class CinemathequeCinema(Cinema):
     TOWNS = ["Tel Aviv"]
     BASE_URL = "https://www.cinema.co.il/shown/?date={0}-{1}-{2}"
     DATE_FORMAT = "%d.%m"
-    HOUR_PATTERN = "\d\d:\d\d"
+    HOUR_PATTERN = "\\d\\d:\\d\\d"
     UPDATE_INTERVAL = 60 * 60
 
     CINE499_LINK = "https://linktr.ee/cine499"

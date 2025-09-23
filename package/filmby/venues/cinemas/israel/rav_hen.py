@@ -4,8 +4,8 @@ import urllib.parse
 import json
 from bs4 import BeautifulSoup
 
-from ...cinema import Cinema
-from ...film import Film, FilmDetails
+from filmby.events.film import Film, FilmDetails
+from filmby.venues.cinema import Cinema
 
 LANGUAGE_TRANSLATIONS = {
     "original-lang-uk": "UA",

@@ -15,7 +15,7 @@ class CanadaCinema(Cinema):
     TOWNS = ["Tel Aviv"]
     BASE_URL = "https://www.kolnoakanada.com/"
     DATE_FORMAT = "%d.%m"
-    HOUR_PATTERN = "\d\d:\d\d"
+    HOUR_PATTERN = "\\d\\d:\\d\\d"
     UPDATE_INTERVAL = 60 * 60
 
     def __init__(self):
