@@ -147,6 +147,7 @@ class FilmManager:
 
             if not self.debug:
                 try:
+                    logger.info("Trying to send alert email")
                     content = "\n".join(unfound_cinema_names)
                     subject = f"{len(unfound_cinema_names)} cinemas are possibly broken"
                     send_email(subject, content)

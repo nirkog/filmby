@@ -62,7 +62,10 @@ class CinemathequeCinema(Cinema):
     def __init__(self):
         super().__init__()
 
-        self._get_499_films()
+        try:
+            self._get_499_films()
+        except Exception:
+            logger.warning("Could not get 499 films")
 
     def get_films_by_date(self, date, town):
         headers = {
