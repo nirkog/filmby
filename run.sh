@@ -11,6 +11,8 @@ if [ "$#" -gt 0 ]; then
 	fi
 fi
 
+export DEBUG=0
+
 change_socket_permissions &
 gunicorn --bind unix:filmby.sock -m 007 --pythonpath src server.wsgi:app --log-level DEBUG
 # fg

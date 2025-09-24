@@ -23,6 +23,9 @@ def create_app(test_config=None):
     if "IGNORE_CACHE" in os.environ:
         ignore_cache = bool(os.environ["IGNORE_CACHE"])
 
+    if "DEBUG" in os.environ:
+        film_manager.set_debug(bool(os.environ["DEBUG"]))
+
     logger.remove()
     if app.debug:
         logger.add(sys.stdout, format=CONSOLE_LOG_FORMAT, level="DEBUG")

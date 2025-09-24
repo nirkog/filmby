@@ -24,13 +24,15 @@ def get_film_name_translations():
 def send_email(subject, content):
     # TODO: This function could be optimized (read password once...)
 
+    subject = "Filmby Alert - " + subject
+
     with open(os.path.expanduser("~/email_password.txt"), "r") as f:
         password = f.read().strip()
 
     with open(os.path.expanduser("~/email_user.txt"), "r") as f:
         email = f.read().strip()
 
-    host = "smtp.mailersend.net"
+    host = "smtp.gmail.com"
     to = "nirkog@gmail.com"
 
     message = MIMEMultipart("alternative")
@@ -40,7 +42,6 @@ def send_email(subject, content):
 
     part = MIMEText(content, "plain")
     message.attach(part)
-
 
     server = smtplib.SMTP(host, 587)
     server.ehlo()

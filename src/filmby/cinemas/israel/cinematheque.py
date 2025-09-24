@@ -117,7 +117,8 @@ class CinemathequeCinema(Cinema):
                         logger.warning(f"Could not parse year, error: {str(e)}")
                 elif "אורך" in detail:
                     try:
-                        films[-1].details.length = int(detail.split(":")[1])
+                        length = int("".join([c for c in detail.split(":")[1] if c.isnumeric()]))
+                        films[-1].details.length = length
                     except Exception as e:
                         logger.warning(f"Could not parse length, error: {str(e)}")
                 else:
