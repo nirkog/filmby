@@ -62,7 +62,10 @@ class CinemathequeCinema(Cinema):
     def __init__(self):
         super().__init__()
 
-        self._get_499_films()
+        try:
+            self._get_499_films()
+        except Exception:
+            logger.warning("Could not get 499 films")
 
     def get_films_by_date(self, date, town):
         headers = {
@@ -117,7 +120,8 @@ class CinemathequeCinema(Cinema):
                         logger.warning(f"Could not parse year, error: {str(e)}")
                 elif "אורך" in detail:
                     try:
-                        films[-1].details.length = int(detail.split(":")[1])
+                        length = int("".join([c for c in detail.split(":")[1] if c.isnumeric()]))
+                        films[-1].details.length = length
                     except Exception as e:
                         logger.warning(f"Could not parse length, error: {str(e)}")
                 else:

@@ -19,10 +19,6 @@ def create_app(test_config=None):
     # app = Flask(__name__, template_folder=os.path.abspath("./templates/"), static_folder=os.path.abspath("./static/"))
     app = Flask(__name__)
 
-    ignore_cache = False
-    if "IGNORE_CACHE" in os.environ:
-        ignore_cache = bool(os.environ["IGNORE_CACHE"])
-
     logger.remove()
     if app.debug:
         logger.add(sys.stdout, format=CONSOLE_LOG_FORMAT, level="DEBUG")
@@ -30,6 +26,14 @@ def create_app(test_config=None):
     else:
         logger.add(sys.stdout, format=CONSOLE_LOG_FORMAT, level="INFO")
         logger.add("filmby.log", format=FILE_LOG_FORMAT, level="INFO")
+
+    ignore_cache = False
+    if "IGNORE_CACHE" in os.environ:
+        ignore_cache = bool(int(os.environ["IGNORE_CACHE"]))
+
+    if "DEBUG" in os.environ:
+        film_manager.set_debug(bool(int(os.environ["DEBUG"])))
+        logger.info(f"Setting debug to {film_manager.debug}")
 
     app.register_blueprint(index_bp)
     app.register_blueprint(show_films_bp)

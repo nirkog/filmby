@@ -33,6 +33,8 @@ class IntervalThread(threading.Thread):
             try:
                 self.func(*self.args, **self.kwargs)
             except Exception as e:
+                import traceback
+                traceback.print_tb(e.__traceback__)
                 logger.error(f"Some fucked up error {e}")
             time.sleep(self.interval)
 
@@ -42,6 +44,7 @@ class FilmManager:
         self.films = []
         self.cache_path = cache_path
         self.started = False
+        self.debug = False
 
         if os.path.exists("/tmp/filmby_update_running"):
             os.remove("/tmp/filmby_update_running")
@@ -73,8 +76,8 @@ class FilmManager:
 
         thread = IntervalThread(interval, first_sleep_duration, self.update_films)
         thread.start()
-
     def update_films(self):
+
         if os.path.exists("/tmp/filmby_update_running"):
             logger.debug("Redundant thread is exiting")
             exit()
@@ -139,10 +142,17 @@ class FilmManager:
                         unfound_cinema_names.remove(cinema_name)
         
         if len(unfound_cinema_names) > 0:
-            logger.info(f"{len(unfound_cinema_names)} Cinemas are possibly broken")
-            content = "\n".join(unfound_cinema_names)
-            subject = f"{len(unfound_cinema_names)} Cinemas are possibly broken"
-            send_email(subject, content)
+            broken_cinemas = ", ".join(unfound_cinema_names)
+            logger.warning(f"{len(unfound_cinema_names)} cinemas are possibly broken - {broken_cinemas}")
+
+            if not self.debug:
+                try:
+                    logger.info("Trying to send alert email")
+                    content = "\n".join(unfound_cinema_names)
+                    subject = f"{len(unfound_cinema_names)} cinemas are possibly broken"
+                    send_email(subject, content)
+                except Exception as e:
+                    logger.error(f"Failed to send alert email, {e}") 
 
         self.films.extend(self.manual_films)
 
@@ -186,5 +196,8 @@ class FilmManager:
 
         with condition:
             condition.notify_all()
+
+    def set_debug(self, new_value):
+        self.debug = new_value
 
 film_manager = FilmManager()

@@ -81,7 +81,7 @@ class JaffaCinema(Cinema):
                 year = None
                 try:
                     raw_str = list(in_parent.children)[0].text
-                    countries, year = raw_str.split(" / ")
+                    countries, year = raw_str.split("/")
                     countries = countries.split(", ")
                 except Exception as e:
                     logger.warning(f"Could not parse countries and year for film {name} (string was \"{raw_str}\"), error: {str(e)}")
