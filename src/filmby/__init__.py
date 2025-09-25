@@ -19,7 +19,7 @@ CINEMAS = {
         RavHenCinema,
         LimboCinema,
         TLVMuseumCinema,
-        JaffaHillCinema,
+        # JaffaHillCinema,
         RadicalCinema
     ]
 }
