@@ -1,0 +1,119 @@
+{% if events|length > 0 %}
+	<h1>אירועים</h1>
+	{% for event in events %}
+		<div class="event card" data-event-index="{{ indices[loop.index - 1] }}">
+			<div class="event-top">
+				<img src="{{ event.image_url }}" referrerpolicy="no-referrer"/>
+				<div class="event-text">
+					<h2 class="event-header">{{ event.name }}</h2>
+					<div class="event-description">
+						<p>
+						{% if event.details.description != None %}
+							{{ event.details.description | safe }}
+						{% endif %}
+						</p>
+					</div>
+					<div class="event-details">
+						{% if event.details.director != None %}
+							<p class="event-director">במאי: {{ event.details.director }} | </p>
+						{% endif %}
+						{% if event.details.cast != None %}
+							<p class="event-cast">שחקנים: {{ event.details.cast }} | </p>
+						{% endif %}
+						{% if event.details.length != None %}
+							<p class="event-length">אורך: {{ event.details.length }} | </p>
+						{% endif %}
+						{% if event.details.countries != None %}
+							<p class="event-countries">ארצות: {{ event.details.get_countries_string() }} | </p>
+						{% endif %}
+						{% if event.details.language != None %}
+							<p class="event-language">שפות: {{ event.details.language }} | </p>
+						{% endif %}
+						{% if event.details.year != None %}
+							<p class="event-year">שנה: {{ event.details.year }} | </p>
+						{% endif %}
+					</div>
+					<div class="event-venue-tag-container">
+						{% set dates = event_dates[loop.index - 1] %} 
+						{% for venue_name in dates %}
+							<div data-name="{{ venue_name }}" class="event-venue-tag venue-tag-{{ venue_name.replace(" ", "").lower() }}">
+								{{ name_translations[venue_name] }}
+							</div>
+						{% endfor %}
+					</div>
+				</div>
+			</div>
+			<div class="event-dates">
+				<h2>הקרנות בתאריך</h2>
+				{% set dates = event_dates[loop.index - 1] %} 
+				{% for venue_name in dates %}
+					{% set venue_dates = dates[venue_name] %} 
+					{% if venue_dates|length > 0 %}
+						<div class="venue-box">
+							<h3>{{ name_translations[venue_name] }}</h3>
+							{% for date in venue_dates %}
+								<div class="date-box">
+									<p>{{ get_day_name(date) }} - {{ date.day }}/{{ date.month }} - {{ date.hour }}:{{ "%02d" % date.minute }}</p>
+									<a class="date-link button" href="{{ event.links[venue_name] }}" target="_blank">הזמן</a>
+								</div>
+							{% endfor %}
+						</div>
+					{% endif %}
+				{% endfor %}
+				<div class="button-box">
+					<a class="event-button button" href="/event/{{ indices[loop.index - 1] }}">לפרטים ותאריכים נוספים</a>
+				</div>	
+			</div>
+			<div class="expand">
+				<i class="fa-solid fa-chevron-down"></i>
+			</div>
+		</div>
+		<div class="event mobile card" data-event-index="{{ indices[loop.index - 1] }}">
+			<h2 class="event-header">{{ event.name }}</h2>
+			<img src="{{ event.image_url }}" referrerpolicy="no-referrer"/>
+			<div class="event-text">
+				<div class="event-description">
+					<p>
+					{% if event.details.description != None %}
+						{{ event.details.description | safe }}
+					{% endif %}
+					</p>
+				</div>
+			</div>
+			<div class="event-venue-tag-container">
+				{% set dates = event_dates[loop.index - 1] %} 
+				{% for venue_name in dates %}
+					<div data-name="{{ venue_name }}" class="event-venue-tag venue-tag-{{ venue_name.replace(" ", "").lower() }}">
+						{{ name_translations[venue_name] }}
+					</div>
+				{% endfor %}
+			</div>
+			<div class="event-dates">
+				<h2>הקרנות בתאריך</h2>
+				{% set dates = event_dates[loop.index - 1] %} 
+				{% for venue_name in dates %}
+					{% set venue_dates = dates[venue_name] %} 
+					{% if venue_dates|length > 0 %}
+						<div class="venue-box">
+							<h3>{{ name_translations[venue_name] }}</h3>
+							{% for date in venue_dates %}
+								<div class="date-box">
+									<p>{{ get_day_name(date) }} - {{ date.day }}/{{ date.month }} - {{ date.hour }}:{{ "%02d" % date.minute }}</p>
+									<a class="date-link button" href="{{ event.links[venue_name] }}" target="_blank">הזמן</a>
+								</div>
+							{% endfor %}
+						</div>
+					{% endif %}
+				{% endfor %}
+				<div class="button-box">
+					<a class="event-button big-button button" href="/event/{{ indices[loop.index - 1] }}">לפרטים ותאריכים נוספים</a>
+				</div>	
+			</div>
+			<div class="expand">
+				<i class="fa-solid fa-chevron-down"></i>
+			</div>
+		</div>
+	{% endfor %}
+{% else %}
+	<h1 id="no-events">לא נמצאו אירועים רלוונטיים :(</h1>
+{% endif %}

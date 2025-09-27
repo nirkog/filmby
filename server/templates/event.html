@@ -1,0 +1,92 @@
+{% extends "base.html" %}
+{% block head %}
+	{{ super() }}
+	<link rel="stylesheet" href="{{ url_for("static", filename="css/event.css") }}">
+{% endblock %}
+{% block title %}
+	{{ super() }} - {{ event.name }}
+{% endblock %}
+{% block content %}
+	<div class="event-details card">
+		<h1>{{ event.name }}</h1>
+		<div class="event-block">
+			<img class="wide-image" src="{{ event.image_url }}" referrerpolicy="no-referrer"/>
+			<div class="event-text">
+				{% if event.details.description != None %}
+					<p class="event-description">{{ event.details.description | safe }}</p>
+				{% endif %}
+				<br>
+				<br>
+				{% if event.details.director != None %}
+					<p class="event-director event-detail">במאי: {{ event.details.director }} |</p>
+				{% endif %}
+				{% if event.details.cast != None %}
+					<p class="event-cast event-detail">שחקנים: {{ event.details.cast }} |</p>
+				{% endif %}
+				{% if event.details.length != None %}
+					<p class="event-length event-detail">אורך: {{ event.details.length }} דקות |</p>
+				{% endif %}
+				{% if event.details.countries != None %}
+					<p class="event-countries event-detail">ארצות: {{ event.details.get_countries_string() }} |</p>
+				{% endif %}
+				{% if event.details.language != None %}
+					<p class="event-language event-detail">שפה: {{ event.details.language }} |</p>
+				{% endif %}
+				{% if event.details.year != None %}
+					<p class="event-year event-detail">שנה: {{ event.details.year }} |</p>
+				{% endif %}
+			</div>
+			<img class="tall-image" src="{{ event.image_url }}" referrerpolicy="no-referrer"/>
+		</div>
+	</div>
+	<div class="event-details mobile card">
+		<h1>{{ event.name }}</h1>
+		<div class="event-block">
+			<img src="{{ event.image_url }}" referrerpolicy="no-referrer"/>
+			<div class="event-text">
+				{% if event.details.description != None %}
+					<p class="event-description">{{ event.details.description | safe }}</p>
+				{% endif %}
+				<br>
+				<br>
+				{% if event.details.director != None %}
+					<p class="event-director event-detail">במאי: {{ event.details.director }} |</p>
+				{% endif %}
+				{% if event.details.cast != None %}
+					<p class="event-cast event-detail">שחקנים: {{ event.details.cast }} |</p>
+				{% endif %}
+				{% if event.details.length != None %}
+					<p class="event-length event-detail">אורך: {{ event.details.length }} דקות |</p>
+				{% endif %}
+				{% if event.details.countries != None %}
+					<p class="event-countries event-detail">ארצות: {{ event.details.get_countries_string() }} |</p>
+				{% endif %}
+				{% if event.details.language != None %}
+					<p class="event-language event-detail">שפה: {{ event.details.language }} |</p>
+				{% endif %}
+				{% if event.details.year != None %}
+					<p class="event-year event-detail">שנה: {{ event.details.year }} |</p>
+				{% endif %}
+			</div>
+		</div>
+	</div>
+
+	<div id="tickets">
+		<h1>הקרנות</h1>
+		{% for venue_name in event.dates %}
+			<div>
+				<div class="event-venue-tag venue-tag-{{ venue_name.replace(" ", "").lower() }}">{{ name_translations[venue_name] }}</div>
+				{% for date in event.dates[venue_name] %}
+					<div class="date-box card">
+						<p>{{ get_day_name(date) }} - {{ date.day }}/{{ date.month }} - {{ date.hour }}:{{ "%02d" % date.minute }}</p>
+						<a class="button" href="{{ event.links[venue_name] }}" target="_blank">הזמן</a>
+					</div>
+				{% endfor %}
+			</div>
+		{% endfor %}
+	</div>
+{% endblock %}
+{% block scripts %}
+	<script src="https://cdn.jsdelivr.net/npm/@tarekraafat/autocomplete.js@10.2.7/dist/autoComplete.min.js"></script>
+	<script src="{{ url_for("static", filename="javascript/event.js") }}"></script>
+{% endblock %}

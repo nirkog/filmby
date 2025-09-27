@@ -4,13 +4,13 @@
 	margin-top: 3rem;
 }
 
-.film-details {
+.event-details {
 	text-align: right;
 	width: 100%;
 	margin: 1rem auto;
 }
 
-.film-block.split {
+.event-block.split {
 	display: flex;
 }
 
@@ -27,30 +27,30 @@
 	padding: 0 1rem;
 }
 
-.film-block img {
+.event-block img {
 	width: 100%;	
 }
 
-.film-block {
+.event-block {
 	margin: 1rem auto;
 	margin-bottom: 2.5rem;
 	width: 93%;
 }
 
-.film-block p {
+.event-block p {
 	display: inline;
 	font-size: 1.2rem;
 }
 
-.film-cinema-tag {
+.event-venue-tag {
 	font-size: 1.1rem;
 }
 
-.film-detail {
+.event-detail {
 	margin: 0.3rem 0;
 }
 
-.film-details h1 {
+.event-details h1 {
 	margin: 0;
 	text-align: center;
 	font-size: 2.75rem;
@@ -88,7 +88,7 @@
 }
 
 @media screen and (max-width: 600px) {
-    .film-details:not(.mobile) {
+    .event-details:not(.mobile) {
         display: none;
     }
 
@@ -96,19 +96,19 @@
     	display: block !important;
     }
 
-	.film-details h1 {
+	.event-details h1 {
 		font-size: 2rem;
 		padding-top: 1rem;
 		padding-bottom: 0;
 	}
 
-    .film-details {
+    .event-details {
     	margin: 0;
     	padding: 0;
     	width: 100%;
     }
 
-    .film-details img {
+    .event-details img {
     	width: 100%;
 		margin: 1.5rem 0;
     }
@@ -117,7 +117,7 @@
     	margin: 1rem;
     }
 
-	.film-block {
+	.event-block {
 		padding-top: 0;
 		margin-top: 0;
 		width: 88%;

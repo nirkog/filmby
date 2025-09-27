@@ -82,7 +82,6 @@ class Film(Event):
         super().__init__(name)
 
         self.details = FilmDetails()
-        self.type_string = "film"
 
     def __str__(self):
         return f"{self.name}, {self.details.director}, {self.details.length}, {self.details.language}, {self.details.year}, {self.links}, {self.dates}"

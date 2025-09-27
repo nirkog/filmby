@@ -28,7 +28,6 @@ class Event:
         self.links = dict()
         self.description = ""
         self.details = None
-        self.type_string = "general"
 
     def __str__(self):
         return f"{self.name}, {self.links}, {self.dates}"

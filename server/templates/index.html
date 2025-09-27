@@ -20,7 +20,7 @@
 
 	<div id="view_menu">
 		<div data-view-id="by_date_view" class="selected">לפי תאריך</div>
-		<div data-view-id="by_film_view">לפי סרט</div>
+		<div data-view-id="by_event_view">לפי סרט</div>
 	</div>
 
 	<div id="by_date_view" class="view selected">
@@ -29,11 +29,11 @@
 				<input type="date" id="date_input" min="{{ min_date }}" max="{{ max_date }}" value="{{ min_date }}"/>
 				<button class="button" id="search-filters-toggle-button">הצג אפשרויות סינון</button>
 			<div id="search-filters">
-				<div id="cinema-filters">
+				<div id="venue-filters">
 					<h2>בתי קולנוע</h2>
-					{% for cinema in cinemas %}
-						<input checked data-cinema="{{ cinema.NAME }}" type="checkbox"/>
-						<label>{{ cinema.TRANSLATED_NAMES["heb"] }}</label>
+					{% for venue in venues %}
+						<input checked data-venue="{{ venue.NAME }}" type="checkbox"/>
+						<label>{{ venue.TRANSLATED_NAMES["heb"] }}</label>
 						<br>
 					{% endfor %}
 				</div>	
@@ -42,14 +42,14 @@
 			<button class="search-button button" id="search_button">מצא סרטים</button>
 		</div>
 
-		<div id="films"></div>
+		<div id="events"></div>
 	</div>
 
-	<div id="by_film_view" class="view">
-		<div id="film-search-form">
-			<input type="text" id="film_search_input" placeholder="חפש סרט"/>
-			<div id="film_autocomplete_container"></div>
-			<div id="film-view-button-box">
+	<div id="by_event_view" class="view">
+		<div id="event-search-form">
+			<input type="text" id="event_search_input" placeholder="חפש סרט"/>
+			<div id="event_autocomplete_container"></div>
+			<div id="event-view-button-box">
 				<button class="search-button button"><i class="fa-solid fa-magnifying-glass"></i></button>
 			</div>
 		</div>
