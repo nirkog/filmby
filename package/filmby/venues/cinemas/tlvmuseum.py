@@ -61,7 +61,7 @@ class TLVMuseumCinema(Cinema):
                     index = -1
 
                 film_date = datetime.datetime.strptime(film_json["date"], self.FULL_DATE_FORMAT)
-                films[index].add_dates(self.NAME, "Tel Aviv", [film_date])
+                films[index].add_dates(self.NAME, [film_date])
 
                 films[index].add_link(self.NAME, self.BASE_URL + film_json["url"])
 
@@ -70,18 +70,18 @@ class TLVMuseumCinema(Cinema):
 
         return films
 
-    def get_films_by_date(self, date, town):
+    def get_events_by_date(self, date):
         if time.time() - self.last_update > self.UPDATE_INTERVAL:
             self.films = self.get_films()
 
         films = []
         for film in self.films:
-            if film.has_screenings_on_date(date):
+            if film.has_date(date):
                 films.append(film)
 
         return films
 
-    def get_film_details(self, film):
+    def get_event_details(self, film):
         cache = self._get_details_from_cache(film)
         if cache != None:
             return cache
@@ -126,8 +126,8 @@ class TLVMuseumCinema(Cinema):
                     area = p.text[p.text.index("|") - 8:p.text.index("|")]
                     area = "".join([x for x in area if x.isnumeric()])
                     year = int(area)
-                except Exception:
-                    logger.warning(f"Could not parse year for {film.name}")
+                except Exception as e:
+                    logger.warning(f"Could not parse year for {film.name}, {e}")
 
                 try:
                     more_details = p.text[p.text.index("בימוי") + 7:].split(", ")
@@ -135,8 +135,8 @@ class TLVMuseumCinema(Cinema):
                     countries = [more_details[1]]
                     language = more_details[3]
                     length = int("".join([x for x in more_details[2] if x.isnumeric()]))
-                except Exception:
-                    logger.warning(f"Could not parse more details for {film.name}")
+                except Exception as e:
+                    logger.warning(f"Could not parse more details for {film.name}, {e}")
 
         details.description = description
         details.year = year
@@ -147,5 +147,5 @@ class TLVMuseumCinema(Cinema):
         
         return details
 
-    def get_provided_film_details(self):
+    def get_provided_event_details(self):
         return ["countries", "year", "language", "length", "director", "cast", "description"]

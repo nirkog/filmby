@@ -56,7 +56,7 @@ class LimboCinema(Cinema):
             date = list_item.find("div", {"class": "event-datetime"}).text
             date = datetime.datetime.strptime(date, self.NEW_DATE_FORMAT)
             date = datetime.datetime(datetime.datetime.now().year, date.month, date.day, 19)
-            films[-1].add_dates(self.NAME, self.TOWNS[0], [date])
+            films[-1].add_dates(self.NAME, [date])
 
             description = list_item.find("div", {"class": "event-summary"}).text
             description = "<span class=\"limbo-comment\">שימו לב! השעות של הסרטים בקולנוע לימבו לא מדויקות, גשו ללינק שמופיע גדי לקבל את השעה המדויקת.</span><br><br>" + description
@@ -66,21 +66,21 @@ class LimboCinema(Cinema):
 
         return films
 
-    def get_films_by_date(self, date, town):
+    def get_events_by_date(self, date):
         if time.time() - self.last_update > self.UPDATE_INTERVAL:
             self.films = self.get_films()
 
         films = []
         for film in self.films:
-            film_dates = film.dates[self.TOWNS[0]][self.NAME]
+            film_dates = film.dates[self.NAME]
             for film_date in film_dates:
                 if film_date.year == date.year and film_date.month == date.month and film_date.day == date.day:
                     films.append(film)
 
         return films
 
-    def get_film_details(self, film):
+    def get_event_details(self, event):
         return None
 
-    def get_provided_film_details(self):
+    def get_provided_event_details(self):
         return []

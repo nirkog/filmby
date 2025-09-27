@@ -63,7 +63,7 @@ class JaffaHillCinema(Cinema):
                         url = f"https://instagram.com/p/{shortcode}/"
                         films.append(Film(name))
                         films[-1].details.description = description
-                        films[-1].add_dates(self.NAME, "Tel Aviv", [date])
+                        films[-1].add_dates(self.NAME, [date])
                         films[-1].add_link(self.NAME, url)
                         films[-1].set_image_url(image_url)
                     except Exception as e:
@@ -74,19 +74,19 @@ class JaffaHillCinema(Cinema):
 
         return films
 
-    def get_films_by_date(self, date, town):
+    def get_events_by_date(self, date):
         if time.time() - self.last_update > self.UPDATE_INTERVAL:
             self.films = self.get_films()
 
         films = []
         for film in self.films:
-            if film.has_screenings_on_date(date):
+            if film.has_date(date):
                 films.append(film)
 
         return films
     
-    def get_film_details(self, film):
+    def get_event_details(self, event):
         return None
 
-    def get_provided_film_details(self):
+    def get_provided_event_details(self):
         return []

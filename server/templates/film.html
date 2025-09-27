@@ -73,10 +73,10 @@
 
 	<div id="tickets">
 		<h1>הקרנות</h1>
-		{% for cinema_name in film.dates[town] %}
+		{% for cinema_name in film.dates %}
 			<div>
 				<div class="film-cinema-tag cinema-tag-{{ cinema_name.replace(" ", "").lower() }}">{{ name_translations[cinema_name] }}</div>
-				{% for date in film.dates[town][cinema_name] %}
+				{% for date in film.dates[cinema_name] %}
 					<div class="date-box card">
 						<p>{{ get_day_name(date) }} - {{ date.day }}/{{ date.month }} - {{ date.hour }}:{{ "%02d" % date.minute }}</p>
 						<a class="button" href="{{ film.links[cinema_name] }}" target="_blank">הזמן</a>

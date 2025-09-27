@@ -31,7 +31,7 @@ def main():
     film.image_url = image_url
 
     cinema_names = []
-    for cinema in CINEMAS["Israel"]:
+    for cinema in CINEMAS:
         cinema_names.append(cinema.NAME)
 
     print("Please enter the film links and dates, first the cinema name, and then the link and dates")

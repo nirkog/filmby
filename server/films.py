@@ -76,29 +76,18 @@ class FilmManager:
 
         thread = IntervalThread(interval, first_sleep_duration, self.update_films)
         thread.start()
+
     def update_films(self):
-
-        if os.path.exists("/tmp/filmby_update_running"):
-            logger.debug("Redundant thread is exiting")
-            exit()
-
-        with open("/tmp/filmby_update_running", "w") as f:
-            f.write("RUNNING")
-
         start = time.time()
 
         logger.info("Starting film update procedure")
 
-        country = "Israel"
-        town = "Tel Aviv"
         cinemas = dict()
-
-        for cinema in filmby.CINEMAS[country]:
-            if town in cinema.TOWNS:
-                try:
-                    cinemas[cinema.NAME] = cinema()
-                except Exception as e:
-                    logger.error(f"Could not initialize {cinema.NAME} cinema, error: {str(e)}")
+        for cinema in filmby.CINEMAS:
+            try:
+                cinemas[cinema.NAME] = cinema()
+            except Exception as e:
+                logger.error(f"Could not initialize {cinema.NAME} cinema, error: {str(e)}")
 
         threads = []
         new_films = []
@@ -108,7 +97,7 @@ class FilmManager:
                 if threading.active_count() > MAX_THREAD_COUNT:
                     with condition:
                         condition.wait()
-                threads.append(threading.Thread(target=self._get_films_by_date, args=(cinemas[cinema], date.today() + timedelta(i), town, new_films, condition,)))
+                threads.append(threading.Thread(target=self._get_films_by_date, args=(cinemas[cinema], date.today() + timedelta(i), new_films, condition,)))
                 threads[-1].start()
 
         for thread in threads:
@@ -117,7 +106,7 @@ class FilmManager:
         threads = []
         for film in new_films:
             for cinema in film.links:
-                if len([x for x in cinemas[cinema].get_provided_film_details() if x in film.details.get_missing_details()]) == 0:
+                if len([x for x in cinemas[cinema].get_provided_event_details() if x in film.details.get_missing_details()]) == 0:
                     continue
 
                 if threading.active_count() > MAX_THREAD_COUNT:
@@ -129,7 +118,6 @@ class FilmManager:
         for thread in threads:
             thread.join()
 
-
         new_films = self._merge_films(new_films)
         self.films = new_films
 
@@ -137,8 +125,8 @@ class FilmManager:
         unfound_cinema_names = [cinema for cinema in cinemas if cinema not in excluded_cinemas]
         for film in new_films:
             for cinema_name in unfound_cinema_names:
-                if cinema_name in film.dates["Tel Aviv"]:
-                    if len(film.dates["Tel Aviv"][cinema_name]) > 0:
+                if cinema_name in film.dates:
+                    if len(film.dates[cinema_name]) > 0:
                         unfound_cinema_names.remove(cinema_name)
         
         if len(unfound_cinema_names) > 0:
@@ -167,9 +155,6 @@ class FilmManager:
 
         logger.info(f"Finished updating with {len(self.films)} films, took {time.time() - start:.1f}s")
 
-        if os.path.exists("/tmp/filmby_update_running"):
-            os.remove("/tmp/filmby_update_running")
-
     def _merge_films(self, films):
         new_films = []
         for film in films:
@@ -182,15 +167,15 @@ class FilmManager:
                 new_films.append(film)
         return new_films
 
-    def _get_films_by_date(self, cinema, date, town, arr, condition):
-        result = cinema.get_films_by_date(date, town)
+    def _get_films_by_date(self, cinema, date, arr, condition):
+        result = cinema.get_events_by_date(date)
         if result != None:
             arr.extend(result)
         with condition:
             condition.notify_all()
 
     def _get_film_details(self, cinema, film, condition):
-        new_details = cinema.get_film_details(film)
+        new_details = cinema.get_event_details(film)
         if new_details != None:
             film.details.merge(new_details)
 

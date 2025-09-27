@@ -6,7 +6,7 @@ from email.mime.multipart import MIMEMultipart
 import filmby
 
 DAY_NAMES = ["שני", "שלישי", "רביעי", "חמישי", "שישי", "שבת", "ראשון"]
-FILM_NAME_TRANSLATIONS = dict()
+CINEMA_NAME_TRANSLATIONS = dict()
 
 def get_day_name(date):
     try:
@@ -14,12 +14,12 @@ def get_day_name(date):
     except Exception:
         return ""
 
-def get_film_name_translations():
-    if len(FILM_NAME_TRANSLATIONS) == 0:
-        for cinema in filmby.CINEMAS["Israel"]:
-            FILM_NAME_TRANSLATIONS[cinema.NAME] = cinema.TRANSLATED_NAMES["heb"]
+def get_cinema_name_translations():
+    if len(CINEMA_NAME_TRANSLATIONS) == 0:
+        for cinema in filmby.CINEMAS:
+            CINEMA_NAME_TRANSLATIONS[cinema.NAME] = cinema.TRANSLATED_NAMES["heb"]
 
-    return FILM_NAME_TRANSLATIONS
+    return CINEMA_NAME_TRANSLATIONS
 
 def send_email(subject, content):
     # TODO: This function could be optimized (read password once...)

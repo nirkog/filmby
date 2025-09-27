@@ -12,4 +12,4 @@ def index():
     logger.info("PAGE REQUEST /index")
     min_date = datetime.datetime.strftime(datetime.datetime.now(), "%Y-%m-%d")
     max_date = datetime.datetime.strftime(datetime.datetime.now() + datetime.timedelta(films.SPAN_IN_DAYS), "%Y-%m-%d")
-    return render_template('index.html', min_date=min_date, max_date=max_date, cinemas=filmby.CINEMAS["Israel"])
+    return render_template('index.html', min_date=min_date, max_date=max_date, cinemas=filmby.CINEMAS)

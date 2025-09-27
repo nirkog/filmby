@@ -42,7 +42,7 @@ class CinemaCityCinema(Cinema):
 
     def __init__(self):
         super().__init__()
-        self.film_ids, self.film_details = self.get_movie_ids_and_details() # TODO: Move this to get_films_by_date
+        self.film_ids, self.film_details = self.get_movie_ids_and_details() # TODO: Move this to get_events_by_date
 
     def get_movie_ids_and_details(self):
         response = requests.get(self.MOVIES_URL)
@@ -75,9 +75,9 @@ class CinemaCityCinema(Cinema):
         
         return ids, details_dict
 
-    def get_films_by_date(self, date, town):
-        theater_id = self.THEATER_IDS[town]
-        tix_theater_id = self.TIX_THEATER_IDS[town]
+    def get_events_by_date(self, date):
+        theater_id = self.THEATER_IDS["Tel Aviv"]
+        tix_theater_id = self.TIX_THEATER_IDS["Tel Aviv"]
         request = requests.get(self.BASE_URL + self.DATES_URL.format(theater_id))
         dates = eval(request.text)
         original_dates = eval(request.text)
@@ -106,7 +106,7 @@ class CinemaCityCinema(Cinema):
                 films[-1].set_image_url(self.IMAGE_URL.format(encoded_pic_name, 300, 300))
 
                 date = datetime.datetime.strptime(film["Dates"]["Date"], self.FILM_DATE_FORMAT)
-                films[-1].add_dates(self.NAME, town, [date])
+                films[-1].add_dates(self.NAME, [date])
 
                 films[-1].add_link(self.NAME, self.BASE_URL + f"movie/{film_id}")
                 films[-1].details = self.film_details[film_id]
@@ -117,8 +117,8 @@ class CinemaCityCinema(Cinema):
 
         return films
 
-    def get_film_details(self, film):
+    def get_event_details(self, event):
         return None
 
-    def get_provided_film_details(self):
+    def get_provided_event_details(self):
         return []

@@ -58,7 +58,7 @@ class CanadaCinema(Cinema):
                 date = datetime.datetime(datetime.datetime.today().year, date.month, date.day, int(hour), int(minute))
             else:
                 date = datetime.datetime(datetime.datetime.today().year, date.month, date.day, 0, 0)
-            films[-1].add_dates(self.NAME, self.TOWNS[0], [date])
+            films[-1].add_dates(self.NAME, [date])
 
             link = buttons_container.find("a")["href"]
             films[-1].add_link(self.NAME, link)
@@ -76,21 +76,21 @@ class CanadaCinema(Cinema):
 
         return films
 
-    def get_films_by_date(self, date, town):
+    def get_events_by_date(self, date):
         if time.time() - self.last_update > self.UPDATE_INTERVAL:
             self.films = self.get_films()
 
         films = []
         for film in self.films:
-            film_dates = film.dates[self.TOWNS[0]][self.NAME]
+            film_dates = film.dates[self.NAME]
             for film_date in film_dates:
                 if film_date.year == date.year and film_date.month == date.month and film_date.day == date.day:
                     films.append(film)
 
         return films
     
-    def get_film_details(self, film):
+    def get_event_details(self, event):
         return None
 
-    def get_provided_film_details(self):
+    def get_provided_event_details(self):
         return []

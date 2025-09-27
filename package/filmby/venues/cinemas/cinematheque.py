@@ -47,7 +47,7 @@ class CinemathequeCinema(Cinema):
             date = datetime.datetime(datetime.datetime.now().year, month, day, 21, 0)
 
             film = Film(name)
-            film.add_dates(self.NAME, self.TOWNS[0], [date])
+            film.add_dates(self.NAME, [date])
 
             image_url = box.div.img["src"]
             film.set_image_url(image_url)
@@ -67,7 +67,7 @@ class CinemathequeCinema(Cinema):
         except Exception:
             logger.warning("Could not get 499 films")
 
-    def get_films_by_date(self, date, town):
+    def get_events_by_date(self, date):
         headers = {
             "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/109.0.0.0 Safari/537.36"
         }
@@ -94,7 +94,7 @@ class CinemathequeCinema(Cinema):
             time_span = grid_box.find("span", {"class": "time"})
             hour, minute = time_span.text.split(":")
             film_date = datetime.datetime(date.year, date.month, date.day, int(hour), int(minute))
-            films[-1].add_dates(self.NAME, town, [film_date])
+            films[-1].add_dates(self.NAME, [film_date])
 
             films[-1].add_link(self.NAME, link)
 
@@ -128,7 +128,7 @@ class CinemathequeCinema(Cinema):
                     films[-1].details.countries = detail
             
         for film in self.cine499_films:
-            dates = film.dates[town][self.NAME]
+            dates = film.dates[self.NAME]
             for _date in dates:
                 if _date.year == date.year and _date.month == date.month and _date.day == date.day:
                     films.append(film)
@@ -137,8 +137,8 @@ class CinemathequeCinema(Cinema):
 
         return films
 
-    def get_film_details(self, film):
+    def get_event_details(self, event):
         return None
 
-    def get_provided_film_details(self):
+    def get_provided_event_details(self):
         return []

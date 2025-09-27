@@ -8,21 +8,20 @@ from server.show_films import bp
 from server.films import film_manager
 import server.utils as utils
 
-def filter_films(date, town, hour_filter):
+def filter_films(date, hour_filter):
     films = []
     indices = []
     screenings = []
     for i, film in enumerate(film_manager.films):
-        if town in film.dates:
-            if date != None:
-                dates = film.get_screenings_on_date(date, hour_filter=hour_filter) 
-                if dates == dict():
-                    continue
-                screenings.append(dates)
-            else:
-                screenings.append(dict())
-            films.append(film)
-            indices.append(i)
+        if date != None:
+            dates = film.get_filtered_dates(date) 
+            if dates == dict():
+                continue
+            screenings.append(dates)
+        else:
+            screenings.append(dict())
+        films.append(film)
+        indices.append(i)
 
     return indices, films, screenings
 
@@ -46,7 +45,7 @@ def show_films():
             date = date.replace(minute=now.minute)
             hour_filter = True
 
-    indices, filtered_films, screenings = filter_films(date, request.args["town"], hour_filter)
+    indices, filtered_films, screenings = filter_films(date, hour_filter)
     logger.debug(f"Found {len(filtered_films)} relevant films")
 
     logger.info(f"PAGE REQUEST /films - date {date}")
@@ -62,7 +61,6 @@ def show_films():
             'films.html',
             films=filtered_films,
             indices=indices,
-            town="Tel Aviv",
-            name_translations=utils.get_film_name_translations(),
+            name_translations=utils.get_cinema_name_translations(),
             get_day_name=utils.get_day_name,
             screenings=screenings)

@@ -88,8 +88,8 @@ class RavHenCinema(Cinema):
     def __init__(self):
         super().__init__()
 
-    def get_films_by_date(self, date, town):
-        url = self.FILMS_URL.format(self.THEATER_IDS[town], date.strftime(self.FILM_DATE_FORMAT))
+    def get_events_by_date(self, date):
+        url = self.FILMS_URL.format(self.THEATER_IDS["Tel Aviv"], date.strftime(self.FILM_DATE_FORMAT))
         response = requests.get(url).json()
 
         films = dict()
@@ -106,7 +106,7 @@ class RavHenCinema(Cinema):
             result[-1].set_image_url(film["posterLink"])
 
             date = datetime.datetime.strptime(event["eventDateTime"], self.EVENT_DATE_FORMAT)
-            result[-1].add_dates(self.NAME, town, [date])
+            result[-1].add_dates(self.NAME, [date])
 
             result[-1].add_link(self.NAME, film["link"])
 
@@ -114,7 +114,7 @@ class RavHenCinema(Cinema):
 
         return result
 
-    def get_film_details(self, film):
+    def get_event_details(self, film):
         cache = self._get_details_from_cache(film)
         if cache != None:
             return cache
@@ -150,5 +150,5 @@ class RavHenCinema(Cinema):
 
         return details
 
-    def get_provided_film_details(self):
+    def get_provided_event_details(self):
         return ["countries", "year", "language", "length", "director", "cast", "description"]

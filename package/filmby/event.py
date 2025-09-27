@@ -1,6 +1,7 @@
 import requests
 import os
 import copy
+import datetime
 
 CONTENT_TYPES_TO_FILE_ENDINGS = {
     "image/jpeg": ".jpg"
@@ -73,22 +74,8 @@ class Event:
 
     def get_filtered_dates(self, start_date, end_date=None):
         if None == end_date:
-            end_of_month = False
-            end_of_year = False
-
-            try:
-                end_date = start_date.replace(day=start_date.day + 1)
-            except ValueError:
-                end_of_month = True
-
-            if end_of_month:
-                try:
-                    end_date = start_date.replace(month=start_date.month + 1, day=1)
-                except ValueError:
-                    end_of_year = True
-
-            if end_of_year:
-                end_date = start_date.replace(year=start_date.year + 1, month=1, day=1)
+            end_date = datetime.datetime.combine(start_date, datetime.datetime.min.time())
+            end_date += datetime.timedelta(days=1)
 
         dates = dict()
         for venue in self.dates:
@@ -101,11 +88,9 @@ class Event:
         return dates
     
     def has_date(self, date):
-        date = date.replace(hour=0, minute=0, seconds=0)
         for venue in self.dates:
             for d in self.dates[venue]:
-                only_day_d = d.replace(hour=0, minute=0, seconds=0)
-                if d == only_day_d:
+                if d.year == date.year and d.month == date.month and d.day == date.day:
                     return True
 
         return False

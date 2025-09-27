@@ -53,8 +53,8 @@ class LevCinema(Cinema):
 
         return urls
 
-    def get_films_by_date(self, date, town):
-        encoded_theater_name = urllib.parse.quote(self.THEATER_NAMES[town])
+    def get_events_by_date(self, date):
+        encoded_theater_name = urllib.parse.quote(self.THEATER_NAMES["Tel Aviv"])
         response = requests.get(self.BASE_URL + self.FILMS_URL.format(encoded_theater_name, date.year, date.month, date.day), headers=self.REQUEST_HEADERS)
         html = BeautifulSoup(response.text, "html.parser")
         movies = html.find_all("li")
@@ -73,7 +73,7 @@ class LevCinema(Cinema):
 
             film_date = datetime.datetime.strptime(movie.a.span.text, "%H:%M")
             film_date = datetime.datetime(date.year, date.month, date.day, film_date.hour, film_date.minute)
-            films[-1].add_dates(self.NAME, town, [film_date])
+            films[-1].add_dates(self.NAME, [film_date])
 
             films[-1].add_link(self.NAME, movie_links[i]["href"])
 
@@ -81,7 +81,7 @@ class LevCinema(Cinema):
 
         return films
 
-    def get_film_details(self, film):
+    def get_event_details(self, film):
         cache = self._get_details_from_cache(film)
         if cache != None:
             return cache
@@ -147,5 +147,5 @@ class LevCinema(Cinema):
         
         return details
 
-    def get_provided_film_details(self):
+    def get_provided_event_details(self):
         return ["countries", "year", "language", "length", "director", "cast", "description"]

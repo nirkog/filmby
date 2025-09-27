@@ -20,5 +20,5 @@ def film_page(film_index):
             'film.html',
             film=film,
             town="Tel Aviv",
-            name_translations=utils.get_film_name_translations(),
+            name_translations=utils.get_cinema_name_translations(),
             get_day_name=utils.get_day_name)
