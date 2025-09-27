@@ -19,6 +19,5 @@ def film_page(film_index):
     return render_template(
             'film.html',
             film=film,
-            town="Tel Aviv",
             name_translations=utils.get_cinema_name_translations(),
             get_day_name=utils.get_day_name)
