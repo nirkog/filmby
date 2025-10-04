@@ -3,6 +3,11 @@ from abc import ABC, abstractmethod
 from filmby.venue import Venue
 
 class Cinema(Venue):
+    VENUE_TYPE_NAME = {
+        "en": "Cinema",
+        "he": "קולנוע"
+    }
+
     def __init__(self):
         super().__init__()
 

@@ -28,8 +28,6 @@ function on_event_click(e) {
 		return
 	}
 
-	const event_index = event_element.dataset.eventIndex;
-
 	const screenings_element = event_element.querySelector(".event-dates");
 	const expand_icon = event_element.querySelector(".expand i");
 	const description = event_element.querySelector(".event-description p");
@@ -62,13 +60,21 @@ function on_event_click(e) {
 
 async function get_events(e) {
 	const date_element = document.querySelector("#date_input");
-	const town_element = document.querySelector("#town_input");
-	const data = await fetch(`/events?date=${date_element.value}&types=film`);
+	const type_element = document.querySelector("#venue_type_input");
+	let filtered_type = type_element.value;
+	let fetch_url;
+	if (filtered_type == "all") {
+		fetch_url = `/events?date=${date_element.value}`;
+	} else {
+		fetch_url = `/events?date=${date_element.value}&types=${filtered_type}`;
+	}
+	console.log(fetch_url);
+	const data = await fetch(fetch_url);
+
 	const element_data = await data.text();
 	const events_elemnt = document.querySelector("#events");
 
 	events_elemnt.innerHTML = element_data;
-	console.log("HI");
 
 	const screening_link_elements = document.querySelectorAll(".date-link");
 	const event_button_elements = document.querySelectorAll(".event-button");
@@ -190,7 +196,7 @@ function load_state() {
 }
 
 async function load_events() {
-	const data = await fetch(`/events?town=Tel Aviv&json=True`);
+	const data = await fetch(`/events?json=True`);
 	const json_data = await data.json();
 
 	g_events = json_data;

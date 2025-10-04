@@ -8,6 +8,14 @@ from server.show_events import bp
 from server.events import event_manager
 import server.utils as utils
 
+import filmby
+
+# TODO: This is a hack and should be made good
+EVENT_TYPES_TO_VENUE_TYPE_NAMES = {
+    filmby.events.Film: "קולנוע",
+    filmby.events.Concert: "הופעות"
+}
+
 def filter_events(date, hour_filter, types):
     events = []
     indices = []
@@ -43,6 +51,17 @@ def filter_dates(dates, chosen_date):
     
     return filtered
 
+def sort_events_by_type(events):
+    result = dict()
+    for event in events:
+        venue_type_name = EVENT_TYPES_TO_VENUE_TYPE_NAMES[type(event)]
+        if not venue_type_name in result:
+            result[venue_type_name] = [event]
+        else:
+            result[venue_type_name].append(event)
+
+    return result
+
 @bp.route('/events')
 def show_events():
     date = None
@@ -59,7 +78,6 @@ def show_events():
     if "types" in request.args:
         types = request.args["types"].split(",")
 
-    print(types)
     indices, filtered_events, event_dates = filter_events(date, hour_filter, types)
     logger.debug(f"Found {len(filtered_events)} relevant events")
 
@@ -71,12 +89,15 @@ def show_events():
             for i, event in enumerate(result):
                 event["index"] = indices[i]
             return json.dumps(result)
-    
+
+    filtered_events = sort_events_by_type(filtered_events)
+
     return render_template(
             'events.html',
             events=filtered_events,
             indices=indices,
             name_translations=utils.get_venue_name_translations(),
             get_day_name=utils.get_day_name,
-            event_dates=event_dates,
-            print=print)
+            type=type,
+            filmby=filmby,
+            selected_date=date)

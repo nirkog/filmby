@@ -3,6 +3,10 @@ from abc import ABC, abstractmethod
 class Venue(ABC):
     TRANSLATED_NAMES = None
     NAME = None
+    VENUE_TYPE_NAMES = {
+        "en": "Venues",
+        "he": "מקומות",
+    }
 
     def __init__(self):
         self.details_cache = dict()

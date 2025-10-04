@@ -9,7 +9,7 @@ CONTENT_TYPES_TO_FILE_ENDINGS = {
 
 class EventDetails:
     def __init__(self):
-        pass
+        self.description = ""
 
     def get_missing_details(self):
         details = vars(self)
@@ -26,7 +26,6 @@ class Event:
         self.image_url = None
         self.dates = dict()
         self.links = dict()
-        self.description = ""
         self.details = None
 
     def __str__(self):
