@@ -78,6 +78,8 @@ class FilmDetails(EventDetails):
         return result
 
 class Film(Event):
+    TYPE = "קולנוע"
+
     def __init__(self, name):
         super().__init__(name)
 

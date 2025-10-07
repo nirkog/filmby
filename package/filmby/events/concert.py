@@ -2,9 +2,13 @@ from filmby.event import Event, EventDetails
 
 class ConcertDetails(EventDetails):
     def __init__(self):
+        super().__init__()
+
         self.doors = None
 
 class Concert(Event):
+    TYPE = "הופעות"
+
     def __init__(self, name):
         super().__init__(name)
 

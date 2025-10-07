@@ -21,12 +21,14 @@ class EventDetails:
         return result
 
 class Event:
+    TYPE = "אחר"
+
     def __init__(self, name):
         self.name = name
         self.image_url = None
         self.dates = dict()
         self.links = dict()
-        self.details = None
+        self.details = EventDetails()
 
     def __str__(self):
         return f"{self.name}, {self.links}, {self.dates}"

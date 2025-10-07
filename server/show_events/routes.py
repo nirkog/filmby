@@ -10,12 +10,6 @@ import server.utils as utils
 
 import filmby
 
-# TODO: This is a hack and should be made good
-EVENT_TYPES_TO_VENUE_TYPE_NAMES = {
-    filmby.events.Film: "קולנוע",
-    filmby.events.Concert: "הופעות"
-}
-
 def filter_events(date, hour_filter, types):
     events = []
     indices = []
@@ -54,11 +48,10 @@ def filter_dates(dates, chosen_date):
 def sort_events_by_type(events):
     result = dict()
     for event in events:
-        venue_type_name = EVENT_TYPES_TO_VENUE_TYPE_NAMES[type(event)]
-        if not venue_type_name in result:
-            result[venue_type_name] = [event]
+        if not event.TYPE in result:
+            result[event.TYPE] = [event]
         else:
-            result[venue_type_name].append(event)
+            result[event.TYPE].append(event)
 
     return result
 

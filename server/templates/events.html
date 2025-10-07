@@ -1,8 +1,8 @@
 {% if events|length > 0 %}
 	<h1>אירועים</h1>
-	{% for venue_type in events %}
-		<h2>{{ venue_type }}</h2>
-		{% for event in events[venue_type] %}
+	{% for event_type in events %}
+		<h2>{{ event_type }}</h2>
+		{% for event in events[event_type] %}
 			<div class="event card">
 				<div class="event-top">
 					<img src="{{ event.image_url }}" referrerpolicy="no-referrer"/>
