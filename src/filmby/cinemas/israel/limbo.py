@@ -13,13 +13,21 @@ class LimboCinema(Cinema):
     NAME = "Limbo"
     TOWNS = ["Tel Aviv"]
     BASE_URL = "https://hameretz2.org/"
-    DATE_FORMAT = "%H:%M"
-    NEW_DATE_FORMAT = "%d.%m"
+    EVENTS_URL = "wp-json/hm2/v1/events"
     UPDATE_INTERVAL = 60 * 60 * 12
-    HEADERS = {
-        "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/109.0.0.0 Safari/537.36"
+    REQUEST_HEADERS = {
+        "User-Agent": "Mozilla/5.0 (X11; Linux x86_64; rv:153.0) Gecko/20100101 Firefox/153.0",
+        "Accept": "application/json",
+        "Accept-Language": "en-US,en;q=0.9",
+        "Accept-Encoding": "gzip, deflate, br, zstd",
+        "Referer": "https://hameretz2.org/",
+        "Sec-GPC": "1",
+        "Connection": "keep-alive",
+        "Sec-Fetch-Dest": "empty",
+        "Sec-Fetch-Mode": "cors",
+        "Sec-Fetch-Site": "same-origin",
+        "Priority": "u=4",
     }
-    HEBREW_MONTHS = ["ינואר", "פברואר", "מרץ", "אפריל", "מאי", "יוני", "יולי", "אוגוסט", "ספטמבר", "אוקטובר", "נובמבר", "דצמבר"]
 
     def __init__(self):
         super().__init__()
@@ -27,40 +35,22 @@ class LimboCinema(Cinema):
         self.films = self.get_films()
 
     def get_films(self):
-        response = requests.get(self.BASE_URL, headers=self.HEADERS)
+        response = requests.get(self.BASE_URL + self.EVENTS_URL, headers=self.REQUEST_HEADERS)
         response.encoding = "utf-8"
 
-        html = BeautifulSoup(response.text, "html.parser")
-        list_items = html.find_all("a", {"class": "zygo-event-card"})
-
         films = []
-        for list_item in list_items:
-            if not "filter-%d7%9c%d7%99%d7%9e%d7%91%d7%95" in list_item['class']:
+        for event in response.json():
+            if event["dept"] != "cinema":
                 continue
-            image_url = list_item.find("img")["src"]
-            name = list_item.find(class_="event-title").text
-            name = emoji.replace_emoji(name)
-            if name.endswith("קולנוע לימבו"):
-                name = name[:-len("קולנוע לימבו")]
-            if name.endswith("לימבו"):
-                name = name[:-len("לימבו")]
-            name = name.strip()
 
-            films.append(Film(name))
+            films.append(Film(event["name"]))
 
-            link = list_item["href"]
-            films[-1].add_link(self.NAME, link)
+            films[-1].set_image_url(event["images"][0])
+            date = datetime.datetime.strptime(event["start"], "%Y-%m-%dT%H:%M")
+            films[-1].add_dates(self.NAME, "Tel Aviv", [date])
+            films[-1].add_link(self.NAME, event["ticket_sale_link"])
 
-            films[-1].set_image_url(image_url) 
-
-            date = list_item.find("div", {"class": "event-datetime"}).text
-            date = datetime.datetime.strptime(date, self.NEW_DATE_FORMAT)
-            date = datetime.datetime(datetime.datetime.now().year, date.month, date.day, 19)
-            films[-1].add_dates(self.NAME, self.TOWNS[0], [date])
-
-            description = list_item.find("div", {"class": "event-summary"}).text
-            description = "<span class=\"limbo-comment\">שימו לב! השעות של הסרטים בקולנוע לימבו לא מדויקות, גשו ללינק שמופיע גדי לקבל את השעה המדויקת.</span><br><br>" + description
-            films[-1].details.description = description
+            films[-1].details.description = event["promo"]
 
         self.last_update = time.time()
 

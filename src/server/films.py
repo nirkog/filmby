@@ -133,7 +133,7 @@ class FilmManager:
         new_films = self._merge_films(new_films)
         self.films = new_films
 
-        excluded_cinemas = ["Jaffa Hill"]
+        excluded_cinemas = ["Jaffa Hill", "TLVMuseum"]
         unfound_cinema_names = [cinema for cinema in cinemas if cinema not in excluded_cinemas]
         for film in new_films:
             for cinema_name in unfound_cinema_names:
