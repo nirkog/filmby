@@ -16,7 +16,6 @@ class RadicalCinema(Cinema):
     UPDATE_INTERVAL = 60 * 60 * 12
     BASE_URL = "https://radical.org.il/"
     CALENDAR_URL = "calendar/"
-    INFO_BASE_URL = "https://live.nimi.co.il/event/getEventByHandler/663cc7bf5d7de52d0a22a907/"
     REQUEST_HEADERS = {
         "accept": "*/*",
         "accept-language": "en-US,en;q=0.9,he-IL;q=0.8,he;q=0.7",
@@ -35,7 +34,7 @@ class RadicalCinema(Cinema):
         "x-requested-with": "XMLHttpRequest"
 	}
     FILM_WORDS = ["הקרנה", "נקרין", "יוקרן", "תוקרן"]
-    DATE_FORMAT = "%Y-%m-%dT%H:%M:%S"
+    DATE_FORMAT = "%Y/%d/%mT%H:%M"
 
     def __init__(self):
         super().__init__()
@@ -43,12 +42,18 @@ class RadicalCinema(Cinema):
         self.films_lock = threading.Lock()
         self.films = self.get_films()
 
-    def _check_event(self, info_link, name, link, image_link, films):
-        response = requests.get(info_link, headers=self.REQUEST_HEADERS)
+    def _check_event(self, name, link, image_link, films):
+        response = requests.get(link, headers=self.REQUEST_HEADERS)
         response.encoding = "utf-8"
-        data = json.loads(response.text) 
-        description = data["description"]
-        description = description.replace("\\", "")
+        html = BeautifulSoup(response.text, "html.parser")
+
+        description_container = html.find("div", {"class": "elementor-widget-woocommerce-product-content"})
+        if None == description_container:
+            return
+
+        description = ""
+        for p in description_container.find_all("p"):
+            description += p.text + "\n"
 
         is_film = bool(sum([int(word in description) for word in self.FILM_WORDS]))
         if not is_film:
@@ -60,10 +65,18 @@ class RadicalCinema(Cinema):
         films[-1].set_image_url(image_link)
         films[-1].add_link(self.NAME, link)
 
-        date_str = data["start_date"]
-        if "." in date_str:
-            date_str = date_str[:date_str.index(".")]
-        date = datetime.datetime.strptime(date_str, self.DATE_FORMAT)
+        # TODO: Better year logic
+
+        date_container = html.find("i", {"class": "fa-calendar"}).parent.parent
+        date_element = date_container.find("span", {"class": "elementor-icon-list-text"})
+        date_text = "".join([c for c in date_element.text if c in "0123456789/"])
+        hour_element = html.find("span", {"class": "variation-ticket-time"})
+        hour_text = hour_element.text.replace(hour_element.span.text, "")
+        year = str(datetime.datetime.now().year)
+        full_date_text = year + "/" + date_text + "T" + hour_text
+        full_date_text = full_date_text.strip()
+        date = datetime.datetime.strptime(full_date_text, self.DATE_FORMAT)
+
         films[-1].add_dates(self.NAME, "Tel Aviv", [date])
 
         films[-1].details.description = description
@@ -71,39 +84,36 @@ class RadicalCinema(Cinema):
         self.films_lock.release()
 
     def get_films(self):
-        response = requests.get(self.BASE_URL + self.CALENDAR_URL, headers=self.REQUEST_HEADERS)
-        response.encoding = "utf-8"
-
-        html = BeautifulSoup(response.text, "html.parser")
-        first_event = html.find_all("div", {"class": "ue_post_grid_item"})[0]
-        container = first_event.parent
-        events = container.find_all("div", {"class": "ue_post_grid_item"})
-        event_info_links = []
         event_links = []
         event_names = []
         event_images = []
         films = []
 
-        for event in events:
-            link = event.a["href"]
-            event_links.append(link)
-            assert link.startswith("https://radical.org.il/events/")
-            link = link[len("https://radical.org.il/events/"):]
-            if link[-1] == "/":
-                link = link[:-1]
-            event_info_links.append(self.INFO_BASE_URL + link)
-            event_names.append(event.find("div", {"class": "ue_p_title"}).text)
+        for i in range(1, 6):
+            response = requests.get(self.BASE_URL + self.CALENDAR_URL + str(i), headers=self.REQUEST_HEADERS)
+            response.encoding = "utf-8"
 
-            image_link = event.find("img")["src"]
-            # @TODO This is a pretty dumb heuristic
-            if image_link[-12] == "-" and image_link[-8] == "x":
-                image_link = image_link[:-12] + image_link[-4:]
+            if response.status_code != 200:
+                continue
 
-            event_images.append(image_link)
+            html = BeautifulSoup(response.text, "html.parser")
+            events = html.find_all("div", {"class": "purchasable"})
+
+            for event in events:
+                link = event.a["href"]
+                event_links.append(link)
+                event_names.append(event.find("h3").text)
+
+                image_link = event.find("img")["src"]
+                # TODO: This is a pretty dumb heuristic
+                if image_link[-12] == "-" and image_link[-8] == "x":
+                    image_link = image_link[:-12] + image_link[-4:]
+
+                event_images.append(image_link)
 
         threads = []
-        for i, link in enumerate(event_info_links):
-            thread = threading.Thread(target=self._check_event, args=(link, event_names[i], event_links[i], event_images[i], films))
+        for i, name in enumerate(event_names):
+            thread = threading.Thread(target=self._check_event, args=(name, event_links[i], event_images[i], films))
             thread.start()
             threads.append(thread)
 
