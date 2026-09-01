@@ -11,15 +11,15 @@ from .cinemas.israel.radical import RadicalCinema
 
 CINEMAS = {
     "Israel": [
-        CinemathequeCinema,
         # CanadaCinema, # SHUT DOWN :(
-        JaffaCinema,
         # CinemaCityCinema,
+        # JaffaHillCinema,
+        CinemathequeCinema,
+        JaffaCinema,
         LevCinema,
         RavHenCinema,
         LimboCinema,
         TLVMuseumCinema,
-        # JaffaHillCinema,
         RadicalCinema
     ]
 }

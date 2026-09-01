@@ -16,31 +16,12 @@ class JaffaCinema(Cinema):
     TOWNS = ["Tel Aviv"]
     BASE_URL = "https://www.jaffacinema.com/"
     UPDATE_INTERVAL = 60 * 60
-    DATE_PATTERN = "\\d\\d/\\d\\d"
-    HOUR_PATTERN = "\\d\\d:\\d\\d"
+    DATE_FORMAT = "%Y/%d/%mT%H:%M"
 
     def __init__(self):
         super().__init__()
         self.films = self.get_films()
 
-    def get_date_from_option(self, text):
-        date = re.findall(self.DATE_PATTERN, text)
-        hour = re.findall(self.HOUR_PATTERN, text)
-
-        if len(date) == 0:
-            return None
-        else:
-            day, month = [int(x) for x in date[0].split("/")]
-
-        if len(hour) > 0:
-            hour, minute = [int(x) for x in hour[0].split(":")]
-        else:
-            hour = minute = 0
-
-        result = datetime.datetime(datetime.datetime.today().year, month, day, hour, minute)
-
-        return result
-    
     def parse_length(self, text):
         text = "".join([x for x in text if x in " 0123456789"])
         parts = [x for x in text.split(" ") if x != ""]
@@ -56,36 +37,47 @@ class JaffaCinema(Cinema):
     def get_films(self):
         response = requests.get(self.BASE_URL)
         html = BeautifulSoup(response.text, "html.parser")
-        screenings = html.find("div", {"id": "screenings"})
+        screenings = html.find_all("article", {"class": "jaffa-movie-card"})
 
         films = []
-        for screening in screenings.children:
+        for screening in screenings:
             try:
-                name = screening.div.div.div.h2.text
-                image = screening.div.div.img["src"]
-                link = self.BASE_URL
-                
-                dates_select = screening.find("select")
-                if dates_select != None:
-                    date_options = dates_select.find_all("option")
-                    date_options = [option.text for option in date_options]
-                    dates = [self.get_date_from_option(option) for option in date_options]
-                    dates = [x for x in dates if x != None]
-                else:
-                    date_text = screening.find("div", {"class": "date-btn"}).p.text
-                    dates = [self.get_date_from_option(date_text)]
+                name = screening.find("h2").text
+                image = screening.find("img")["src"]
+                link = screening.find("a", {"class": "jaffa-movie-card__screening"})["href"]
 
-                in_parent = screening.find("div", {"class": "in-parent"}) 
-                paragraphs = in_parent.find_all("p")
+                dates = []
+                date_elements = screening.find_all("span", {"class": "jaffa-movie-card__date-link"})
+                for element in date_elements:
+                    date_parts = "".join([c for c in element.text if c in "0123456789/: "])
+                    date_parts = date_parts.split(" ")
+                    date_parts = [x for x in date_parts if x != ""]
+                    assert len(date_parts) == 2
+                    hour_text = None
+                    date_text = None
+                    for part in date_parts:
+                        if "/" in part:
+                            date_text = part
+                        elif ":" in part:
+                            hour_text = part
+                    year = str(datetime.datetime.now().year)
+                    full_date_text = year + "/" + date_text + "T" + hour_text
+                    dates.append(datetime.datetime.strptime(full_date_text, self.DATE_FORMAT))
+
+                description_element = screening.find("div", {"class": "jaffa-movie-card__desc-inner"}) 
+                paragraphs = description_element.find_all("p")
                 countries = None
                 year = None
-                try:
-                    raw_str = list(in_parent.children)[0].text
-                    countries, year = raw_str.split("/")
+                countries_year_raw_str = paragraphs[0].text
+
+                if "/" in countries_year_raw_str:
+                    countries, year = countries_year_raw_str.split("/")[:2]
                     countries = countries.split(", ")
-                except Exception as e:
-                    logger.warning(f"Could not parse countries and year for film {name} (string was \"{raw_str}\"), error: {str(e)}")
-                    countries = None
+                elif "|" in countries_year_raw_str:
+                    countries, year = countries_year_raw_str.split("|")[:2]
+                    countries = countries.split(", ")
+                else:
+                    logger.warning(f"Could not parse countries and year for film {name} (string was \"{countries_year_raw_str}\")")
 
                 try:
                     year = int(year.strip().replace(" ", "")[:4])
@@ -96,9 +88,9 @@ class JaffaCinema(Cinema):
 
                 try:
                     description = ""
-                    elements = in_parent.find_all("p") + in_parent.find_all("span")
+                    elements = description_element.find_all("p") + description_element.find_all("span")
                     for element in elements:
-                        if element.text == raw_str:
+                        if element.text == countries_year_raw_str:
                             continue
 
                         description += element.text + "<br>"
@@ -107,17 +99,15 @@ class JaffaCinema(Cinema):
                     logger.warning(f"Could not parse description for film {name}, error: {str(e)}")
                     description = None
 
-                info_title = screening.find("div", {"class": "info-title"})
-                length, director = info_title.p.text.split(" | ")
-                length = self.parse_length(length)
+                # TODO: Add director and length
                 
                 films.append(Film(name))
                 films[-1].set_image_url(image)
                 films[-1].add_dates(self.NAME, self.TOWNS[0], dates)
                 films[-1].add_link(self.NAME, link)
+                # films[-1].details.length = length
+                # films[-1].details.director = director
                 films[-1].details.countries = countries
-                films[-1].details.length = length
-                films[-1].details.director = director
                 films[-1].details.description = description
                 films[-1].details.year = year
             except Exception as e:
