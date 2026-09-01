@@ -54,7 +54,7 @@ class Levontin7(MusicVenue):
 
         self._concerts = self._get_concerts()
 
-    def _concert_raw_concert_to_concert(self, raw_concert):
+    def _convert_raw_concert_to_concert(self, raw_concert):
         start_date = datetime.datetime.strptime(raw_concert["start_date"], self.DATE_FORMAT) 
         event_details_raw = requests.get(self.EVENT_DETAILS_URL.format(raw_concert["id"]), self.HEADERS)
         event_details = event_details_raw.json()
@@ -90,7 +90,6 @@ class Levontin7(MusicVenue):
         self._thread_concerts.append(concert)
 
     def _get_concerts(self):
-        start = time.time()
         current_date = datetime.datetime.now()
         month_name = self.MONTHS[current_date.month]
         year = current_date.year
@@ -106,7 +105,7 @@ class Levontin7(MusicVenue):
             if start_date < current_date:
                 continue
 
-            threads.append(threading.Thread(target=self._concert_raw_concert_to_concert, args=(raw_concert,)))
+            threads.append(threading.Thread(target=self._convert_raw_concert_to_concert, args=(raw_concert,)))
             threads[-1].start()
 
             time.sleep(0.05)
